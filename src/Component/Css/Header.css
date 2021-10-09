@@ -1,0 +1,33 @@
+.clear {
+    clear: both;
+}
+.header {
+    background-color: #ceebff;
+    padding: 0 60px;
+}
+.header .logo{
+    float: left;
+}
+.logo img {
+    height: 30px;
+    margin: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    .header {
+        padding: 10px;
+    }
+    .header .logo {
+      float: none;
+    }
+    .logo img {
+        display: block;
+        margin: auto;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .logo img {
+        height: 40px;
+    }
+}

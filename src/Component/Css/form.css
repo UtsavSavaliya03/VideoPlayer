@@ -1,0 +1,61 @@
+.clear {
+    clear: both;
+}
+.login-container {
+    background: url(../../assets/Background/bg2.jpg);
+    height: 100vh;
+    background-position: unset;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 100px;
+}
+.login-container::after{
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+  }
+.form-container {
+    display: block;
+    margin: auto;
+    width: 30%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 999;
+    transform: translate(-50%,-50%);
+    background: rgba(255,255,255,0.04);
+    box-shadow: -1px 4px 28px 0px rgba(0,0,0,0.75);
+}
+.form-container h1, h2 {
+    color: white;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.forgot-password {
+    float: left;
+}
+.signup {
+    float: right;
+}
+form a {
+    text-decoration: none;
+    color: white;
+}
+
+@media only screen and (max-width: 1024px) {
+    .form-container {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 760px) {
+    .form-container {
+        margin: 50px auto;
+        width: 100%;
+    }
+}
