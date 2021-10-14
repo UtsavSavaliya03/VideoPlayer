@@ -1,0 +1,46 @@
+.clear {
+    clear: both;
+}
+.video-container {
+    width: 90%;
+    margin: 20px auto;
+    display: block;
+}
+.video-container .vd-playing-cotainer { 
+    background-color: burlywood;
+    width: 65%;
+    float: left;
+}
+.vd-playing {
+    width: 100%;
+    height: 500px;
+}
+.video-container .vd-list-container {
+    width: 33%;
+    float: right;
+}
+.vd-queue {
+    width: 100%;
+    height: auto;
+}
+.vd-content-container{
+    height: 100px;
+    float: left;
+}
+.vd-content {
+    width: 200px;
+    height: 100px;
+}
+.vd-info {
+    margin-left: 10px;
+    width: 50%;
+    float: left;
+}
+.vd-info .vd-name {
+    font-weight: 700;
+}
+.vd-info .vd-channel,
+.vd-info .vd-views-time {
+    font-size: 15px;
+    color: gray;
+}

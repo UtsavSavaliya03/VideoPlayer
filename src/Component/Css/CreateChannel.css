@@ -1,4 +1,5 @@
   .modalBackground {
+    z-index: 999;
     width: 100vw;
     height: 100vh;
     background-color: rgb(153, 153, 153, 0.8);
@@ -17,7 +18,7 @@
     background-image: linear-gradient(to bottom right, #d5eeff, rgb(255, 224, 228), #cbe9ff, rgb(255, 205, 214));
   }
 
-  .modalContainer .channel-logo img {
+  .modalContainer .channel-logo > img {
     display: block;
     margin: auto;
     height: 150px;

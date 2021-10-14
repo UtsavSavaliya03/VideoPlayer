@@ -1,0 +1,46 @@
+.vd-list {
+    width: 90%;
+    margin: 20px auto;
+    display: block;
+}
+.vd-flex-item {
+    margin: 10px;
+}
+.vd-cover {
+    width: 300px;
+    height: 170px;
+}
+.vd-flex-item .vd-info {
+    width: 300px;
+    margin: 0%;
+}
+.vd-flex-item .vd-info .channel-logo {
+    float: left;
+    width: 15%;
+}
+.vd-flex-item .channel-logo > img {
+    margin-top: 10px;
+    height: 40px;
+}
+.channel-info {
+    float: left;
+    width: 80%;
+}
+.channel-info .vd-name {
+    font-weight: 600;
+    text-align: left;
+    padding-left: 5px;
+}
+.channel-info .vd-channel,
+.channel-info .vd-views-time {
+    padding-left: 5px;
+    color: gray;
+    text-align: left;
+    line-height: 100%;
+}
+.vd-flex-item button {
+    background-color: transparent;
+    margin: 0%;
+    padding: 0%;
+    border: none;
+}
