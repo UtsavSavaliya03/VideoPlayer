@@ -5,6 +5,7 @@ import Login from './Component/Login';
 import SendMail from './Component/SendMail';
 import ResetPassword from './Component/ResetPassword';
 import Home from './Component/Home';
+import VideoPlay from './Component/VideoPlay';
 
 function App() {
   let value = localStorage.getItem('isLogin');
@@ -43,6 +44,7 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/sendMail" component={SendMail} />
         <Route path="/resetPassword" component={ResetPassword} />
+        <Route path="/playVideo" component={VideoPlay} />
       </Router>
     </>
   );

@@ -5,16 +5,24 @@ import logo from '../assets/Images/user.png';
 import UserHeader from './UserHeader';
 import Video from '../assets/Video/Video.mp4';
 
-export default function Home() {
+export default function Home(props) {
 
     const [arr, setArr] = useState([{ "_id": "01", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "02", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "03", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "04", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "05", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "06", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "07", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "08", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "09", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "10", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "11", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "12", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }]);
+
+    function routeChange(path) {
+        props.history.push(path);
+    }
+
+    function playVideo() {
+        routeChange('/playVideo');
+    }
 
     function renderTableRow() {
         return arr.map(vd => {
             return (
                 <tr key={vd._id}>
                     <div className="vd-flex-item">
-                        <button onClick={ ()=>{console.log(vd)} }>
+                        <button onClick={() => { playVideo()}}>
                             <div>
                                 <VideoPlayer src={Video} bigPlayButton={false} controls={false} className="vd-cover" />
                             </div>

@@ -4,7 +4,7 @@ import React from 'react'
 export default function Login(props) {
 
     function routeChange(path) {
-        this.props.history.push(path);
+        props.history.push(path);
     }
 
     function loginHandler() {
