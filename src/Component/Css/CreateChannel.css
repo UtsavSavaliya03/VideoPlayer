@@ -11,7 +11,7 @@
   
   .modalContainer {
     display: block;
-    margin: auto;
+    margin: 50px 0 auto;
     width: 50%;
     border-radius: 15px;
     box-shadow: 5px 10px 18px #888888;
@@ -39,6 +39,9 @@
     background-color: transparent;
     font-size: 18px;
     font-weight: 600;
+  }
+  .modalContainer .btn-container button:focus {
+    outline: none;
   }
   .modalContainer .btn-container .cancel-btn {
     color: gray;

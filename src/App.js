@@ -6,45 +6,47 @@ import SendMail from './Component/SendMail';
 import ResetPassword from './Component/ResetPassword';
 import Home from './Component/Home';
 import VideoPlay from './Component/VideoPlay';
+import UserProfile from './Component/UserProfile';
 
 function App() {
   let value = localStorage.getItem('isLogin');
 
-  const PublicRoute = ({ component: Component, ...props }) => (
-    <Route
-      {...props}
-      render={props =>
-        (value == null) ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to={{ pathname: '/home' }} />
-        )
-      }
-    />
-  );
+  // const PublicRoute = ({ component: Component, ...props }) => (
+  //   <Route
+  //     {...props}
+  //     render={props =>
+  //       (value == null) ? (
+  //         <Component {...props} />
+  //       ) : (
+  //         <Redirect to={{ pathname: '/home' }} />
+  //       )
+  //     }
+  //   />
+  // );
 
-  const PrivateRoute = ({ component: Component, ...props }) => (
-    <Route
-      {...props}
-      render={props =>
-        (value != null) ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to={{ pathname: '/' }} />
-        )
-      }
-    />
-  );
+  // const PrivateRoute = ({ component: Component, ...props }) => (
+  //   <Route
+  //     {...props}
+  //     render={props =>
+  //       (value != null) ? (
+  //         <Component {...props} />
+  //       ) : (
+  //         <Redirect to={{ pathname: '/' }} />
+  //       )
+  //     }
+  //   />
+  // );
 
   return (
     <>
       <Router>
-        <PublicRoute exact path="/" component={Login} />
-        <PrivateRoute path="/home" component={Home} />
+        <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/sendMail" component={SendMail} />
         <Route path="/resetPassword" component={ResetPassword} />
         <Route path="/playVideo" component={VideoPlay} />
+        <Route path="/userProfile" component={UserProfile} />
       </Router>
     </>
   );

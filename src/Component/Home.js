@@ -2,8 +2,10 @@ import './Css/Home.css';
 import React, { useState } from 'react';
 import VideoPlayer from 'react-video-js-player';
 import logo from '../assets/Images/user.png';
+import Header from './Header';
 import UserHeader from './UserHeader';
 import Video from '../assets/Video/Video.mp4';
+import Cover from '../assets/Video/VideoCover/videoCover.jpg';
 
 export default function Home(props) {
 
@@ -24,7 +26,7 @@ export default function Home(props) {
                     <div className="vd-flex-item">
                         <button onClick={() => { playVideo()}}>
                             <div>
-                                <VideoPlayer src={Video} bigPlayButton={false} controls={false} className="vd-cover" />
+                                <VideoPlayer src={Video} poster={Cover} bigPlayButton={false} controls={false} className="vd-cover" />
                             </div>
                             <div className="vd-info">
                                 <div className="channel-logo">
@@ -45,7 +47,8 @@ export default function Home(props) {
     }
     return (
         <>
-            <UserHeader />
+            {/* <UserHeader /> */}
+            <Header />
             <div className="vd-list">
                 <div className="d-flex flex-wrap justify-content-center">{renderTableRow()}</div>
             </div>

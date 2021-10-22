@@ -4,6 +4,7 @@ import VideoPlayer from 'react-video-js-player';
 import user from '../assets/Images/user.png';
 import Video from '../assets/Video/Video.mp4';
 import Cover from '../assets/Video/VideoCover/videoCover.jpg';
+import UserHeader from '../Component/UserHeader';
 
 export default function VideoPlay() {
 
@@ -18,7 +19,12 @@ export default function VideoPlay() {
                 <tr key={vd._id}>
                     <td className="vd-queue">
                         <div className="vd-content-container">
-                            <VideoPlayer className="vd-content" />
+                            <VideoPlayer className="vd-content"
+                                src={Video}
+                                poster={Cover}
+                                bigPlayButton={false}
+                                controls={false}
+                            />
                         </div>
                         <div className="vd-info">
                             <div className="vd-name">{vd.name}</div>
@@ -35,7 +41,7 @@ export default function VideoPlay() {
     function renderComment() {
         return cmt.map((cmt) => {
             return (
-                <tr key={cmt._id} >
+                <tr key={cmt._id}>
                     <div className="user-comment">
                         <div className="user-profile">
                             <img src={user} alt="User Profile" />
@@ -52,45 +58,50 @@ export default function VideoPlay() {
     }
 
     return (
-        <div>
-            <div className="video-container">
-                <div className="vd-playing-cotainer">
-                    <VideoPlayer className="vd-playing"
-                        src={video}
-                        poster={cover}
-                    />
-                    <div className="video-details">
-                        <div className="vd-name">
-                            <p>Love me thoda aur | Rakul Preat Singh</p>
-                        </div>
-                        <div className="vd-view-time">
-                            <span>300K</span><span> • </span><span>6 Years ado</span>
-                        </div>
-                    </div><hr />
-                    <div className="channel">
-                        <div className="logo">
-                            <img src={user} alt="Channel Logo" />
-                        </div>
-                        <div className="channel-info">
-                            <p className="name">Sony Musics</p>
-                            <p className="subscribers">30M Subscribers</p>
-                        </div>
-                        <div className="subscribe-btn">
-                            <button className="btn btn-danger">SUBSCRIBE</button>
-                        </div>
-                        <div className="clear"></div>
-                    </div><hr />
-                    <div className="comment-container">{renderComment()}</div>
-                </div>
-                <div className="vd-list-container">
-                    <div>
-                        <table>
-                            <tbody className="vd-video">{renderTableRows()}</tbody>
-                        </table>
+        <>
+            <UserHeader />
+            <div>
+                <div className="video-container">
+                    <div className="vd-playing-cotainer">
+                        <VideoPlayer className="vd-playing"
+                            src={video}
+                            poster={cover}
+                            bigPlayButton={false}
+                            autoplay={true}
+                        />
+                        <div className="video-details">
+                            <div className="vd-name">
+                                <p>Love me thoda aur | Rakul Preat Singh</p>
+                            </div>
+                            <div className="vd-view-time">
+                                <span>300K</span><span> • </span><span>6 Years ado</span>
+                            </div>
+                        </div><hr />
+                        <div className="channel">
+                            <div className="logo">
+                                <img src={user} alt="Channel Logo" />
+                            </div>
+                            <div className="channel-info">
+                                <p className="name">Sony Musics</p>
+                                <p className="subscribers">30M Subscribers</p>
+                            </div>
+                            <div className="subscribe-btn">
+                                <button className="btn btn-danger">SUBSCRIBE</button>
+                            </div>
+                            <div className="clear"></div>
+                        </div><hr />
+                        <div className="comment-container">{renderComment()}</div>
                     </div>
+                    <div className="vd-list-container">
+                        <div>
+                            <table>
+                                <tbody className="vd-video">{renderTableRows()}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="clear"></div>
                 </div>
-                <div className="clear"></div>
             </div>
-        </div>
+        </>
     )
 }

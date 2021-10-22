@@ -1,3 +1,9 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .clear {
     clear: both;
 }
@@ -45,6 +51,12 @@
 form a {
     text-decoration: none;
     color: white;
+}
+.validation-error {
+    height: 10px;
+    color: red;
+    float: right;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 1024px) {

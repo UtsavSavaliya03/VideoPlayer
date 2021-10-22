@@ -80,20 +80,30 @@
 
 .comment-container {
     margin-top: 30px;
+    width: 100%;
 }
-.comment-container .user-profile {
+.user-comment {
+    width: 123vh;
+}
+.user-comment .user-profile {
     float: left;
+    width: 5%;
+    height: auto;
 }
-.comment-container .user-profile img {
+.user-comment .user-profile img {
     height: 45px;
+    width: auto;
 }
-.comment-container .user-info {
+.user-comment .user-info {
     float: left;
+    width: 95%;
+    height: auto;
 }
 .comment-container .user-info .name {
     margin: 0 0 0 10px;
     font-size: 15px;
     font-weight: 500;
+    width: 100%;
 }
 .comment-container .user-info .comment {
     margin: 0 0 0 10px;
@@ -101,4 +111,49 @@
 }
 .comment-container .user-comment{
     margin-top: 30px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .video-container {
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+    .vd-playing-cotainer .vd-playing{
+        width: auto;
+        height: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .channel .channel-info {
+        width: auto;
+    }
+    .video-container .vd-playing-cotainer{
+        width: 100%;
+        float: none;
+    }
+    .video-container .vd-list-container{
+        width: 100%;
+        float: none;
+    }
+    .vd-content-container{
+        width: 100%;
+        float: none;
+        height: 200px;
+        display: block;
+    }
+    .vd-info {
+        width: 100%;
+        float: none;
+    }
+    .vd-content {
+        width: auto;
+        height: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .comment-container {
+        display: none;
+    }
 }
