@@ -1,6 +1,12 @@
+.home-container {
+    overflow: auto;
+    height: 93.5vh;
+}
+.vjs-poster {
+    background-size: cover !important; 
+}
 .vd-list {
-    width: 90%;
-    margin: 20px auto;
+    margin: 10px auto;
     display: block;
 }
 .vd-flex-item {
@@ -17,32 +23,38 @@
 .vd-flex-item .vd-info .channel-logo {
     float: left;
     width: 15%;
+    padding-top: 10px;
 }
-.vd-flex-item .channel-logo > img {
-    margin-top: 10px;
-    height: 40px;
+.vd-flex-item .vd-info .channel-logo span {
+    font-size: 20px;
 }
 .channel-info {
     float: left;
     width: 80%;
 }
-.channel-info .vd-name {
-    font-weight: 600;
+.channel-info > .vd-name {
+    font-weight: 700;
     text-align: left;
     padding-left: 5px;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .channel-info .vd-channel,
 .channel-info .vd-views-time {
     padding-left: 5px;
     color: gray;
     text-align: left;
-    line-height: 100%;
 }
 .vd-flex-item button {
     background-color: transparent;
     margin: 0%;
     padding: 0%;
     border: none;
+    cursor: pointer;
 }
 .vd-flex-item button:focus{
     outline: none;

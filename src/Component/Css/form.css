@@ -52,11 +52,14 @@ form a {
     text-decoration: none;
     color: white;
 }
+form button:disabled {
+    cursor: not-allowed;
+}
 .validation-error {
     height: 10px;
     color: red;
     float: right;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 @media only screen and (max-width: 1024px) {

@@ -4,7 +4,7 @@ import ApiCall from '../ServiceManager/apiCall';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-let apiCall = new ApiCall;
+let apiCall = new ApiCall();
 
 class SendMail extends React.Component {
     constructor(props) {
@@ -21,7 +21,7 @@ class SendMail extends React.Component {
     }
 
     displayAlert = (type, alertMsg) => {
-        if (type == true) {
+        if (type === true) {
             toast.success(alertMsg, {
                 position: "top-center"
             })

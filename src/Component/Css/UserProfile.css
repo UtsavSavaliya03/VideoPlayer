@@ -28,7 +28,7 @@
     width: 75%;
     position: relative;
     margin: auto;
-    margin-top: -150px;
+    margin-top: -180px;
     margin-bottom: 50px;
     border-radius: 10px;
     box-shadow: 5px 10px 18px #888888;
@@ -39,14 +39,33 @@
     width: 40%;
 }
 .profile .user-profile {
-    height: 150px;
-    width: 150px;
+    height: 200px;
+    width: 200px;
     border-radius: 50%;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: -70px;
-    /* box-shadow: 5px 10px 18px #888888; */
+    margin-top: -100px;
+    font-size: 60px;
+    background-color: lightskyblue;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.15);
+}
+.profile .user-profile span {
+    color: rgb(108, 111, 114);
+    font-size: 70px;
+    margin: 0%;
+    text-align: center;
+    display: block;
+    padding-top: 20px;
+}
+.profile .user-profile .sb-avatar__text {
+    width: 100px !important;
+    height: 100px !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+.profile .user-profile:hover {
+    cursor: pointer;
 }
 .head .account {
     float: left;
@@ -59,9 +78,9 @@
 }
 .account h3 {
     font-size: 30px;
-    margin: 10px;
+    margin: 30px 10px 10px 10px;
 }
-.data-container form {
+.data-container .user-details {
     display: block;
     padding: 80px 100px;
 }

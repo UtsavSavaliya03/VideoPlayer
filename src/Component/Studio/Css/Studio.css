@@ -1,0 +1,31 @@
+.clear {
+    clear: both;
+}
+.side-navigation {
+    float: left;
+    width: 15%;
+    height: 100vh;
+    background-color:rgb(235, 235, 235);
+}
+.main-container {
+    float: left;
+    width: 85%;
+}
+.side-navigation .nav-bar li {
+    display: block;
+}
+.side-navigation .nav-bar a {
+    display: block;
+    width: 100%;
+    color: rgb(82, 82, 82);
+    text-align: left;
+    border: none;
+    text-decoration: none;
+    padding: 5px 20px;
+    margin: 0%;
+    font-size: 20px;
+}
+.side-navigation .nav-bar li:hover{
+    background-color:white;
+    color: black;
+}

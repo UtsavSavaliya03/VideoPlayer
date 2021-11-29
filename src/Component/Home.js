@@ -1,36 +1,54 @@
 import './Css/Home.css';
-import React, { useState } from 'react';
+import React from 'react';
 import VideoPlayer from 'react-video-js-player';
 import logo from '../assets/Images/user.png';
-import Header from './Header';
-import UserHeader from './UserHeader';
 import Video from '../assets/Video/Video.mp4';
-import Cover from '../assets/Video/VideoCover/videoCover.jpg';
+import Avatar from 'react-avatar';
+import Cover from '../assets/Video/VideoCover/RakulPreet.jpg';
+import ApiCall from '../ServiceManager/apiCall';
 
-export default function Home(props) {
+let apiCall = new ApiCall();
 
-    const [arr, setArr] = useState([{ "_id": "01", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "02", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "03", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "04", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "05", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "06", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "07", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "08", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "09", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "10", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "11", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "12", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }]);
+class Home extends React.Component {
 
-    function routeChange(path) {
-        props.history.push(path);
+    constructor(props) {
+        super(props);
+        this.state = {
+            arr: [{ "_id": "0145", "name": "Love me thoda aur | Rakul Preat Singh kohli kohli kohli kohli kohli kohli kohli kohli kohli", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "02775", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0335", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0584", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "05568", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0685", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0790", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0823", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "09", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0136", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0118", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "012879", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }]
+        }
     }
 
-    function playVideo() {
-        routeChange('/playVideo');
+    routeChange = (path) => {
+        this.props.history.push(path);
     }
 
-    function renderTableRow() {
-        return arr.map(vd => {
+    playVideo = async (videoDetails) => {
+
+        const user_id = localStorage.getItem('user_id');
+        const parameter = {
+            user_id: user_id,
+            video_id: videoDetails._id
+        }
+        const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+
+        console.log(history);
+
+        this.routeChange('/playVideo');
+    }
+
+    renderTableRow = () => {
+        return this.state.arr.map(vd => {
             return (
                 <tr key={vd._id}>
                     <div className="vd-flex-item">
-                        <button onClick={() => { playVideo()}}>
+                        <button onClick={() => { this.playVideo(vd) }}>
                             <div>
                                 <VideoPlayer src={Video} poster={Cover} bigPlayButton={false} controls={false} className="vd-cover" />
                             </div>
                             <div className="vd-info">
                                 <div className="channel-logo">
-                                    <img src={logo} alt="channel Logo" />
+                                    <Avatar round={true} size="40" name="Sony Music" />
+                                    {/* <img src={logo} alt="channel Logo" /> */}
                                 </div>
                                 <div className="channel-info">
                                     <div className="vd-name">{vd.name}</div>
@@ -45,13 +63,18 @@ export default function Home(props) {
             );
         })
     }
-    return (
-        <>
-            {/* <UserHeader /> */}
-            <Header />
-            <div className="vd-list">
-                <div className="d-flex flex-wrap justify-content-center">{renderTableRow()}</div>
-            </div>
-        </>
-    )
+
+    render() {
+        return (
+            <>
+                <div className="home-container">
+                    <div className="vd-list">
+                        <div className="d-flex flex-wrap justify-content-center">{this.renderTableRow()}</div>
+                    </div>
+                </div>
+            </>
+        );
+    }
 }
+
+export default Home;

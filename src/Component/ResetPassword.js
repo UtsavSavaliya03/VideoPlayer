@@ -4,7 +4,7 @@ import ApiCall from '../ServiceManager/apiCall';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-let apiCall = new ApiCall;
+let apiCall = new ApiCall();
 
 class ResetPassword extends React.Component {
 
@@ -26,7 +26,7 @@ class ResetPassword extends React.Component {
     }
 
     displayAlert = (type, alertMsg) => {
-        if (type == true) {
+        if (type === true) {
             toast.success(alertMsg, {
                 position: "top-center"
             })
@@ -55,7 +55,7 @@ class ResetPassword extends React.Component {
                 passwordError = passwordValid ? '' : 'Password is too weak...!';
                 break;
             case 'confirmPass':
-                if (value == this.state.password) {
+                if (value === this.state.password) {
                     confirmPassError = '';
                     confirmPassValid = true;
                 } else {

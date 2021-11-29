@@ -83,8 +83,7 @@ class Login extends React.Component {
                             <div className="form-group">
                                 <input type="password" className="form-control" name="password" onChange={this.getValue} placeholder="Password" required />
                             </div>
-                            {/* disabled={!this.state.isValid} */}
-                            <button type="button" className="btn btn-primary d-block my-4 mx-auto" onClick={this.loginHandler}>Login</button>
+                            <button className="btn btn-primary d-block my-4 mx-auto" onClick={this.loginHandler} disabled={!this.state.isValid} >Login</button>
                             <div className="my-4">
                                 <div className="forgot-password">
                                     <a href="/sendMail">forgot password ?</a>
