@@ -71,16 +71,16 @@ class VideoPlay extends React.Component {
     }
 
     addFavourite = async () => {
-        const user_id = localStorage.getItem('user_id');
+        // const user_id = localStorage.getItem('user_id');
         // const video_id = ;
 
-        const parameter = {
-            user_id: user_id,
-            // video_id: video_id
-        }
-        const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
+        // const parameter = {
+        //     user_id: user_id,
+        //     video_id: video_id
+        // }
+        // const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
 
-        this.displayAlert(favourite.status, favourite.msg);
+        // this.displayAlert(favourite.status, favourite.msg);
     }
 
     addWatchLater = async () => {

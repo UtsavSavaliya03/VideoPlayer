@@ -91,3 +91,15 @@
 form label {
     font-weight: 600;
 }
+
+/* --------------- Spinner ---------------- */
+
+.user-profile .spinner {
+    margin: 250px auto;
+}
+.user-profile .spinner-text {
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+    color: rgb(61, 61, 61);
+}

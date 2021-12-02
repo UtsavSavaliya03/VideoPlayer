@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Css/WatchLater.css';
 import VideoPlayer from 'react-video-js-player';
 import Video from '../assets/Video/Video.mp4';
 import Cover from '../assets/Video/VideoCover/RakulPreet.jpg';
 import ApiCall from '../ServiceManager/apiCall';
+import { useSelector } from 'react-redux';
 import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import Loader from '../ServiceManager/Loader';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,38 +14,32 @@ import 'react-toastify/dist/ReactToastify.css';
 
 let apiCall = new ApiCall;
 
-class WatchLater extends React.Component {
+function WatchLater(props) {
 
-    constructor(props) {
-        super(props);
+    const user = useSelector((state) => state.user);
+    const [isLoading, setIsLoading] = useState(false);
+    const [watchLater, setWatchLater] = useState('');
 
-        this.state = {
-            watchLater: [],
-            isLoading: false
-        }
-    }
+    useEffect(async () => {
+        setIsLoading(true);
 
-    async componentDidMount() {
-        this.setState({ isLoading: true })
-
-        const user_id = localStorage.getItem('user_id');
         const parameter = {
-            user_id: user_id
+            user_id: user.user_id
         }
         const watchLater = await apiCall.postAPI('http://localhost:3000/getWatchLater', parameter);
 
-        this.setState({ isLoading: false })
+        setIsLoading(false);
 
         if (watchLater.status) {
-            this.setState({ watchLater: watchLater.data });
+            setWatchLater(watchLater.data);
         }
+    }, [user]);
+
+    function routeChange(path) {
+        props.history.push(path);
     }
 
-    routeChange = (path) => {
-        this.props.history.push(path);
-    }
-
-    displayAlert = (type, alertMsg) => {
+    function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
                 position: "top-center"
@@ -56,56 +51,55 @@ class WatchLater extends React.Component {
         }
     }
 
-    playVideo = async (videoDetails) => {
+    async function playVideo(videoDetails) {
 
-        const user_id = localStorage.getItem('user_id');
         const parameter = {
-            user_id: user_id,
+            user_id: user.user_id,
             video_id: videoDetails
         }
         const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
 
-        this.routeChange('/playVideo');
+        routeChange('/playVideo');
     }
 
-    removeWatchLater = async (videoId) => {
-        const user_id = localStorage.getItem('user_id');
+    async function removeWatchLater(videoId) {
+
         const parameter = {
-            user_id: user_id,
+            user_id: user.user_id,
             video_id: videoId
         }
         const watchLater = await apiCall.postAPI('http://localhost:3000/removeWatchLater', parameter);
 
-        this.displayAlert(watchLater.status, watchLater.msg);
+        displayAlert(watchLater.status, watchLater.msg);
 
         if (watchLater.status) {
             window.location.reload();
         }
     }
 
-    removeAllWatchLater = async () => {
-        const user_id = localStorage.getItem('user_id');
+    async function removeAllWatchLater() {
+
         const parameter = {
-            user_id: user_id
+            user_id: user.user_id
         }
         const watchLater = await apiCall.postAPI('http://localhost:3000/removeAllWatchLater', parameter);
 
-        this.displayAlert(watchLater.status, watchLater.msg);
+        displayAlert(watchLater.status, watchLater.msg);
 
         if (watchLater.status) {
             window.location.reload();
         }
     }
 
-    renderWatchLater = () => {
-        return this.state.watchLater.map(vd => {
+    function renderWatchLater() {
+        return watchLater.map(vd => {
             return (
-                <tr key={vd._id}>
-                    <td className="WL-vd-queue">
+                <li key={vd._id}>
+                    <div className="WL-vd-queue">
                         <div className="video-list">
                             <div className="WL-remove-btn">
-                                <button onClick={() => this.removeWatchLater(vd.video_id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => this.playVideo(vd.video_id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                                <button onClick={() => removeWatchLater(vd.video_id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
+                                <button onClick={() => playVideo(vd.video_id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
                             </div>
                             <div className="WL-vd-content-container">
                                 <VideoPlayer className="WL-vd-content"
@@ -122,62 +116,58 @@ class WatchLater extends React.Component {
                             </div>
                             <div className="clear"></div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </li>
             );
         })
     }
 
-    render() {
-        const { watchLater, isLoading } = this.state;
-
-        if (isLoading) {
-            return (
+    if (isLoading) {
+        return (
+            <>
+                <div className="WL-vd-container">
+                    <div className="WL-header">
+                        <div className="title">Watch Later</div>
+                    </div>
+                    <div className="spinner">
+                        <div className="spinner-img">
+                            <Loader />
+                        </div>
+                        <div className="spinner-text"><h3>Loading...</h3></div>
+                    </div>
+                </div>
+            </>
+        );
+    } else {
+        return watchLater.length > 0
+            ? (
+                <>
+                    <div className="WL-container">
+                        <div className="WL-vd-container">
+                            <div className="WL-header">
+                                <div className="title">Watch Later</div>
+                                <div className="WL-clear-btn"><button onClick={() => removeAllWatchLater()} >Remove all</button></div>
+                            </div>
+                            <div className="clear"></div>
+                            <div>
+                                <table>
+                                    <tbody className="vd-video">{renderWatchLater()}</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <ToastContainer />
+                </>
+            ) : (
                 <>
                     <div className="WL-vd-container">
                         <div className="WL-header">
                             <div className="title">Watch Later</div>
                         </div>
-                        <div className="spinner">
-                            <div className="spinner-img">
-                                <Loader />
-                            </div>
-                            <div className="spinner-text"><h3>Loading...</h3></div>
-                        </div>
+                        <div className="no-watch-later"><h3>No Watch Later</h3></div>
                     </div>
                 </>
             );
-        } else {
-            return watchLater.length > 0
-                ? (
-                    <>
-                        <div className="WL-container">
-                            <div className="WL-vd-container">
-                                <div className="WL-header">
-                                    <div className="title">Watch Later</div>
-                                    <div className="WL-clear-btn"><button onClick={()=>this.removeAllWatchLater()} >Remove all</button></div>
-                                </div>
-                                <div className="clear"></div>
-                                <div>
-                                    <table>
-                                        <tbody className="vd-video">{this.renderWatchLater()}</tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <ToastContainer />
-                    </>
-                ) : (
-                    <>
-                        <div className="WL-vd-container">
-                            <div className="WL-header">
-                                <div className="title">Watch Later</div>
-                            </div>
-                            <div className="no-watch-later"><h3>No Watch Later</h3></div>
-                        </div>
-                    </>
-                );
-        }
     }
 }
 

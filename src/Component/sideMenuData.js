@@ -6,8 +6,6 @@ import { BiLike } from "react-icons/bi";
 import { RiHistoryLine } from "react-icons/ri";
 import { FiSettings } from "react-icons/fi";
 
-const isLogin = localStorage.getItem('isLogin');
-
 export const SidebarData = [
   {
     title: 'Home',

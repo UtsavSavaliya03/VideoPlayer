@@ -1,63 +1,49 @@
 import './Css/UserProfile.css';
-import React, { useState, useEffect, Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import axios from 'axios';
-import addPhoto from '../assets/Icons/add_a_photo.svg';
 import personIcon from '../assets/Icons/black_person.svg';
 import ApiCall from '../ServiceManager/apiCall';
 import { ToastContainer, toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { useCookies } from 'react-cookie';
+import Loader from '../ServiceManager/Loader';
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
 
 let apiCall = new ApiCall;
 
-class UserProfile extends React.Component {
+function UserProfile() {
 
-    constructor() {
-        super();
-        this.state = {
-            profilePicture: '',
-            profilePicture: '',
-            userName: '',
-            email: '',
-            fName: '',
-            lName: '',
-            contact: '',
-            country: '',
-            address: '',
-            file: ''
-        }
-    }
+    const [cookies, setCookie] = useCookies(["user"]);
+    const user = useSelector((state) => state.user);
 
-    async componentDidMount() {
-        const user_id = localStorage.getItem('user_id');
-        const parameter = {
-            user_id: user_id
-        }
-        const data = await apiCall.postAPI('http://localhost:3000/getUser', parameter);
-        console.log(data);
-        if (data.status) {
-            this.setState({
-                profilePicture: data.data.profile_picture,
-                userName: data.data.userName,
-                email: data.data.email,
-                fName: data.data.fName,
-                lName: data.data.lName,
-                contact: data.data.contact,
-                country: data.data.country,
-                address: data.data.address
-            })
-        }
-    }
+    const [isLoading, setIsLoading] = useState(false);
+    const [profilePicture, setProfilePicture] = useState('');
+    const [userName, setUserName] = useState('');
+    const [email, setEmail] = useState('');
+    const [fName, setFName] = useState('');
+    const [lName, setLName] = useState('');
+    const [contact, setContact] = useState('');
+    const [country, setCountry] = useState('');
+    const [address, setAddress] = useState('');
+    const [file, setFile] = useState(null);
 
-    getValue = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        this.setState({ [name]: value });
-    }
+    useEffect(async () => {
 
-    displayAlert = (type, alertMsg) => {
+        setProfilePicture(user.profile_picture);
+        setUserName(user.userName);
+        setEmail(user.email);
+        setFName(user.fName);
+        setLName(user.lName);
+        setContact(user.contact);
+        setCountry(user.country);
+        setAddress(user.address);
+
+    }, [user])
+
+    function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
                 position: "top-center"
@@ -69,20 +55,27 @@ class UserProfile extends React.Component {
         }
     }
 
-    updateHandler = async () => {
+    async function updateHandler() {
 
-        const user_id = localStorage.getItem('user_id');
+        if (contact === undefined || country === undefined || address === undefined) {
+            return (
+                displayAlert(false, "Please enter contact information...!")
+            );
+        }
+
+        setIsLoading(true);
+
         let formData = new FormData();
 
-        formData.append("user_id", user_id);
-        formData.append("file", this.state.file);
-        formData.append("userName", this.state.userName);
-        formData.append("email", this.state.email);
-        formData.append("fName", this.state.fName);
-        formData.append("lName", this.state.lName);
-        formData.append("contact", this.state.contact);
-        formData.append("country", this.state.country);
-        formData.append("address", this.state.address);
+        formData.append("user_id", user.user_id);
+        formData.append("file", file);
+        formData.append("userName", userName);
+        formData.append("email", email);
+        formData.append("fName", fName);
+        formData.append("lName", lName);
+        formData.append("contact", contact);
+        formData.append("country", country);
+        formData.append("address", address);
 
         const data = await axios.post('http://localhost:3000/updateProfile', formData)
             .then((response) => {
@@ -92,21 +85,36 @@ class UserProfile extends React.Component {
                 return error
             });
 
-        console.log(data);
-        this.displayAlert(data.status, data.msg);
+        console.log(data.data);
+        displayAlert(data.status, data.msg);
+        setIsLoading(false);
 
         if (data.status) {
-            window.location.reload();
+            setCookie("user", data.data, { path: '/' });
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
         }
     }
 
-    upload = () => {
+    function upload() {
         document.getElementById("selectImage").click()
     }
 
-    render() {
-        console.log(this.state.profilePicture);
-        console.log(this.state.file);
+    if (isLoading) {
+        return (
+            <>
+                <div className="user-profile">
+                    <div className="spinner">
+                        <div className="spinner-img">
+                            <Loader />
+                        </div>
+                        <div className="spinner-text"><h3>Loading...</h3></div>
+                    </div>
+                </div>
+            </>
+        );
+    } else {
         return (
             <>
                 <div className="profile-container">
@@ -115,7 +123,7 @@ class UserProfile extends React.Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <h1 className="title">Hello {this.state.fName}...</h1>
+                                        <h1 className="title">Hello {fName}...</h1>
                                     </div>
                                 </div>
                             </div>
@@ -124,16 +132,14 @@ class UserProfile extends React.Component {
                     <div className="data-container">
                         <div className="head">
                             <div className="profile">
-                                {/* <form encType="multipart/form-data"> */}
-                                <Avatar className="user-profile" onClick={this.upload} unstyled={true} src={this.state.profilePicture} name={this.state.fName + ' ' + this.state.lName} />
+                                <Avatar className="user-profile" onClick={() => upload()} unstyled={true} src={profilePicture} name={fName + ' ' + lName} />
                                 <input
                                     id="selectImage"
                                     accept="image/*"
                                     hidden
                                     type="file"
-                                    onChange={(event) => { this.setState({ file: event.target.files[0] }) }}
+                                    onChange={(event) => setFile(event.target.files[0])}
                                 />
-                                {/* </form> */}
                             </div>
                             <div className="account">
                                 <h3><span><img className="personIcon" src={personIcon} alt="person icon" /></span>My Account</h3>
@@ -144,49 +150,49 @@ class UserProfile extends React.Component {
                             <div className="user-info">
                                 <div className="title"><p>USER INFORMATION</p></div>
                                 <div className="row">
-                                    <div class="form-group col-6">
+                                    <div className="form-group col-6">
                                         <label>Username :</label>
                                         <input
                                             type="text"
                                             name="userName"
                                             className="form-control"
-                                            value={this.state.userName}
-                                            onChange={this.getValue}
+                                            value={userName}
+                                            onChange={(e) => { setUserName(e.target.value) }}
                                             placeholder="Username"
                                         />
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div className="form-group col-6">
                                         <label>Email Address :</label>
                                         <input
                                             type="email"
                                             name="email"
                                             className="form-control"
-                                            value={this.state.email}
-                                            onChange={this.getValue}
+                                            value={email}
+                                            onChange={(e) => { setEmail(e.target.value) }}
                                             placeholder="Email"
                                         />
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div class="form-group col-6">
+                                    <div className="form-group col-6">
                                         <label>First Name :</label>
                                         <input
                                             type="text"
                                             name="fName"
                                             className="form-control"
-                                            value={this.state.fName}
-                                            onChange={this.getValue}
+                                            value={fName}
+                                            onChange={(e) => { setFName(e.target.value) }}
                                             placeholder="First Name"
                                         />
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div className="form-group col-6">
                                         <label>Last Name :</label>
                                         <input
                                             type="text"
                                             name="lName"
                                             className="form-control"
-                                            value={this.state.lName}
-                                            onChange={this.getValue}
+                                            value={lName}
+                                            onChange={(e) => { setLName(e.target.value) }}
                                             placeholder="Last Name"
                                         />
                                     </div>
@@ -194,44 +200,44 @@ class UserProfile extends React.Component {
                                 <hr />
                                 <div className="title"><p>CONTACT INFORMATION</p></div>
                                 <div className="row">
-                                    <div class="form-group col-6">
+                                    <div className="form-group col-6">
                                         <label>Contact :</label>
                                         <input
                                             type="number"
                                             name="contact"
                                             className="form-control"
-                                            value={this.state.contact}
-                                            onChange={this.getValue}
+                                            value={contact}
+                                            onChange={(e) => { setContact(e.target.value) }}
                                             placeholder="Contact Number"
                                         />
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div className="form-group col-6">
                                         <label>Country :</label>
                                         <input
                                             type="text"
                                             name="country"
                                             className="form-control"
-                                            value={this.state.country}
-                                            onChange={this.getValue}
+                                            value={country}
+                                            onChange={(e) => { setCountry(e.target.value) }}
                                             placeholder="Country"
                                         />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <label>Address :</label>
                                     <input
                                         type="text"
                                         name="address"
                                         className="form-control"
-                                        value={this.state.address}
-                                        onChange={this.getValue}
+                                        value={address}
+                                        onChange={(e) => { setAddress(e.target.value) }}
                                         placeholder="Address"
                                     />
                                 </div>
                                 <button
                                     type="button"
                                     className="btn btn-primary mx-auto mt-4 d-block"
-                                    onClick={this.updateHandler}>
+                                    onClick={() => updateHandler()}>
                                     Update
                                 </button>
                             </div>
@@ -243,5 +249,4 @@ class UserProfile extends React.Component {
         );
     }
 }
-
 export default UserProfile;

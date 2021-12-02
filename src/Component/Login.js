@@ -1,28 +1,27 @@
 import './Css/form.css';
-import React from 'react';
+import React, { useState } from 'react';
 import ApiCall from '../ServiceManager/apiCall';
 import { ToastContainer, toast } from 'react-toastify';
+import { useCookies } from 'react-cookie';
+
+/* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
 
 
 let apiCall = new ApiCall;
 
-class Login extends React.Component {
+export default function Login(props) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            userOrEmail: '',
-            password: '',
-            isValid: false
-        }
+    const [cookies, setCookie] = useCookies("user");  
+    const [loginUser, setLoginUser] = useState([]);
+    const [userOrEmail, setUserOrEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    function routeChange(path) {
+        props.history.push(path);
     }
 
-    routeChange = (path) => {
-        this.props.history.push(path);
-    }
-
-    displayAlert = (type, alertMsg) => {
+    function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
                 position: "top-center"
@@ -34,72 +33,84 @@ class Login extends React.Component {
         }
     }
 
-    loginHandler = async () => {
+    async function loginHandler() {
         const parameter = {
-            userName: this.state.userOrEmail[0],
-            email: this.state.userOrEmail[0],
-            password: this.state.password[0]
+            userName: userOrEmail,
+            email: userOrEmail,
+            password: password
         }
 
-        //-----------------------------------------------------------------------------
-        // localStorage.setItem('email', this.state.userOrEmail);
-        //-----------------------------------------------------------------------------
-        
         const data = await apiCall.postAPI('http://localhost:3000/login', parameter);
         console.log(data);
-        
-        this.displayAlert(data.status, data.msg)
-        
+
+        displayAlert(data.status, data.msg)
+
         if (data.status) {
+            setLoginUser(data.data.user);
             localStorage.setItem('isLogin', true);
             localStorage.setItem('user_id', data.data.user[0].user_id);
-            this.routeChange('/');
+            setCookie("user", data.data.user[0], {path: '/'});
+            
+            const parameter = {
+                user_id: data.data.user[0].user_id,
+            }
+            
+            const channel = await apiCall.postAPI('http://localhost:3000/getUserChannel', parameter);
+            console.log(channel);
+            if (channel.status) {
+                setCookie("channel", channel.data, {path: '/'});
+            }
+
+            routeChange('/');
             window.location.reload();
         }
     }
 
-    validation = (value) => {
-        if (value != null) {
-            this.setState({ isValid: true });
-        }
-    }
-
-    getValue = (event) => {
-        let name = event.target.name;
-        let value = event.target.value;
-        this.setState({ [name]: [value] }, () => { this.validation(value) });
-    }
-
-    render() {
-        return (
-            <>
-                <div className="login-container">
-                    <div className="form-container">
-                        <h1 className="px-5 pt-5">Login</h1>
-                        <form className="p-5">
-                            <div className="form-group">
-                                <input type="text" className="form-control" name="userOrEmail" onChange={this.getValue} placeholder="Email or Username" required />
+    return (
+        <>
+            <div className="login-container">
+                <div className="form-container">
+                    <h1 className="px-5 pt-5">Login</h1>
+                    <form className="p-5">
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="userOrEmail"
+                                onChange={(e) => { setUserOrEmail(e.target.value) }}
+                                placeholder="Email or Username"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <input
+                                type="password"
+                                className="form-control"
+                                name="password"
+                                onChange={(e) => { setPassword(e.target.value) }}
+                                placeholder="Password"
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            className="btn btn-primary d-block my-4 mx-auto"
+                            onClick={() => loginHandler()}
+                            disabled={userOrEmail.length < 1}
+                        >
+                            Login
+                        </button>
+                        <div className="my-4">
+                            <div className="forgot-password">
+                                <a href="/sendMail">forgot password ?</a>
                             </div>
-                            <div className="form-group">
-                                <input type="password" className="form-control" name="password" onChange={this.getValue} placeholder="Password" required />
+                            <div className="signup">
+                                <a href="/signup">signup</a>
                             </div>
-                            <button className="btn btn-primary d-block my-4 mx-auto" onClick={this.loginHandler} disabled={!this.state.isValid} >Login</button>
-                            <div className="my-4">
-                                <div className="forgot-password">
-                                    <a href="/sendMail">forgot password ?</a>
-                                </div>
-                                <div className="signup">
-                                    <a href="/signup">signup</a>
-                                </div>
-                            </div>
-                            <div className="clear"></div>
-                        </form>
-                    </div>
+                        </div>
+                        <div className="clear"></div>
+                    </form>
                 </div>
-                <ToastContainer />
-            </>
-        );
-    }
+            </div>
+            <ToastContainer />
+        </>
+    );
 }
-
-export default Login;

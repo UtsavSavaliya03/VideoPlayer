@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Css/History.css';
 import VideoPlayer from 'react-video-js-player';
 import Video from '../assets/Video/Video.mp4';
@@ -7,45 +7,41 @@ import ApiCall from '../ServiceManager/apiCall';
 import Loader from '../ServiceManager/Loader';
 import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
 
 let apiCall = new ApiCall();
 
-class History extends React.Component {
+function History(props) {
+    
+    const user = useSelector((state)=> state.user);
+    const [isLoading, setIsLoading] = useState(false);
+    const [history, setHistory] = useState('');
 
-    constructor(props) {
-        super(props);
+    useEffect(async () => {
 
-        this.state = {
-            history: [],
-            isLoading: false
-        }
-    }
+        setIsLoading(true);
 
-    async componentDidMount() {
-
-        this.setState({ isLoading: true })
-
-        const user_id = localStorage.getItem('user_id');
         const parameter = {
-            user_id: user_id
+            user_id: user.user_id
         }
         const history = await apiCall.postAPI('http://localhost:3000/getHistory', parameter);
 
-        this.setState({ isLoading: false })
+        setIsLoading(false);
 
         if (history.status) {
-            this.setState({ history: history.data });
+            setHistory(history.data);
         }
+
+    }, [user])
+
+    function routeChange(path) {
+        props.history.push(path);
     }
 
-    routeChange = (path) => {
-        this.props.history.push(path);
-    }
-
-    displayAlert = (type, alertMsg) => {
+    function displayAlert(type, alertMsg) {
         if (type === true) {
             toast.success(alertMsg, {
                 position: "top-center"
@@ -57,56 +53,55 @@ class History extends React.Component {
         }
     }
 
-    playVideo = async (videoDetails) => {
-        
-        const user_id = localStorage.getItem('user_id');
+    async function playVideo(videoDetails) {
+
         const parameter = {
-            user_id: user_id,
+            user_id: user.user_id,
             video_id: videoDetails
         }
         await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
 
-        this.routeChange('/playVideo');
+        routeChange('/playVideo');
     }
 
-    removeHistory = async (videoId) => {
-        const user_id = localStorage.getItem('user_id');
+    async function removeHistory(videoId) {
+
         const parameter = {
-            user_id: user_id,
+            user_id: user.user_id,
             video_id: videoId
         }
         const history = await apiCall.postAPI('http://localhost:3000/removeHistory', parameter);
 
-        this.displayAlert(history.status, history.msg);
+        displayAlert(history.status, history.msg);
 
         if (history.status) {
             window.location.reload();
         }
     }
 
-    removeAllHistory = async () => {
-        const user_id = localStorage.getItem('user_id');
+    async function removeAllHistory() {
+
         const parameter = {
-            user_id: user_id
+            user_id: user.user_id
         }
         const history = await apiCall.postAPI('http://localhost:3000/removeAllHistory', parameter);
 
-        this.displayAlert(history.status, history.msg);
+        displayAlert(history.status, history.msg);
 
         if (history.status) {
             window.location.reload();
         }
     }
 
-    renderHistorr = () => {
-        return this.state.history.map(vd => {
+    function renderHistorr() {
+        return history.map(vd => {
             return (
-                <tr key={vd._id}>
-                    <td className="H-vd-queue">
+                <li key={vd._id}>
+                    <div className="H-vd-queue">
                         <div className="video-list">
                             <div className="H-remove-btn">
-                                <button onClick={() => this.removeHistory(vd.video_id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button  onClick={() => this.playVideo(vd.video_id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                                <button onClick={() => removeHistory(vd.video_id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
+                                <button onClick={() => playVideo(vd.video_id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
                             </div>
                             <div className="H-vd-content-container">
                                 <VideoPlayer className="H-vd-content"
@@ -124,65 +119,59 @@ class History extends React.Component {
                             </div>
                             <div className="clear"></div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </li>
             );
         })
     }
 
-    render() {
-
-        const { history, isLoading } = this.state;
-
-        if (isLoading) {
-            return (
+    if (isLoading) {
+        return (
+            <>
+                <div className="H-vd-container">
+                    <div className="H-header">
+                        <div className="title">Your History</div>
+                    </div>
+                    <div className="spinner">
+                        <div className="spinner-img">
+                            <Loader />
+                        </div>
+                        <div className="spinner-text"><h3>Loading...</h3></div>
+                    </div>
+                </div>
+            </>
+        );
+    } else {
+        return history.length > 0
+            ? (
+                <>
+                    <div className="H-container">
+                        <div className="H-vd-container">
+                            <div className="H-header">
+                                <div className="title">Your History</div>
+                                <div className="H-clear-btn"><button onClick={() => removeAllHistory()} >Clear all history</button></div>
+                            </div>
+                            <div className="clear"></div>
+                            <div>
+                                <div>
+                                    <div className="vd-video">{renderHistorr()}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ToastContainer />
+                </>
+            ) : (
                 <>
                     <div className="H-vd-container">
                         <div className="H-header">
                             <div className="title">Your History</div>
                         </div>
-                        <div className="spinner">
-                            <div className="spinner-img">
-                                <Loader />
-                            </div>
-                            <div className="spinner-text"><h3>Loading...</h3></div>
-                        </div>
+                        <div className="no-history"><h3>No History</h3></div>
                     </div>
                 </>
             );
-        } else {
-            return history.length > 0
-                ? (
-                    <>
-                        <div className="H-container">
-                            <div className="H-vd-container">
-                                <div className="H-header">
-                                    <div className="title">Your History</div>
-                                    <div className="H-clear-btn"><button onClick={() => this.removeAllHistory()} >Clear all history</button></div>
-                                </div>
-                                <div className="clear"></div>
-                                <div>
-                                    <div>
-                                        <div className="vd-video">{this.renderHistorr()}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <ToastContainer />
-                    </>
-                ) : (
-                    <>
-                        <div className="H-vd-container">
-                            <div className="H-header">
-                                <div className="title">Your History</div>
-                            </div>
-                            <div className="no-history"><h3>No History</h3></div>
-                        </div>
-                    </>
-                );
-        }
     }
-
 }
 
 export default History;
