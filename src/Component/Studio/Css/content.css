@@ -1,24 +1,24 @@
 .clear {
     clear: both;
 }
-.WL-vd-container {
+.CV-vd-container {
     margin: auto;
     padding: 0px 150px 30px;
     height: 94vh;
     overflow: auto;
 }
-.WL-vd-queue {
+.CV-vd-queue {
     width: 100%;
     margin-bottom: 10px;
 }
-.WL-vd-queue:hover {
+.CV-vd-queue:hover {
     background-color: rgb(238, 238, 238);
 }
-.WL-vd-queue .video-list {
+.CV-vd-queue .video-list {
     border: none;
     padding: 10px 130px 10px 80px;
 }
-.WL-header {
+.CV-header {
     widows: 100%;
     height: 55px;
     padding: 5px 40px;
@@ -28,17 +28,17 @@
     z-index: 1;
     top: 0;
 }
-.WL-header .title {
+.CV-header .title {
     float: left;
     width: 50%;
     font-size: 30px;
     font-weight: 600;
 }
-.WL-header .H-clear-btn {
+.CV-header .H-clear-btn {
     float: left;
     width: 50%;
 }
-.WL-clear-btn button {
+.CV-clear-btn button {
     float: right;
     padding: 0px;
     margin: 10px;
@@ -48,25 +48,25 @@
     font-weight: 600;
     color: white;
 }
-.WL-clear-btn button:hover {
+.CV-clear-btn button:hover {
     color: rgb(255, 29, 29);;
 }
-.WL-clear-btn button:focus {
+.CV-clear-btn button:focus {
     outline: none;
 }
-.WL-vd-queue:hover .WL-remove-btn button {
+.CV-vd-queue:hover .CV-remove-btn button {
     visibility: visible;
 }
-.WL-vd-content-container {
+.CV-vd-content-container {
     float: left;
     width: 300px;
     height: 140px;
 }
-.WL-vd-info {
+.CV-vd-info {
     float: left;
     display: contents;
 }
-.WL-remove-btn {
+.CV-remove-btn {
     float: left;
     width: 60px;
     margin: 13px auto;
@@ -87,11 +87,11 @@
     right: 100%;
     margin-left: -50px;
 }
-.WL-remove-btn .delete-btn:hover + .tooltip-text,
-.WL-remove-btn .play-btn:hover + .tooltip-text {
+.CV-remove-btn .delete-btn:hover + .tooltip-text,
+.CV-remove-btn .play-btn:hover + .tooltip-text {
     visibility: visible;
 }
-.WL-remove-btn button {
+.CV-remove-btn button {
     float: left;
     display: block;
     margin: 5px auto;
@@ -102,15 +102,15 @@
     color: rgb(165, 165, 165);
     visibility: hidden;
 }
-.WL-remove-btn .delete-btn:hover {
+.CV-remove-btn .delete-btn:hover {
     cursor: pointer;
     color: rgb(255, 29, 29);
 }
-.WL-remove-btn .play-btn:hover {
+.CV-remove-btn .play-btn:hover {
     cursor: pointer;
     color: rgb(34, 166, 255);
 }
-.WL-vd-info .WL-vd-name {
+.CV-vd-info .CV-vd-name {
     font-size: 18px;
     font-weight: 700;
     word-break: break-word;
@@ -121,22 +121,22 @@
     -webkit-box-orient: vertical;
     padding-top: 10px;
 }
-.WL-vd-content {
+.CV-vd-content {
     width: 280px;
     height: 140px;
 }
-.WL-vd-content .vjs-poster {
+.CV-vd-content .vjs-poster {
     pointer-events: none;
 }
-.WL-vd-info .WL-vd-channel,
-.WL-vd-info .WL-vd-views-time {
+.CV-vd-info .CV-vd-channel,
+.CV-vd-info .CV-vd-views-time {
     font-size: 18px;
     color: gray;
 }
-.WL-remove-btn button:focus {
+.CV-remove-btn button:focus {
     outline: none;
 }
-.WL-vd-container .signin-btn {
+.CV-vd-container .signin-btn {
     display: block;
     margin: 100px auto;
     text-align: center;
@@ -144,16 +144,16 @@
 
 /* --------------- Spinner ---------------- */
 
-.WL-vd-container .spinner {
+.CV-vd-container .spinner {
     margin: 200px auto;
 }
-.WL-vd-container .spinner-text {
+.CV-vd-container .spinner-text {
     margin: 10px auto;
     display: block;
     text-align: center;
     color: rgb(61, 61, 61);
 }
-.no-watch-later {
+.no-channel-video {
     display: block;
     margin: 100px auto;
     text-align: center;

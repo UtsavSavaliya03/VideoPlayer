@@ -2,7 +2,6 @@
     clear: both;
 }
 .header-container {
-    width: 100%;
     background-color: rgb(230, 230, 230);
     padding: 0 40px;
     position: sticky;
@@ -132,7 +131,7 @@ li:hover .dropdown {
     top: 0;
     left: -100%;
     transition: 850ms;
-    overflow: scroll;
+    /* overflow: scroll; */
   }
   
   .nav-menu.active {

@@ -125,6 +125,9 @@
     width: 280px;
     height: 140px;
 }
+.H-vd-content .vjs-poster {
+    pointer-events: none;
+}
 .H-vd-info .H-vd-channel,
 .H-vd-info .H-vd-views-time {
     font-size: 18px;
@@ -132,6 +135,11 @@
 }
 .H-remove-btn button:focus {
     outline: none;
+}
+.H-vd-container .signin-btn {
+    display: block;
+    margin: 100px auto;
+    text-align: center;
 }
 .H-history-date {
     color: blue;

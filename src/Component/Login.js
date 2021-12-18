@@ -12,8 +12,7 @@ let apiCall = new ApiCall;
 
 export default function Login(props) {
 
-    const [cookies, setCookie] = useCookies("user");  
-    const [loginUser, setLoginUser] = useState([]);
+    const [cookies, setCookie] = useCookies("user", "channel", "isLogin");  
     const [userOrEmail, setUserOrEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -46,13 +45,11 @@ export default function Login(props) {
         displayAlert(data.status, data.msg)
 
         if (data.status) {
-            setLoginUser(data.data.user);
-            localStorage.setItem('isLogin', true);
-            localStorage.setItem('user_id', data.data.user[0].user_id);
+            setCookie("isLogin", true, {path: '/'});
             setCookie("user", data.data.user[0], {path: '/'});
             
             const parameter = {
-                user_id: data.data.user[0].user_id,
+                user_id: data.data.user[0]._id,
             }
             
             const channel = await apiCall.postAPI('http://localhost:3000/getUserChannel', parameter);

@@ -1,5 +1,5 @@
 const reducer = (state='', action) => {
-    if (action.type === 'setLogin') {
+    if (action.type === 'setCurrentVd') {
         return action.payload;
     } else {
         return state;

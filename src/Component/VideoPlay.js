@@ -1,39 +1,98 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Css/VideoPlay.css';
-import VideoPlayer from 'react-video-js-player';
+import TimeAgo from 'react-timeago';
 import Avatar from 'react-avatar';
 import ApiCall from '../ServiceManager/apiCall';
+import { useHistory, useParams } from "react-router-dom";
 import { AiFillLike, AiFillHeart } from 'react-icons/ai';
 import { MdWatchLater } from 'react-icons/md';
-import Video from '../assets/Video/Video.mp4';
-import Cover from '../assets/Video/VideoCover/RakulPreet.jpg';
+import Loader from '../ServiceManager/Loader';
+import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
 
+
 let apiCall = new ApiCall;
 
-class VideoPlay extends React.Component {
+function VideoPlay() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentVideo: '',
-            userComment: '',
-            videoComments: '',
-            video: Video,
-            cover: Cover,
-            arr: [{ "_id": "11", "name": "Love me thoda aur | Rakul Preat Singh kohli kohli kohli kohli kohli", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "12", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "13", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "04", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "15", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "16", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "17", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "18", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "19", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }],
-            cmt: [{ "_id": "0131", "userName": "Test123", "cmt_text": "Nice content brother. Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother." }, { "_id": "0213222", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "01213", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "012135", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "015134", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "05923", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "0936", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "07", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "84608", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "09465", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "104651", "userName": "Test123", "cmt_text": "Nice content brother." }]
+    let history = useHistory();
+    let params = useParams();
+
+    const user = useSelector(state => state.user);
+    const isLogin = useSelector(state => state.isLogin);
+    const currentVd = useSelector(state => state.currentVd);
+
+    const [userComment, setUserComment] = useState('');
+    const [videoComments, setVideoComments] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isVdListLoading, setIsVdListLoading] = useState(false);
+    const [isCmtListLoading, setIsCmtListLoading] = useState(false);
+    const [videos, setVideos] = useState([]);
+    const [previousId, setPreviousId] = useState(null);
+
+    const [cmt, setCmt] = useState([{ "_id": "0131", "userName": "Test123", "cmt_text": "Nice content brother. Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother." }, { "_id": "0213222", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "01213", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "012135", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "015134", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "05923", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "0936", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "07", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "84608", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "09465", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "104651", "userName": "Test123", "cmt_text": "Nice content brother." }]);
+
+    /* ----------- Current Playing video's State ----------- */
+    const [playingVideo, setPlayingVideo] = useState([]);
+
+    if (previousId != null && previousId != atob(params.id)) {
+        window.location.reload();
+    }
+
+    useEffect(async () => {
+
+        /* --------------------------- Get currently playing Video ----------------------------- */
+
+        setIsLoading(true);
+
+        setPreviousId(atob(params.id));
+        const videoId = atob(params.id);
+        const url = `http://localhost:3000/getVideo/${videoId}`;
+        const playingVd = await apiCall.postAPI(url);
+
+        if (playingVd.status) {
+            setPlayingVideo(playingVd.data);
+            setIsLoading(false);
         }
+
+        /* --------------------------- Get Comment Api ----------------------------- */
+
+        setIsCmtListLoading(true);
+
+        const parameter = {
+            video_id: playingVd.data._id
+        }
+
+        const videoCmt = await apiCall.postAPI('http://localhost:3000/getComment', parameter);
+
+        
+        setIsCmtListLoading(false);
+        if (videoCmt.status) {
+            setVideoComments(videoCmt.data);
+        }
+
+        /* --------------------------- Get All Videos Api ----------------------------- */
+
+        setIsVdListLoading(true);
+
+        const videos = await apiCall.postAPI('http://localhost:3000/getAllVd');
+
+        setIsVdListLoading(false);
+
+        if (videos.status) {
+            setVideos(videos.data);
+        }
+
+    }, [user]);
+
+    function routeChange(path) {
+        history.push(path);
     }
 
-    routeChange = (path) => {
-        this.props.history.push(path);
-    }
-
-    displayAlert = (type, alertMsg) => {
+    function displayAlert(type, alertMsg) {
         if (type === true) {
             toast.success(alertMsg, {
                 position: "top-center"
@@ -45,104 +104,108 @@ class VideoPlay extends React.Component {
         }
     }
 
-    getValue = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        this.setState({ [name]: value });
-    }
+    async function playVideo(videoDetails) {
 
-    playVideo = async (videoDetails) => {
-
-        const user_id = localStorage.getItem('user_id');
-
-        if (user_id != null) {
+        if (isLogin) {
             const parameter = {
-                user_id: user_id,
+                user_id: user._id,
                 video_id: videoDetails._id
             }
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
-
-            console.log(history);
         }
-        console.log("Changed");
-        this.setState({ currentVideo: videoDetails })
-        this.routeChange('/playVideo');
-        // window.location.reload();
+
+        routeChange(`/playVideo/${btoa(videoDetails._id)}`);
+        window.location.reload();
     }
 
-    addFavourite = async () => {
-        // const user_id = localStorage.getItem('user_id');
-        // const video_id = ;
+    async function addFavourite() {
 
         // const parameter = {
-        //     user_id: user_id,
+        //     user_id: user.user_id,
         //     video_id: video_id
         // }
         // const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
 
-        // this.displayAlert(favourite.status, favourite.msg);
+        // displayAlert(favourite.status, favourite.msg);
     }
 
-    addWatchLater = async () => {
-        alert("123456789")
+    async function addWatchLater() {
+        if (isLogin) {
+            alert("123456789")
+        } else {
+            displayAlert(false, "Please, Sign in first...!");
+        }
     }
 
-    postComment = async () => {
-        const user_id = localStorage.getItem('user_id');
-        if (user_id != null) {
+    async function postComment() {
+        if (isLogin) {
             const parameter = {
-                user_id: user_id,
-                cmt_text: this.state.userComment,
+                user_id: user._id,
+                video_id: playingVideo._id,
+                cmt_text: userComment,
             }
             const comment = await apiCall.postAPI('http://localhost:3000/postComment', parameter);
 
             if (comment.status) {
-                this.setState({ userComment: '' })
+                setUserComment('');
             }
         }
     }
 
-    renderTableRows = () => {
-        return this.state.arr.map(vd => {
+    function renderVideosList() {
+        if (isVdListLoading) {
             return (
-                <tr key={vd._id}>
-                    <td className="vd-queue">
-                        <button onClick={() => { this.playVideo("03") }} >
-                            <div className="vd-content-container">
-                                <VideoPlayer className="vd-content"
-                                    src={this.state.video}
-                                    poster={this.state.cover}
-                                    bigPlayButton={false}
-                                    controls={false}
-                                />
-                            </div>
-                            <div className="vd-info">
-                                <div className="vd-name">{vd.name}</div>
-                                <div className="vd-channel">{vd.channel_name}</div>
-                                <div className="vd-views-time"><span>{vd.views}</span><span> • </span><span>{vd.time_line}</span></div>
-                            </div>
-                            <div className="clear"></div>
-                        </button>
-                    </td>
-                </tr>
+                <>
+                    <div className="container-fluid">
+                        <div className="spinner">
+                            <Loader />
+                        </div>
+                    </div>
+                </>
             );
-        })
+        } else {
+            return videos.map(vd => {
+                return (
+                    <tr key={vd._id}>
+                        <td className="vd-queue">
+                            <button onClick={() => { playVideo(vd) }} >
+                                <div className="vd-content-container">
+                                    <div>
+                                        <video className="vd-content" poster={vd.thumbnailImage_link} >
+                                            <source src={vd.videoContent_link} type="video/mp4" />
+                                        </video>
+                                    </div>
+                                </div>
+                                <div className="vd-info">
+                                    <div className="vd-name">{vd.videoName}</div>
+                                    <div className="vd-channel">{vd.channel_id.channelName}</div>
+                                    <div className="vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.createDate} />}</span></div>
+                                </div>
+                                <div className="clear"></div>
+                            </button>
+                        </td>
+                    </tr>
+                );
+            })
+        }
     }
 
-    renderComment = () => {
-        if (this.state.videoComments.length > 0) {
-            return this.state.cmt.map((cmt) => {
+    function renderComment() {
+        if (videoComments.length > 0) {
+            return cmt.map((cmt) => {
                 return (
                     <tr key={cmt._id}>
                         <div className="user-comment">
-                            <div className="user-profile">
-                                <Avatar className="user-profile-cmt" round size="45" name={cmt.userName} />
+                            <div className="row">
+                                <div className=" user-profile">
+                                    <Avatar className="user-profile-cmt" round size="45" name="Utsav Savaliy" />
+                                </div>
+                                <div className=" user-info">
+                                    <p className="name">Utsav Savalilya • <span className="cmt-time" >3 Days ago</span> </p>
+                                    <p className="comment">{cmt.cmt_text}</p>
+                                </div>
                             </div>
-                            <div className="user-info">
-                                <p className="name">{cmt.userName}</p>
-                                <p className="comment">{cmt.cmt_text}</p>
-                            </div>
-                            <div className="clear"></div>
+                            {/* <div className="clear"></div> */}
                         </div>
                     </tr>
                 );
@@ -156,69 +219,95 @@ class VideoPlay extends React.Component {
         }
     }
 
-    render() {
-        console.log("Current Video",this.state.currentVideo);
+    if (isLoading) {
+        return (
+            <>
+                <div className="container-fluid">
+                    <div className="spinner">
+                        <div className="spinner-img">
+                            <Loader />
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    } else {
         return (
             <>
                 <div>
                     <div className="video-container">
                         <div className="vd-playing-cotainer">
-                            <VideoPlayer className="vd-playing"
-                                src={this.state.video}
-                                poster={this.state.cover}
-                                bigPlayButton={false}
-                            // autoplay={true}
-                            />
+                            <div>
+                                <video className="vd-playing" poster={playingVideo.thumbnailImage_link} controls autoPlay >
+                                    <source src={playingVideo.videoContent_link} type="video/mp4"></source>
+                                </video>
+                            </div>
                             <div className="video-details">
                                 <div className="vd-name">
-                                    <p>Love me thoda aur | Rakul Preat Singh</p>
+                                    <p>{playingVideo.videoName}</p>
                                 </div>
                                 <div className="vd-view-time">
-                                    <span>300K</span><span> • </span><span>6 Years ago</span>
+                                    <span>300K</span><span> • </span><span>{<TimeAgo date={playingVideo.createDate} />}</span>
                                 </div>
                                 <div className="btn-container">
                                     <button><AiFillLike className="like-btn" /><span className="tooltip-text" >Like</span></button>
-                                    <button><AiFillHeart onClick={this.addFavourite} className="favourite-btn" /><span className="tooltip-text" >Favourite</span></button>
-                                    <button><MdWatchLater onClick={this.addWatchLater} className="watch-later-btn" /><span className="tooltip-text" >Watch Later</span></button>
+                                    <button><AiFillHeart onClick={() => addFavourite()} className="favourite-btn" /><span className="tooltip-text" >Favourite</span></button>
+                                    <button><MdWatchLater onClick={() => addWatchLater()} className="watch-later-btn" /><span className="tooltip-text" >Watch Later</span></button>
                                 </div>
                                 <div className="clear"></div>
                             </div><hr className="hr" />
                             <div className="channel">
                                 <div className="logo">
-                                    <Avatar className="channel-profile" round size="50" name={"Sony Music"} />
+                                    <Avatar className="channel-profile" src={playingVideo.channel_id.channel_profile} round size="50" name={playingVideo.channel_id.channelName} />
                                 </div>
                                 <div className="channel-info">
-                                    <p className="name">Sony Musics</p>
-                                    <p className="subscribers">30M Subscribers</p>
-                                </div>
-                                <div className="subscribe-btn">
-                                    <button className="btn btn-danger">SUBSCRIBE</button>
+                                    <p className="name">{playingVideo.channel_id.channelName}</p>
                                 </div>
                                 <div className="clear"></div>
                             </div><hr />
-                            <div className="add-comment">
-                                <div className="user-profile">
-                                    <Avatar className="user-profile-cmt" round size="45" name={"userName"} />
+                            {!isLogin &&
+                                <div className="signin-btn">
+                                    <h6 className="text-primary">Please, sign in to comment..
+                                        <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
                                 </div>
-                                <div className="user-info">
-                                    <input
-                                        className="cmt-input"
-                                        type="text"
-                                        name="userComment"
-                                        value={this.state.userComment}
-                                        placeholder="Commenting as Utsav Savaliya"
-                                        onChange={(e) => { this.setState({ userComment: e.target.value }) }}
-                                    />
-                                    {this.state.userComment.length > 0 && <button className="add-cmt-btn" onClick={() => { this.postComment() }} >COMMENT</button>}
+                            }
+                            {isLogin &&
+                                <div className="add-comment">
+                                    <div className="user-profile">
+                                        <Avatar className="user-profile-cmt" src={user.profile_picture} round size="45" name={user.fName + ' ' + user.lName} />
+                                    </div>
+                                    <div className="user-info">
+                                        <input
+                                            className="cmt-input"
+                                            type="text"
+                                            name="userComment"
+                                            value={userComment}
+                                            placeholder={`Commenting as ${user.fName} ${user.lName} `}
+                                            onChange={(e) => setUserComment(e.target.value)}
+                                        />
+                                        {userComment.length > 0 && <button className="add-cmt-btn" onClick={() => { postComment() }} >COMMENT</button>}
+                                    </div>
+                                    <div className="clear"></div>
                                 </div>
-                                <div className="clear"></div>
-                            </div><hr />
-                            <div className="comment-container">{this.renderComment()}</div>
+                            }
+                            <hr />
+                            {isCmtListLoading
+                                ?
+                                <>
+                                    <div className="comment-container">
+                                        <div className="spinner">
+                                            <Loader />
+                                        </div>
+                                    </div>
+                                </>
+                                :
+                                <div className="comment-container">{renderComment()}</div>
+                            }
                         </div>
                         <div className="vd-list-container">
                             <div>
                                 <table>
-                                    <tbody className="vd-video">{this.renderTableRows()}</tbody>
+                                    <tbody className="vd-video">{renderVideosList()}</tbody>
                                 </table>
                             </div>
                         </div>

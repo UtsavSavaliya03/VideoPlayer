@@ -8,7 +8,7 @@ input::-webkit-inner-spin-button {
     clear: both;
 }
 .login-container {
-    background: url(../../assets/Background/bg2.jpg);
+    /* background: url(../../assets/Background/bg2.jpg); */
     height: 100vh;
     background-position: unset;
     background-repeat: no-repeat;

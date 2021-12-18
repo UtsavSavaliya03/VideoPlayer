@@ -1,13 +1,17 @@
 .clear {
     clear: both;
 }
+.profile-container {
+    height: 94vh;
+    overflow: auto;
+}
 .profile-container .img-frame {
     height: 500px;
-    background: url("../../assets/Background/background_2.jpg") no-repeat 50% 50%;
+    background: url("../../assets/Background/background.jpg") no-repeat 50% 50%;
     background-size: cover;
     position: relative;
 }
-.overlay:before {
+.profile-container .overlay:before {
     content: "";
     position: absolute;
     left: 0;

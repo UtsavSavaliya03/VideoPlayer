@@ -125,6 +125,9 @@
     width: 280px;
     height: 140px;
 }
+.F-vd-content .vjs-poster {
+    pointer-events: none;
+}
 .F-vd-info .F-vd-channel,
 .F-vd-info .F-vd-views-time {
     font-size: 18px;
@@ -132,6 +135,11 @@
 }
 .F-remove-btn button:focus {
     outline: none;
+}
+.F-vd-container .signin-btn {
+    display: block;
+    margin: 100px auto;
+    text-align: center;
 }
 
 /* --------------- Spinner ---------------- */
@@ -145,6 +153,8 @@
     text-align: center;
     color: rgb(61, 61, 61);
 }
+
+/* ------------------------------------------ */
 .no-favourite {
     display: block;
     margin: 100px auto;

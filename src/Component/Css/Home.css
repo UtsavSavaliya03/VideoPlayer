@@ -15,6 +15,10 @@
 .vd-cover {
     width: 300px;
     height: 170px;
+    object-fit:cover;
+}
+.vd-cover .vjs-poster {
+    pointer-events: none;
 }
 .vd-flex-item .vd-info {
     width: 300px;
@@ -33,7 +37,10 @@
     width: 80%;
 }
 .channel-info > .vd-name {
+    margin-top: 5px;
+    margin-bottom: 5px;
     font-weight: 700;
+    font-size: 15px;
     text-align: left;
     padding-left: 5px;
     word-break: break-word;
@@ -58,4 +65,26 @@
 }
 .vd-flex-item button:focus{
     outline: none;
+}
+.home-container .vd-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.no-videos {
+    display: block;
+    margin: 200px auto;
+    text-align: center;
+}
+
+/* --------------- Spinner ---------------- */
+
+.home-container .spinner {
+    margin: 200px auto;
+}
+.home-container .spinner-text {
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+    color: rgb(61, 61, 61);
 }

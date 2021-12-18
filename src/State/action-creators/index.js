@@ -1,11 +1,11 @@
-// export const setLogin = (isLogin) => {
-//     return (dispatch)=>{
-//         dispatch({
-//             type: 'setLogin',
-//             payload: isLogin
-//         })
-//     }
-// }
+export const setLogin = (isLogin) => {
+    return (dispatch)=>{
+        dispatch({
+            type: 'setLogin',
+            payload: isLogin
+        })
+    }
+}
 
 export const setUser = (user) => {
     return (dispatch) => {
@@ -21,6 +21,15 @@ export const setUserChannel = (userChannel) => {
         dispatch({
             type: 'setUserChannel',
             payload: userChannel
+        })
+    }
+}
+
+export const setCurrentVd = (currentVd) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'setCurrentVd',
+            payload: currentVd
         })
     }
 }

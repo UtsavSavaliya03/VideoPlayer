@@ -1,6 +1,5 @@
 import './Css/Header.css';
 import React, { useState, useEffect } from 'react';
-import CreateChannel from './CreateChannel';
 import personIcon from '../assets/Icons/person.svg';
 import channelIcon from '../assets/Icons/channel.svg';
 import studioIcon from '../assets/Icons/studio.svg';
@@ -16,19 +15,19 @@ import { useSelector } from 'react-redux';
 export default function Header(props) {
 
     const [sidebar, setSidebar] = useState(false);
-    const [channelOpen, setChannelOpen] = useState(false);
     const showSidebar = () => setSidebar(!sidebar);
 
-    const studioPath = window.location.pathname;
+    const studioPath = (window.location.pathname);
 
     const [cookies, setCookie, removeCookie] = useCookies(["user", "channel"]);
+    const isLogin = useSelector(state => state.isLogin);
     const user = useSelector(state => state.user);
     const userChannel = useSelector(state => state.userChannel);
 
     function signOutHandler() {
-        localStorage.clear();
         removeCookie("user");
         removeCookie("channel");
+        removeCookie("isLogin");
     }
 
     return (
@@ -49,7 +48,7 @@ export default function Header(props) {
                                     <AiOutlineClose />
                                 </a>
                             </li>
-                            {((studioPath === '/studio' || studioPath === '/studio/upload') ? StudioSidebarData : SidebarData).map((item, index) => {
+                            {((studioPath.substr(0,7) === '/studio') ? StudioSidebarData : SidebarData).map((item, index) => {
                                 return (
                                     <li key={index} className={item.cName}>
                                         <a href={item.path}>
@@ -64,13 +63,19 @@ export default function Header(props) {
                 </div>
                 <div className="button-container">
                     <ul className="navigation">
-                        {cookies.user === undefined &&
+                        {!isLogin &&
                             <li>
                                 <a href='/login' className="btn btn-outline-dark">SIGN IN</a>
                             </li>}
-                        {cookies.user != undefined &&
+                        {isLogin &&
                             <li>
-                                <Avatar className="header-avatar" size="35" round={true} src={user.profile_picture} name={user.fName + " " + user.lName} />
+                                <Avatar
+                                    className="header-avatar"
+                                    size="35"
+                                    round={true}
+                                    src={user.profile_picture}
+                                    name={user.fName + " " + user.lName}
+                                />
                                 <div className="dropdown">
                                     <ul className="dropdown-content">
                                         <div className="user">
@@ -87,19 +92,21 @@ export default function Header(props) {
                                         <li>
                                             <a href="/userProfile" ><span><img src={personIcon} alt="person icon" /></span>My Account</a>
                                         </li>
-                                        {cookies.channel === undefined &&
+                                        {(userChannel === 'undefined')
+                                            ?
                                             <li>
-                                                <button onClick={() => { setChannelOpen(true); }}><span><img src={channelIcon} alt="Channel icon" /></span>Create Channel</button>
+                                                <a href="/createChannel" ><span><img src={channelIcon} alt="Channel icon" /></span>Create Channel</a>
+                                            </li>
+                                            :
+                                            <li>
+                                                <a target="_blank" href={`/studio/${btoa(userChannel._id)}`} ><span><img src={studioIcon} alt="Subscribtion icon" /></span>Studio</a>
                                             </li>
                                         }
-                                        {cookies.channel != undefined &&
+                                        {(studioPath !== '/studio' && studioPath !== '/studio/upload' && studioPath !== '/studio/myChannel') &&
                                             <li>
-                                                <a target="_blank" href="/studio" ><span><img src={studioIcon} alt="Subscribtion icon" /></span>Studio</a>
+                                                <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
                                             </li>
                                         }
-                                        <li>
-                                            <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
-                                        </li>
                                     </ul>
                                 </div>
                             </li>}
@@ -107,7 +114,6 @@ export default function Header(props) {
                 </div>
                 <div className="clear"></div>
             </div>
-            {channelOpen && <CreateChannel setOpenChannel={setChannelOpen} />}
         </>
     );
 }

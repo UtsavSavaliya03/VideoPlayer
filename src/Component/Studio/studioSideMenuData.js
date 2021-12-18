@@ -10,9 +10,15 @@ export const StudioSidebarData = [
         icon: <AiOutlineHome />,
         cName: 'nav-text'
     },
+    // {
+    //     title: 'My Channel',
+    //     path: '/studio',
+    //     icon: <BiBookContent />,
+    //     cName: 'nav-text'
+    // },
     {
         title: 'Content',
-        path: '/studio',
+        path: '/studio/myContent',
         icon: <BiBookContent />,
         cName: 'nav-text'
     },

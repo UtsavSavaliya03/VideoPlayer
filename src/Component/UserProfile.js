@@ -55,6 +55,31 @@ function UserProfile() {
         }
     }
 
+    function maxSelectFile(event) {
+        let files = event.target.files;
+        if (files.length > 1) {
+            toast.error('Maximum 1 file is allowed...!');
+            event.target.value = null;
+            return false;
+        } else {
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > 1000000) { // 1 MB
+                    displayAlert(false, "Fiel must be less then 1 Mb...!")
+                }
+            }
+        }
+        return true;
+    }
+
+    function fileChangeHandler(event) {
+        const file = event.target.files[0];
+        if (file != null) {
+            if (maxSelectFile(event)) {
+                setFile(file);
+            }
+        }
+    }
+
     async function updateHandler() {
 
         if (contact === undefined || country === undefined || address === undefined) {
@@ -67,7 +92,6 @@ function UserProfile() {
 
         let formData = new FormData();
 
-        formData.append("user_id", user.user_id);
         formData.append("file", file);
         formData.append("userName", userName);
         formData.append("email", email);
@@ -77,7 +101,9 @@ function UserProfile() {
         formData.append("country", country);
         formData.append("address", address);
 
-        const data = await axios.post('http://localhost:3000/updateProfile', formData)
+        const url = `http://localhost:3000/updateProfile/${user._id}`
+
+        const data = await axios.post(url, formData)
             .then((response) => {
                 return response.data
             })
@@ -85,15 +111,24 @@ function UserProfile() {
                 return error
             });
 
-        console.log(data.data);
         displayAlert(data.status, data.msg);
-        setIsLoading(false);
 
         if (data.status) {
-            setCookie("user", data.data, { path: '/' });
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+
+            const url = `http://localhost:3000/getUser/${user._id}`
+
+            setTimeout(async () => {
+                const updatedUser = await apiCall.postAPI(url);
+                console.log(updatedUser);
+
+                if (updatedUser.status) {
+                    setCookie("user", updatedUser.data, { path: '/' });
+                    setIsLoading(false);
+                }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }, 3000);
         }
     }
 
@@ -138,7 +173,7 @@ function UserProfile() {
                                     accept="image/*"
                                     hidden
                                     type="file"
-                                    onChange={(event) => setFile(event.target.files[0])}
+                                    onChange={(event) => fileChangeHandler(event)}
                                 />
                             </div>
                             <div className="account">

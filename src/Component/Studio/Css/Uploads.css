@@ -1,5 +1,5 @@
-.container-fluid {
-  padding: 50px 170px;
+.uploader-container {
+  padding: 50px 170px 200px;
   overflow: auto;
   height: 94vh;
 }
@@ -93,5 +93,4 @@
 }
 .react-tag-input__input {
   padding: 5px 10px !important;
-
 }
