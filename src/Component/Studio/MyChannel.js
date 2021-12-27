@@ -4,6 +4,7 @@ import Avatar from 'react-avatar';
 import { useHistory, useParams } from "react-router-dom";
 import Loader from '../../ServiceManager/Loader';
 import ApiCall from '../../ServiceManager/apiCall';
+import { useSelector } from 'react-redux';
 
 const apiCall = new ApiCall;
 
@@ -11,6 +12,8 @@ function MyChannel() {
 
     let history = useHistory();
     let params = useParams();
+
+    const userChannel = useSelector((state) => state.userChannel);
 
     const [isLoading, setIsLoading] = useState(true);
     const [channel, setChannel] = useState([]);
@@ -20,17 +23,18 @@ function MyChannel() {
         setIsLoading(true);
 
         const channelId = atob(params.id);
-        const url = `http://localhost:3000/getChannel/${channelId}`;
-        const channel = await apiCall.postAPI(url);
-
-        console.log(channelId);
-        console.log(channel);
+        const getChannelUrl = `http://localhost:3000/getChannel/${channelId}`;
+        const channel = await apiCall.postAPI(getChannelUrl);
 
         if (channel.status) {
             setIsLoading(false);
             setChannel(channel.data);
         }
     }, []);
+
+    function routeChange(path) {
+        history.push(path);
+    }
 
     if (isLoading) {
         return (
@@ -57,7 +61,9 @@ function MyChannel() {
                                 <h2 className="text-center my-3">{channel.channelName}</h2>
                             </div>
                             <div className="col-md-6 align-self-center text-center mx-auto">
-                                <button className="btn btn-outline-primary">Customize</button>
+                                { ( userChannel._id === atob(params.id) ) &&
+                                    <button onClick={() => {routeChange(`/studio/updateChannel/${btoa(userChannel._id)}`)}} className="btn btn-outline-primary" >Customize</button>
+                                }
                             </div>
                         </div>
                         <div className="m-5 p-4">

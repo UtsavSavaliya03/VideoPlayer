@@ -4,62 +4,34 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.clear {
-    clear: both;
-}
-.login-container {
-    /* background: url(../../assets/Background/bg2.jpg); */
-    height: 100vh;
-    background-position: unset;
+.container-fluid {
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.5) 100%), url(../../assets/Background/loginBackground.jpg);
+    height: 94vh;
+    background-position: left;
     background-repeat: no-repeat;
-    background-size: cover;
-    padding-top: 100px;
+    background-size: contain;
 }
-.login-container::after{
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(0,0,0,0.4);
-  }
-.form-container {
-    display: block;
-    margin: auto;
-    width: 30%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 999;
-    transform: translate(-50%,-50%);
-    background: rgba(255,255,255,0.04);
-    box-shadow: -1px 4px 28px 0px rgba(0,0,0,0.75);
+form input {
+    border-radius: 0px !important;
+    border: none !important;
+    border-bottom: 3px solid rgb(194, 194, 194) !important;
 }
-.form-container h1, h2 {
-    color: white;
-}
-.form-group {
-    margin-bottom: 20px;
-}
-.forgot-password {
-    float: left;
-}
-.signup {
-    float: right;
+form input:focus {
+    border-color: rgb(142, 142, 255) !important;
+    outline: none !important;
 }
 form a {
-    text-decoration: none;
-    color: white;
+    text-decoration: none !important;
+    color: black;
+}
+form .validation-error{
+    color: red;
+    font-weight: bold;
+    float: right;
+    margin: 0px ;
 }
 form button:disabled {
     cursor: not-allowed;
-}
-.validation-error {
-    height: 10px;
-    color: red;
-    float: right;
-    font-weight: 600;
 }
 
 @media only screen and (max-width: 1024px) {

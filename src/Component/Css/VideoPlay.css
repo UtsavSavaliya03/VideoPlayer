@@ -40,11 +40,23 @@ button .like-btn:hover {
     cursor: pointer;
     color: rgb(34, 166, 255);
 }
+button .like-btn-active {
+    cursor: pointer;
+    color: rgb(34, 166, 255);
+}
 button .favourite-btn:hover {
     cursor: pointer;
     color: rgb(255, 46, 46);
 }
+button .favourite-btn-active {
+    cursor: pointer;
+    color: rgb(255, 46, 46);
+}
 button .watch-later-btn:hover {
+    cursor: pointer;
+    color: rgb(255, 206, 115);
+}
+button .watch-later-btn-active {
     cursor: pointer;
     color: rgb(255, 206, 115);
 }
@@ -201,32 +213,15 @@ button .watch-later-btn:hover + .tooltip-text {
 .add-cmt-btn:focus {
     outline: none;
 }
-.user-comment .user-profile {
-    float: left;
-    width: 45px;
-    height: auto;
-    background-color: lightsalmon;
-    /* width: 100%; */
-    display: block;
-}
-.user-comment .user-info {
-    float: left;
-    background-color: lawngreen;
-    width: auto;
-    width: 60%;
-    display: block;
-}
 .user-profile-cmt span {
     font-size: 20px;
 }
 .user-info .name {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 500;
-    margin: 0 0 0 10px;
     width: 100%;
 }
 .user-info .comment {
-    margin: 0 0 0 10px;
     font-size: 15px;
     color: rgb(97, 97, 97);
 }

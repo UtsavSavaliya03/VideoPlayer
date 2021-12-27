@@ -61,17 +61,15 @@ class SendMail extends React.Component {
         const parameter = {
             email: this.state.email[0]
         }
-        
-        //-----------------------------------------------------------------------------
-        localStorage.setItem('email', this.state.email)
-        //-----------------------------------------------------------------------------
 
         const data = await apiCall.postAPI('http://localhost:3000/sendEmail', parameter);
-        console.log(data);
 
         this.displayAlert(data.status, data.msg);
 
         if (data.status) {
+            //-----------------------------------------------------------------------------
+            localStorage.setItem('email', this.state.email)
+            //-----------------------------------------------------------------------------
             this.routeChange('/resetPassword');
         }
     }
@@ -79,16 +77,25 @@ class SendMail extends React.Component {
     render() {
         return (
             <>
-                <div className="login-container">
-                    <div className="form-container">
-                        <h2 className="px-5 pt-5">Send Recovery Mail</h2>
-                        <form className="p-5">
-                            <div className="form-group">
-                                <p className="validation-error" >{this.state.emailError}</p>
-                                <input type="email" name="email" className="form-control" onChange={this.getValue} placeholder="Email" />
-                            </div>
-                            <button type="button" className="btn btn-primary d-block my-4 mx-auto" onClick={this.sendEmail} disabled={!this.state.emailValid} >Send</button>
-                        </form>
+                <div className="container-fluid">
+                    <div className="row pt-5">
+                        <div className="offset-md-7 col-md-4 mt-5">
+                            <h2 className="px-5 pt-5 text-primary">Send Recovery Mail</h2>
+                            <form className="p-5">
+                                <div className="form-group">
+                                    <p className="validation-error" >{this.state.emailError}</p>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        className="w-100 p-2"
+                                        onChange={this.getValue}
+                                        placeholder="Email"
+                                        autocomplete="off"
+                                    />
+                                </div>
+                                <button type="button" className="btn btn-primary d-block my-5 mx-auto" onClick={this.sendEmail} disabled={!this.state.emailValid} >Send</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <ToastContainer />

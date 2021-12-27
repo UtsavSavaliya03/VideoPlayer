@@ -9,10 +9,12 @@ import { MdWatchLater } from 'react-icons/md';
 import Loader from '../ServiceManager/Loader';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actionCreators from '../State/action-creators/index';
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
-
 
 let apiCall = new ApiCall;
 
@@ -21,10 +23,13 @@ function VideoPlay() {
     let history = useHistory();
     let params = useParams();
 
+    const dispatch = useDispatch();
+    const action = bindActionCreators(actionCreators, dispatch);
+
     const user = useSelector(state => state.user);
     const isLogin = useSelector(state => state.isLogin);
-    const currentVd = useSelector(state => state.currentVd);
 
+    
     const [userComment, setUserComment] = useState('');
     const [videoComments, setVideoComments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -32,8 +37,11 @@ function VideoPlay() {
     const [isCmtListLoading, setIsCmtListLoading] = useState(false);
     const [videos, setVideos] = useState([]);
     const [previousId, setPreviousId] = useState(null);
-
-    const [cmt, setCmt] = useState([{ "_id": "0131", "userName": "Test123", "cmt_text": "Nice content brother. Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother.Nice content brother." }, { "_id": "0213222", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "01213", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "012135", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "015134", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "05923", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "0936", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "07", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "84608", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "09465", "userName": "Test123", "cmt_text": "Nice content brother." }, { "_id": "104651", "userName": "Test123", "cmt_text": "Nice content brother." }]);
+    
+    /* ----------- Current Playing video's Like, Favourite, Watchlater State ----------- */
+    const isLiked = useSelector(state => state.isLiked);
+    const isFavourite = useSelector(state => state.isFavourite);
+    const isWatchLater = useSelector(state => state.isWatchLater);
 
     /* ----------- Current Playing video's State ----------- */
     const [playingVideo, setPlayingVideo] = useState([]);
@@ -58,6 +66,26 @@ function VideoPlay() {
             setIsLoading(false);
         }
 
+        /* ----------- Current Playing video's Like, Favourite, Watchlater State ----------- */
+
+        const vdParameters = {
+            user_id: user._id,
+            video_id: playingVd.data._id
+        }
+
+        if (isLogin) {
+            // Like
+            const like = await apiCall.postAPI('http://localhost:3000/checkLike', vdParameters);
+            action.setLike(like.status);
+
+            // Favourite
+            const favourite = await apiCall.postAPI('http://localhost:3000/checkFavourite', vdParameters);
+            action.setFavourite(favourite.status);
+
+            // Watch Later
+            const watchLater = await apiCall.postAPI('http://localhost:3000/checkWatchLater', vdParameters);
+            action.setWatchLater(watchLater.status);
+        }
         /* --------------------------- Get Comment Api ----------------------------- */
 
         setIsCmtListLoading(true);
@@ -68,7 +96,6 @@ function VideoPlay() {
 
         const videoCmt = await apiCall.postAPI('http://localhost:3000/getComment', parameter);
 
-        
         setIsCmtListLoading(false);
         if (videoCmt.status) {
             setVideoComments(videoCmt.data);
@@ -118,20 +145,47 @@ function VideoPlay() {
         window.location.reload();
     }
 
-    async function addFavourite() {
+    async function addLike(videoId) {
+        if (isLogin) {
+            const parameter = {
+                user_id: user._id,
+                video_id: videoId
+            }
+            const like = await apiCall.postAPI('http://localhost:3000/addLike', parameter);
 
-        // const parameter = {
-        //     user_id: user.user_id,
-        //     video_id: video_id
-        // }
-        // const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
-
-        // displayAlert(favourite.status, favourite.msg);
+            action.setLike(like.status);
+            displayAlert(like.status, like.msg);
+        } else {
+            displayAlert(false, "Please, Sign in first...!");
+        }
     }
 
-    async function addWatchLater() {
+    async function addFavourite(videoId) {
         if (isLogin) {
-            alert("123456789")
+            const parameter = {
+                user_id: user._id,
+                video_id: videoId
+            }
+            const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
+
+            action.setFavourite(favourite.status);
+            displayAlert(favourite.status, favourite.msg);
+        } else {
+            displayAlert(false, "Please, Sign in first...!");
+        }
+    }
+
+    async function addWatchLater(videoId) {
+        if (isLogin) {
+            const parameter = {
+                user_id: user._id,
+                video_id: videoId
+            }
+
+            const watchLater = await apiCall.postAPI('http://localhost:3000/addWatchLater', parameter);
+
+            action.setWatchLater(watchLater.status);
+            displayAlert(watchLater.status, watchLater.msg);
         } else {
             displayAlert(false, "Please, Sign in first...!");
         }
@@ -179,7 +233,7 @@ function VideoPlay() {
                                 <div className="vd-info">
                                     <div className="vd-name">{vd.videoName}</div>
                                     <div className="vd-channel">{vd.channel_id.channelName}</div>
-                                    <div className="vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.createDate} />}</span></div>
+                                    <div className="vd-views-time">{<TimeAgo date={vd.createDate} />}</div>
                                 </div>
                                 <div className="clear"></div>
                             </button>
@@ -192,22 +246,21 @@ function VideoPlay() {
 
     function renderComment() {
         if (videoComments.length > 0) {
-            return cmt.map((cmt) => {
+            return videoComments.map((cmt) => {
                 return (
-                    <tr key={cmt._id}>
+                    <li key={cmt._id}>
                         <div className="user-comment">
                             <div className="row">
-                                <div className=" user-profile">
-                                    <Avatar className="user-profile-cmt" round size="45" name="Utsav Savaliy" />
+                                <div className="user-profile">
+                                    <Avatar src={cmt.user_id.profile_picture} round size="45" name={`${cmt.user_id.fName} ${cmt.user_id.lName}`} />
                                 </div>
-                                <div className=" user-info">
-                                    <p className="name">Utsav Savalilya • <span className="cmt-time" >3 Days ago</span> </p>
-                                    <p className="comment">{cmt.cmt_text}</p>
+                                <div className=" user-info col">
+                                    <p className="name m-0">{`${cmt.user_id.fName} ${cmt.user_id.lName}`} • <span className="cmt-time" >{<TimeAgo date={cmt.createDate} />}</span> </p>
+                                    <p className="comment m-0">{cmt.cmt_text}</p>
                                 </div>
                             </div>
-                            {/* <div className="clear"></div> */}
                         </div>
-                    </tr>
+                    </li>
                 );
             });
         } else {
@@ -247,12 +300,12 @@ function VideoPlay() {
                                     <p>{playingVideo.videoName}</p>
                                 </div>
                                 <div className="vd-view-time">
-                                    <span>300K</span><span> • </span><span>{<TimeAgo date={playingVideo.createDate} />}</span>
+                                    {<TimeAgo date={playingVideo.createDate} />}
                                 </div>
                                 <div className="btn-container">
-                                    <button><AiFillLike className="like-btn" /><span className="tooltip-text" >Like</span></button>
-                                    <button><AiFillHeart onClick={() => addFavourite()} className="favourite-btn" /><span className="tooltip-text" >Favourite</span></button>
-                                    <button><MdWatchLater onClick={() => addWatchLater()} className="watch-later-btn" /><span className="tooltip-text" >Watch Later</span></button>
+                                    <button><AiFillLike onClick={() => addLike(playingVideo._id)} className={isLiked ? 'like-btn-active' : 'like-btn'} /><span className="tooltip-text" >Like</span></button>
+                                    <button><AiFillHeart onClick={() => addFavourite(playingVideo._id)} className={isFavourite ? 'favourite-btn-active' : 'favourite-btn'} /><span className="tooltip-text" >Favourite</span></button>
+                                    <button><MdWatchLater onClick={() => addWatchLater(playingVideo._id)} className={isWatchLater ? 'watch-later-btn-active' : 'watch-later-btn'} /><span className="tooltip-text" >Watch Later</span></button>
                                 </div>
                                 <div className="clear"></div>
                             </div><hr className="hr" />
@@ -278,6 +331,7 @@ function VideoPlay() {
                                     </div>
                                     <div className="user-info">
                                         <input
+                                            autocomplete="off"
                                             className="cmt-input"
                                             type="text"
                                             name="userComment"

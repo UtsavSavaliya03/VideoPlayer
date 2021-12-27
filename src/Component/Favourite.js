@@ -6,6 +6,7 @@ import ApiCall from '../ServiceManager/apiCall';
 import { useSelector } from 'react-redux';
 import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import Loader from '../ServiceManager/Loader';
+import { useHistory } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 /* ------------------ Import CSS ------------------- */
@@ -14,6 +15,8 @@ import 'react-toastify/dist/ReactToastify.css';
 let apiCall = new ApiCall;
 
 function Favourite(props) {
+
+    const history = useHistory();
 
     const isLogin = useSelector((state) => state.isLogin);
     const user = useSelector((state) => state.user);
@@ -37,24 +40,7 @@ function Favourite(props) {
     }, [user]);
 
     function routeChange(path) {
-        props.history.push(path);
-    }
-
-    console.log(favourite);
-
-    async function playVideo(videoDetails) {
-
-        if (isLogin) {
-
-            const parameter = {
-                user_id: user._id,
-                video_id: videoDetails
-            }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
-
-        }
-
-        routeChange('/playVideo');
+        history.push(path);
     }
 
     function displayAlert(type, alertMsg) {
@@ -67,6 +53,22 @@ function Favourite(props) {
                 position: "top-center"
             })
         }
+    }
+
+    async function playVideo(videoId) {
+
+        if (isLogin) {
+
+            const parameter = {
+                user_id: user._id,
+                video_id: videoId
+            }
+            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+
+        }
+
+        routeChange(`/playVideo/${btoa(videoId)}`);
+        window.location.reload();
     }
 
     async function removeFavourite(videoId) {
@@ -105,8 +107,8 @@ function Favourite(props) {
                     <div className="F-vd-queue">
                         <div className="video-list">
                             <div className="F-remove-btn">
-                                <button onClick={() => removeFavourite(vd.video_id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => playVideo(vd.video_id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                                <button onClick={() => removeFavourite(vd.video_id._id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
+                                <button onClick={() => playVideo(vd.video_id._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
                             </div>
                             <div className="F-vd-content-container">
                                 <VideoPlayer className="F-vd-content"
@@ -119,7 +121,7 @@ function Favourite(props) {
                             <div className="F-vd-info">
                                 <div className="F-vd-name">{vd.video_id.videoName}</div>
                                 <div className="F-vd-channel">{vd.video_id.channel_id.channelName}</div>
-                                <div className="F-vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.video_id.createDate} />}</span></div>
+                                <div className="F-vd-views-time">{<TimeAgo date={vd.video_id.createDate} />}</div>
                             </div>
                             <div className="clear"></div>
                         </div>

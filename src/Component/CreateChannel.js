@@ -56,10 +56,7 @@ function CreateChannel() {
 
         if(data.status) {
             setCookie("channel", data.data, {path: '/'});
-            setTimeout(()=>{
-                routeChange(`/studio/${btoa(data.data._id)}`);
-                window.location.reload();
-            }, 2000);
+            routeChange('/studio');
         }
 
         displayAlert(data.status, data.msg);

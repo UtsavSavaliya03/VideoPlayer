@@ -1,13 +1,11 @@
 import './Css/content.css';
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import TimeAgo from 'react-timeago';
 import VideoPlayer from 'react-video-js-player';
 import ApiCall from '../../ServiceManager/apiCall';
 import Loader from '../../ServiceManager/Loader';
 import { useHistory } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../../State/action-creators/index';
 import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 
 let apiCall = new ApiCall;
@@ -19,9 +17,6 @@ function Content() {
     const isLogin = useSelector((state) => state.isLogin);
     const user = useSelector((state) => state.user);
     const userChannel = useSelector((state) => state.userChannel);
-
-    const dispatch = useDispatch();
-    const action = bindActionCreators(actionCreators, dispatch);
 
     const [isLoading, setIsLoading] = useState(false);
     const [channelVideo, setChannelVideo] = useState('');
@@ -37,7 +32,6 @@ function Content() {
             channel_id: userChannel._id
         }
         const channelVideo = await apiCall.postAPI('http://localhost:3000/getChannelVd', parameter);
-        console.log(channelVideo);
 
         setIsLoading(false);
 
@@ -47,20 +41,19 @@ function Content() {
     }, [userChannel]);
 
 
-    async function playVideo(videoDetails) {
+    async function playVideo(videoId) {
 
         if (isLogin) {
 
             const parameter = {
                 user_id: user._id,
-                video_id: videoDetails
+                video_id: videoId
             }
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
 
         }
-
-        action.setCurrentVd(videoDetails);
-        routeChange('/playVideo');
+        routeChange(`/playVideo/${btoa(videoId)}`);
+        window.location.reload();
     }
 
     function renderChannelVideo() {
@@ -71,7 +64,7 @@ function Content() {
                         <div className="video-list">
                             <div className="CV-remove-btn">
                                 <button>< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => playVideo(vd)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                                <button onClick={() => playVideo(vd._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
                             </div>
                             <div className="CV-vd-content-container">
                                 <VideoPlayer className="CV-vd-content"
@@ -84,7 +77,7 @@ function Content() {
                             <div className="CV-vd-info">
                                 <div className="CV-vd-name">{vd.videoName}</div>
                                 <div className="CV-vd-channel">{vd.channel_id.channelName}</div>
-                                <div className="CV-vd-views-time"><span>300K</span><span> • </span><span>6 Years ago</span></div>
+                                <div className="CV-vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.createDate} />}</span></div>
                             </div>
                             <div className="clear"></div>
                         </div>
@@ -134,6 +127,10 @@ function Content() {
                         <div className="title">Your uploaded videos</div>
                     </div>
                     <div className="no-channel-video"><h3>No Videos yet</h3></div>
+                    <div className='text-center'>
+                        <h6 className="text-primary">Please, Upload your content...
+                            <span><a href="/studio/upload" className="btn btn-outline-primary ml-4">UPLOAD</a></span></h6>
+                    </div>
                 </div>
             </>
         );

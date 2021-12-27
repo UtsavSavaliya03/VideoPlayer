@@ -66,6 +66,7 @@ function History(props) {
         }
 
         routeChange(`/playVideo/${btoa(videoId)}`);
+        window.location.reload();
     }
 
     async function removeHistory(videoId) {
@@ -104,7 +105,7 @@ function History(props) {
                     <div className="H-vd-queue">
                         <div className="video-list">
                             <div className="H-remove-btn">
-                                <button onClick={() => removeHistory(vd._id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
+                                <button onClick={() => removeHistory(vd.video_id._id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
                                 <button onClick={() => playVideo(vd.video_id._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
                             </div>
                             <div className="H-vd-content-container">

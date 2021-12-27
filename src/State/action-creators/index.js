@@ -25,11 +25,29 @@ export const setUserChannel = (userChannel) => {
     }
 }
 
-export const setCurrentVd = (currentVd) => {
+export const setLike = (isLiked) => {
     return (dispatch) => {
         dispatch({
-            type: 'setCurrentVd',
-            payload: currentVd
+            type: 'setLike',
+            payload: isLiked
+        })
+    }
+}
+
+export const setFavourite = (isFavourite) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'setFavourite',
+            payload: isFavourite
+        })
+    }
+}
+
+export const setWatchLater = (isWatchLater) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'setWatchLater',
+            payload: isWatchLater
         })
     }
 }

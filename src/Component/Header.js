@@ -6,13 +6,26 @@ import studioIcon from '../assets/Icons/studio.svg';
 import logOutIcon from '../assets/Icons/logout.svg';
 import Avatar from 'react-avatar';
 import { GiHamburgerMenu } from "react-icons/gi";
-import { AiOutlineClose } from "react-icons/ai";
-import { SidebarData } from './sideMenuData';
-import { StudioSidebarData } from './Studio/studioSideMenuData';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 
+/* --------------- Icons ------------------- */
+
+import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { BiLike } from "react-icons/bi";
+import { RiHistoryLine } from "react-icons/ri";
+import { FiSettings } from "react-icons/fi";
+import { BiBookContent } from "react-icons/bi";
+import { FiUser } from "react-icons/fi";
+import { GoCloudUpload } from "react-icons/go";
+import { useHistory } from 'react-router-dom';
+
 export default function Header(props) {
+
+    const history = useHistory();
 
     const [sidebar, setSidebar] = useState(false);
     const showSidebar = () => setSidebar(!sidebar);
@@ -28,6 +41,11 @@ export default function Header(props) {
         removeCookie("user");
         removeCookie("channel");
         removeCookie("isLogin");
+        window.location.reload();
+    }
+
+    function routeChange(path) {
+        history.push(path);
     }
 
     return (
@@ -48,16 +66,74 @@ export default function Header(props) {
                                     <AiOutlineClose />
                                 </a>
                             </li>
-                            {((studioPath.substr(0,7) === '/studio') ? StudioSidebarData : SidebarData).map((item, index) => {
-                                return (
-                                    <li key={index} className={item.cName}>
-                                        <a href={item.path}>
-                                            <span className="sidebar-icon" >{item.icon}</span>
-                                            <span className="sidebar-title" >{item.title}</span>
+                            {(studioPath.substr(0, 7) === '/studio') ?
+                                (<>
+                                    <li className='nav-text'>
+                                        <a href="/">
+                                            <span className="sidebar-icon" ><AiOutlineHome /></span>
+                                            <span className="sidebar-title" >Home</span>
                                         </a>
                                     </li>
-                                );
-                            })}
+                                    <li className='nav-text'>
+                                        <a href="/studio">
+                                            <span className="sidebar-icon" ><BiBookContent /></span>
+                                            <span className="sidebar-title" >Content</span>
+                                        </a>
+                                    </li>
+                                    <li className='nav-text'>
+                                        <a href={`/studio/myChannel/${btoa(userChannel._id)}`}>
+                                            <span className="sidebar-icon" ><FiUser /></span>
+                                            <span className="sidebar-title">My Channel</span>
+                                        </a>
+                                    </li>
+                                    <li className='nav-text'>
+                                        <a href="/studio/upload">
+                                            <span className="sidebar-icon" ><GoCloudUpload /></span>
+                                            <span className="sidebar-title" >Upload Video</span>
+                                        </a>
+                                    </li>
+                                </>
+                                ) : (
+                                    <>
+                                        <li className='nav-text'>
+                                            <a href="/">
+                                                <span className="sidebar-icon" ><AiOutlineHome /></span>
+                                                <span className="sidebar-title" >Home</span>
+                                            </a>
+                                        </li>
+                                        <li className='nav-text'>
+                                            <a href="/likedVideos">
+                                                <span className="sidebar-icon" ><BiLike /></span>
+                                                <span className="sidebar-title">Liked Videos</span>
+                                            </a>
+                                        </li>
+                                        <li className='nav-text'>
+                                            <a href="/favourite">
+                                                <span className="sidebar-icon" ><AiOutlineHeart /></span>
+                                                <span className="sidebar-title">Favourite</span>
+                                            </a>
+                                        </li>
+                                        <li className='nav-text'>
+                                            <a href="/watchLater">
+                                                <span className="sidebar-icon" ><MdOutlineWatchLater /></span>
+                                                <span className="sidebar-title">Watch Latere</span>
+                                            </a>
+                                        </li>
+                                        <li className='nav-text'>
+                                            <a href="/history">
+                                                <span className="sidebar-icon" ><RiHistoryLine /></span>
+                                                <span className="sidebar-title">History</span>
+                                            </a>
+                                        </li>
+                                        <li className='nav-text'>
+                                            <a href="">
+                                                <span className="sidebar-icon" ><FiSettings /></span>
+                                                <span className="sidebar-title">Settings</span>
+                                            </a>
+                                        </li>
+                                    </>
+                                )
+                            }
                         </ul>
                     </nav>
                 </div>
@@ -65,7 +141,7 @@ export default function Header(props) {
                     <ul className="navigation">
                         {!isLogin &&
                             <li>
-                                <a href='/login' className="btn btn-outline-dark">SIGN IN</a>
+                                <button onClick={() => routeChange('/login')} className="btn-signin">SIGN IN</button>
                             </li>}
                         {isLogin &&
                             <li>
@@ -99,10 +175,10 @@ export default function Header(props) {
                                             </li>
                                             :
                                             <li>
-                                                <a target="_blank" href={`/studio/${btoa(userChannel._id)}`} ><span><img src={studioIcon} alt="Subscribtion icon" /></span>Studio</a>
+                                                <a target="_blank" href="/studio" ><span><img src={studioIcon} alt="Subscribtion icon" /></span>Studio</a>
                                             </li>
                                         }
-                                        {(studioPath !== '/studio' && studioPath !== '/studio/upload' && studioPath !== '/studio/myChannel') &&
+                                        {(studioPath.substr(0, 7) != '/studio') &&
                                             <li>
                                                 <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
                                             </li>

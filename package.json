@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.23.0",
+    "millify": "^4.0.0",
     "react": "^17.0.2",
     "react-avatar": "^3.10.0",
     "react-bootstrap": "^2.0.2",

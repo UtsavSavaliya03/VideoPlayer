@@ -13,14 +13,14 @@ import Header from './Component/Header';
 import Favourite from './Component/Favourite';
 import WatchLater from './Component/WatchLater';
 import History from './Component/History';
-import Uploads from './Component/Studio/Uploads';
 import { useCookies } from 'react-cookie';
+import CreateChannel from './Component/CreateChannel';
+import LikedVd from './Component/LikedVd';
 /* -------------------- Redux ----------------------- */
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from './State/action-creators/index';
 import { useSelector } from 'react-redux';
-import CreateChannel from './Component/CreateChannel';
 
 function App(props) {
 
@@ -93,6 +93,7 @@ function App(props) {
               <Route path="/favourite" component={Favourite} />
               <Route path="/watchLater" component={WatchLater} />
               <Route path="/history" component={History} />
+              <Route path="/likedVideos" component={LikedVd} />
             </Switch>
         </div>
       </Router>

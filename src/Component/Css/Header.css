@@ -42,6 +42,23 @@ ul , li {
 li:hover .dropdown {
     display: block;
 }
+.navigation .btn-signin {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+  color: rgb(145, 145, 145);
+  margin-top: 3px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+.navigation .btn-signin:hover {
+  color: black;
+  cursor: pointer;
+}
+.navigation .btn-signin:focus {
+  outline: none;
+}
 
 /* ---------------------- Dropdown ------------------------- */
 

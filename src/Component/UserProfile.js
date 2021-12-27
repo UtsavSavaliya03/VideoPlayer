@@ -119,7 +119,7 @@ function UserProfile() {
 
             setTimeout(async () => {
                 const updatedUser = await apiCall.postAPI(url);
-                console.log(updatedUser);
+                // console.log(updatedUser);
 
                 if (updatedUser.status) {
                     setCookie("user", updatedUser.data, { path: '/' });
@@ -190,7 +190,7 @@ function UserProfile() {
                                         <input
                                             type="text"
                                             name="userName"
-                                            className="form-control"
+                                            className="w-100 p-2"
                                             value={userName}
                                             onChange={(e) => { setUserName(e.target.value) }}
                                             placeholder="Username"
@@ -201,7 +201,7 @@ function UserProfile() {
                                         <input
                                             type="email"
                                             name="email"
-                                            className="form-control"
+                                            className="w-100 p-2"
                                             value={email}
                                             onChange={(e) => { setEmail(e.target.value) }}
                                             placeholder="Email"
@@ -214,7 +214,7 @@ function UserProfile() {
                                         <input
                                             type="text"
                                             name="fName"
-                                            className="form-control"
+                                            className="w-100 p-2"
                                             value={fName}
                                             onChange={(e) => { setFName(e.target.value) }}
                                             placeholder="First Name"
@@ -225,7 +225,7 @@ function UserProfile() {
                                         <input
                                             type="text"
                                             name="lName"
-                                            className="form-control"
+                                            className="w-100 p-2"
                                             value={lName}
                                             onChange={(e) => { setLName(e.target.value) }}
                                             placeholder="Last Name"
@@ -240,7 +240,7 @@ function UserProfile() {
                                         <input
                                             type="number"
                                             name="contact"
-                                            className="form-control"
+                                            className="w-100 p-2"
                                             value={contact}
                                             onChange={(e) => { setContact(e.target.value) }}
                                             placeholder="Contact Number"
@@ -251,7 +251,7 @@ function UserProfile() {
                                         <input
                                             type="text"
                                             name="country"
-                                            className="form-control"
+                                            className="w-100 p-2"
                                             value={country}
                                             onChange={(e) => { setCountry(e.target.value) }}
                                             placeholder="Country"
@@ -263,7 +263,7 @@ function UserProfile() {
                                     <input
                                         type="text"
                                         name="address"
-                                        className="form-control"
+                                        className="w-100 p-2"
                                         value={address}
                                         onChange={(e) => { setAddress(e.target.value) }}
                                         placeholder="Address"

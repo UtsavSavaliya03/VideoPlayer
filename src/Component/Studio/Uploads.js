@@ -27,7 +27,7 @@ function Uploads() {
     const [description, setDescription] = useState(null);
     const [category, setCategory] = useState(null);
     const [visibility, setVisibility] = useState(null);
-    const [tags, setTags] = useState([]);
+    const [videoTags, setvideoTags] = useState([]);
     const [uploadedPercentage, setUploadedPercentage] = useState(0);
 
     function uploadVideo() {
@@ -95,13 +95,13 @@ function Uploads() {
         formData.append("description", description);
         formData.append("category", category);
         formData.append("visibility", visibility);
-        formData.append("tags", tags);
+        formData.append("tags", videoTags);
 
         const progress = {
             onUploadProgress: ProgressEvent => {
                 const { loaded, total } = ProgressEvent;
                 let percent = Math.floor(loaded * 100 / total);
-                console.log(`${loaded} kb of ${total}  |  ${percent}%`);
+                // console.log(`${loaded} kb of ${total}  |  ${percent}%`);
 
                 if (percent < 100) {
                     setUploadedPercentage(percent);
@@ -234,9 +234,9 @@ function Uploads() {
                     <div className="col-12">
                         <ReactTagInput
                             allowUnique={true}
-                            tags={tags}
-                            value={tags}
-                            onChange={(newTags) => setTags(newTags)}
+                            tags={videoTags}
+                            value={videoTags}
+                            onChange={(newTags) => setvideoTags(newTags)}
                             placeholder="# Add tags...  (Type and press enter)"
                         />
                     </div>

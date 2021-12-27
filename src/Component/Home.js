@@ -6,24 +6,18 @@ import ApiCall from '../ServiceManager/apiCall';
 import { useSelector } from 'react-redux';
 import Loader from '../ServiceManager/Loader';
 import { useHistory } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../State/action-creators/index';
 
 let apiCall = new ApiCall();
+
+// •
 
 export default function Home(props) {
 
     let history = useHistory();
 
-    const dispatch = useDispatch();
-    const action = bindActionCreators(actionCreators, dispatch);
-
     const isLogin = useSelector((state) => state.isLogin);
     const user = useSelector((state) => state.user);
-    const currentVd = useSelector((state) => state.currentVd);
 
-    const [arr, setArr] = useState([{ "_id": "0145", "name": "Love me thoda aur | Rakul Preat Singh kohli kohli kohli kohli kohli kohli kohli kohli kohli", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "02775", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0335", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0584", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "05568", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0685", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0790", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0823", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "09", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0136", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "0118", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }, { "_id": "012879", "name": "Love me thoda aur | Rakul Preat Singh", "channel_name": "Sony music", "views": "300K", "time_line": "6 Years ago" }])
     const [isLoading, setIsLoading] = useState(false);
     const [videos, setVideos] = useState([]);
 
@@ -55,7 +49,6 @@ export default function Home(props) {
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
         }
 
-        action.setCurrentVd(videoDetails);
         routeChange(`/playVideo/${btoa(videoDetails._id)}`);
 
     }
@@ -78,7 +71,7 @@ export default function Home(props) {
                                 <div className="channel-info">
                                     <div className="vd-name">{vd.videoName}</div>
                                     <div className="vd-channel">{vd.channel_id.channelName}</div>
-                                    <div className="vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.createDate} />}</span></div>
+                                    <div className="vd-views-time">{<TimeAgo date={vd.createDate} />}</div>
                                 </div>
                                 <div className="clear"></div>
                             </div>
