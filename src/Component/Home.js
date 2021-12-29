@@ -103,7 +103,6 @@ export default function Home(props) {
                         <div className="vd-list">
                             {renderVideos()}
                         </div>
-                        {/* <img height='500px' width='500px' src={user.profile_picture} alt='asdfghjkl' /> */}
                     </div>
                 </>
             );
