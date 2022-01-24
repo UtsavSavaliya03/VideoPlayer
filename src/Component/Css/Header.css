@@ -1,22 +1,8 @@
-.clear {
-    clear: both;
-}
 .header-container {
     background-color: rgb(230, 230, 230);
-    padding: 0 40px;
     position: sticky;
     top: 0px;
     z-index: 2;
-}
-.menu {
-    float: left;
-}
-.button-container {
-    float: right;
-}
-.navigation li .header-avatar {
-    display: block;
-    height: 100%;
 }
 .navigation li {
     position: relative;
@@ -57,6 +43,33 @@ li:hover .dropdown {
   cursor: pointer;
 }
 .navigation .btn-signin:focus {
+  outline: none;
+}
+
+/* -------------------- search-bar ----------------------- */
+.search-input {
+  width: 90%;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: none;
+  background-color: rgb(243, 243, 243);
+}
+.search-input:focus {
+  outline: none;
+  background-color: white;
+}
+.btn-search {
+  width: 10%;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: none;
+  background-color: rgb(204, 204, 204);
+}
+.btn-search:hover {
+  cursor: pointer;
+  background-color: rgb(160, 160, 160);
+}
+.btn-search:focus {
   outline: none;
 }
 
@@ -137,6 +150,7 @@ li:hover .dropdown {
     height: 30px;
     width: 30px;
     margin-top: 5px;
+    cursor: pointer;
   }
   .nav-menu {
     background-color: rgb(230, 230, 230);
@@ -148,7 +162,6 @@ li:hover .dropdown {
     top: 0;
     left: -100%;
     transition: 850ms;
-    /* overflow: scroll; */
   }
   
   .nav-menu.active {
@@ -191,7 +204,6 @@ li:hover .dropdown {
   .nav-menu-items {
     width: 100%;
   }
-  
   .navbar-toggle {
     margin-bottom: 20px;
     text-align: right;

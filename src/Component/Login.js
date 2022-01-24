@@ -26,11 +26,11 @@ export default function Login(props) {
     function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -49,10 +49,10 @@ export default function Login(props) {
 
         if (data.status) {
             setCookie("isLogin", true, { path: '/' });
-            setCookie("user", data.data.user[0], { path: '/' });
+            setCookie("user", data.data.user, { path: '/' });
 
             const parameter = {
-                user_id: data.data.user[0]._id,
+                user_id: data.data.user._id,
             }
 
             const channel = await apiCall.postAPI('http://localhost:3000/getUserChannel', parameter);
@@ -69,47 +69,49 @@ export default function Login(props) {
     return (
         <>
             <div className="container-fluid">
-                <div className="row pt-5">
-                    <div className="offset-md-7 col-md-4 mt-5">
-                        <h1 className="px-5 pt-5 text-primary">Login</h1>
-                        <form className="p-5">
-                            <div className="form-group">
-                                <input
-                                    type="text"
-                                    className="w-100 p-2"
-                                    name="userOrEmail"
-                                    onChange={(e) => { setUserOrEmail(e.target.value) }}
-                                    placeholder="Email or Username"
-                                    autocomplete="off"
-                                />
-                            </div>
-                            <div className="form-group">
-                                <input
-                                    type="password"
-                                    className="w-100 p-2"
-                                    name="password"
-                                    onChange={(e) => { setPassword(e.target.value) }}
-                                    placeholder="Password"
-                                    autocomplete="off"
-                                />
-                            </div>
-                            <button
-                                type="button"
-                                className="btn btn-primary d-block mt-5 mb-4 mx-auto"
-                                onClick={() => loginHandler()}
-                                disabled={userOrEmail.length < 1}
-                            >
-                                Login
-                            </button>
-                            <div className="my-4">
-                                <div className="float-left">
-                                    <a href="/sendMail">forgot password ?</a>
+                <div className="background">
+                    <div className="row pt-md-5">
+                        <div className="offset-lg-7 offset-md-5 col-lg-4 col-md-7 mt-md-5">
+                            <h1 className="px-md-5 pt-5 text-primary">Login</h1>
+                            <form className="p-md-5 pt-4">
+                                <div className="form-group">
+                                    <input
+                                        type="text"
+                                        className="w-100 p-2"
+                                        name="userOrEmail"
+                                        onChange={(e) => { setUserOrEmail(e.target.value) }}
+                                        placeholder="Email or Username"
+                                        autoComplete="off"
+                                    />
                                 </div>
-                                <div className="float-right">
-                                    <a href="/signup">signup</a>
+                                <div className="form-group">
+                                    <input
+                                        type="password"
+                                        className="w-100 p-2"
+                                        name="password"
+                                        onChange={(e) => { setPassword(e.target.value) }}
+                                        placeholder="Password"
+                                        autoComplete="off"
+                                    />
                                 </div>
-                            </div>
-                        </form>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary d-block mt-5 mb-4 mx-auto"
+                                    onClick={() => loginHandler()}
+                                    disabled={userOrEmail.length < 1}
+                                >
+                                    Login
+                                </button>
+                                <div className="my-4">
+                                    <div className="float-left">
+                                        <a href="/sendMail">forgot password ?</a>
+                                    </div>
+                                    <div className="float-right">
+                                        <a href="/signup">signup</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

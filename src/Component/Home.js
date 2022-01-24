@@ -56,28 +56,27 @@ export default function Home(props) {
     function renderVideos() {
         return videos.map(vd => {
             return (
-                <li key={vd._id}>
-                    <div className="vd-flex-item">
+                <div key={vd._id}>
+                    <div className="vd-flex-item my-3 m-md-3">
                         <button onClick={() => { playVideo(vd) }}>
                             <div>
-                                <video className="vd-cover" poster={vd.thumbnailImage_link} >
+                                <video className='vd-cover' poster={vd.thumbnailImage_link} >
                                     <source src={vd.videoContent_link} type="video/mp4" />
                                 </video>
                             </div>
-                            <div className="vd-info">
-                                <div className="channel-logo">
+                            <div className="vd-info row">
+                                <div className="col-2 p-0">
                                     <Avatar round={true} src={vd.channel_id.channel_profile} size="40" name={vd.channel_id.channelName} />
                                 </div>
-                                <div className="channel-info">
+                                <div className="col-10 p-0 text-left">
                                     <div className="vd-name">{vd.videoName}</div>
-                                    <div className="vd-channel">{vd.channel_id.channelName}</div>
-                                    <div className="vd-views-time">{<TimeAgo date={vd.createDate} />}</div>
+                                    <div><p className='text-muted m-0'>{vd.channel_id.channelName}</p></div>
+                                    <div><p className='text-muted m-0'>{<TimeAgo date={vd.createDate} />}</p></div>
                                 </div>
-                                <div className="clear"></div>
                             </div>
                         </button>
                     </div>
-                </li>
+                </div>
             );
         })
     }
@@ -85,12 +84,12 @@ export default function Home(props) {
     if (isLoading) {
         return (
             <>
-                <div className="home-container">
+                <div className="container-fluid p-0">
                     <div className="spinner">
                         <div className="spinner-img">
                             <Loader />
                         </div>
-                        <div className="spinner-text"><h3>Loading...</h3></div>
+                        <div className="text-muted text-center"><h3>Loading...</h3></div>
                     </div>
                 </div>
             </>
@@ -99,8 +98,11 @@ export default function Home(props) {
         if (videos.length > 0) {
             return (
                 <>
-                    <div className="home-container">
-                        <div className="vd-list">
+                    <div className="container-fluid">
+                        <div className='py-5 bg-light my-2'>
+                            <h2 className='text-center'>Advertisement</h2>
+                        </div>
+                        <div className="d-flex flex-wrap justify-content-center">
                             {renderVideos()}
                         </div>
                     </div>
@@ -109,9 +111,7 @@ export default function Home(props) {
         } else {
             return (
                 <>
-                    <div className="home-container">
-                        <div className="no-videos"><h3>No Videos</h3></div>
-                    </div>
+                    <div className="no-videos"><h3 className='text-muted'>No Videos</h3></div>
                 </>
             );
         }

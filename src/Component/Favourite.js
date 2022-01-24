@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import './Css/CentralStyle.css';
 import './Css/Favourite.css';
-import VideoPlayer from 'react-video-js-player';
 import TimeAgo from 'react-timeago';
 import ApiCall from '../ServiceManager/apiCall';
 import { useSelector } from 'react-redux';
-import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import Loader from '../ServiceManager/Loader';
 import { useHistory } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -22,9 +21,13 @@ function Favourite(props) {
     const user = useSelector((state) => state.user);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [favourite, setFavourite] = useState('');
+    const [favourite, setFavourite] = useState([]);
 
-    useEffect(async () => {
+    useEffect(() => {
+        loadFavouriteVideos();
+    }, [user]);
+
+    async function loadFavouriteVideos() {
         setIsLoading(true);
 
         const parameter = {
@@ -37,7 +40,7 @@ function Favourite(props) {
         if (favourite.status) {
             setFavourite(favourite.data);
         }
-    }, [user]);
+    }
 
     function routeChange(path) {
         history.push(path);
@@ -46,11 +49,11 @@ function Favourite(props) {
     function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -68,21 +71,25 @@ function Favourite(props) {
         }
 
         routeChange(`/playVideo/${btoa(videoId)}`);
-        window.location.reload();
     }
 
-    async function removeFavourite(videoId) {
+    async function removeFavourite(e, videoId) {
+
+        e.stopPropagation();
 
         const parameter = {
             user_id: user._id,
             video_id: videoId
         }
-        const favourite = await apiCall.postAPI('http://localhost:3000/removeFavourite', parameter);
+        const removedFavourite = await apiCall.postAPI('http://localhost:3000/removeFavourite', parameter);
 
-        displayAlert(favourite.status, favourite.msg);
+        displayAlert(removedFavourite.status, removedFavourite.msg);
 
-        if (favourite.status) {
-            window.location.reload();
+        if (removedFavourite.status) {
+            loadFavouriteVideos();
+            if (favourite.length == 1) {
+                setFavourite([]);
+            }
         }
     }
 
@@ -96,105 +103,90 @@ function Favourite(props) {
         displayAlert(favourite.status, favourite.msg);
 
         if (favourite.status) {
-            window.location.reload();
+            loadFavouriteVideos();
+            setFavourite([]);
         }
     }
 
     function renderFavourite() {
         return favourite.map(vd => {
             return (
-                <li key={vd._id}>
-                    <div className="F-vd-queue">
-                        <div className="video-list">
-                            <div className="F-remove-btn">
-                                <button onClick={() => removeFavourite(vd.video_id._id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => playVideo(vd.video_id._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                <div key={vd._id} className="F-vd-queue mb-2">
+                    <button onClick={() => playVideo(vd.video_id._id)} className='vd-play-btn p-0 pt-1 w-100 text-left'>
+                        <div className="row mx-0 mx-lg-5">
+                            <div className="col-12 col-md-5 col-lg-3 p-md-0">
+                                <video width={'100%'} height={'160px'} poster={vd.video_id.thumbnailImage_link} >
+                                    <source src={vd.video_id.videoContent_link} type="video/mp4" />
+                                </video>
                             </div>
-                            <div className="F-vd-content-container">
-                                <VideoPlayer className="F-vd-content"
-                                    src={vd.video_id.videoContent_link}
-                                    poster={vd.video_id.thumbnailImage_link}
-                                    bigPlayButton={false}
-                                    controls={false}
-                                />
+                            <div className="col-12 col-md-7 col-lg-9 pr-md-0 pt-md-2">
+                                <div><h5 className='break-title-2'>{vd.video_id.videoName}</h5></div>
+                                <div><h5 className="text-muted">{vd.video_id.channel_id.channelName}</h5></div>
+                                <div><h6 className='text-muted'>{<TimeAgo date={vd.video_id.createDate} />}</h6></div>
+                                <button onClick={(e) => removeFavourite(e, vd.video_id._id)} className='remove-fvourites-btn p-0 mt-2'><i class="far fa-trash-alt mr-2"></i>REMOVE FROM FAVOURITES</button>
                             </div>
-                            <div className="F-vd-info">
-                                <div className="F-vd-name">{vd.video_id.videoName}</div>
-                                <div className="F-vd-channel">{vd.video_id.channel_id.channelName}</div>
-                                <div className="F-vd-views-time">{<TimeAgo date={vd.video_id.createDate} />}</div>
-                            </div>
-                            <div className="clear"></div>
                         </div>
-                    </div>
-                </li>
+                    </button>
+                </div>
             );
         })
     }
 
-    if (!isLogin) {
-        return (
-            <>
-                <div className="F-vd-container">
-                    <div className="F-header">
-                        <div className="title">Your Favourites</div>
+    return (
+        <>
+            <div className="F-container">
+                <div className="F-vd-container p-0 m-0 px-md-5 mx-md-5">
+                    <div className="F-header p-2 px-md-5 mb-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3 className='m-0'>Your Favourites</h3>
+                        </div>
+                        {favourite.length > 0 &&
+                            <div>
+                                <button
+                                    onClick={removeAllFavourite}
+                                    className='remove-all-fvourites-btn'
+                                    type="button"
+                                >
+                                    <i class="far fa-trash-alt mr-2"></i>
+                                    CLEAR ALL
+                                </button>
+                            </div>
+                        }
                     </div>
-                    <div className="signin-btn">
-                        <h6 className="text-primary">Please, sign in to see your favourite videos...
-                            <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
+                    <div className='py-5 bg-light my-2'>
+                        <h2 className='text-center'>Advertisement</h2>
+                    </div>
+                    <div>
+                        {isLoading
+                            ? (
+                                <div className="spinner">
+                                    <Loader />
+                                    <div className="text-center text-muted"><h3>Loading...</h3></div>
+                                </div>
+                            ) : (
+                                isLogin
+                                    ? (
+                                        favourite.length > 0
+                                            ? (
+                                                renderFavourite()
+                                            ) : (
+                                                <div className="no-favourite"><h3 className='text-muted'>No Favourites</h3></div>
+                                            )
+                                    ) : (
+                                        <div className="signin-btn">
+                                            <h6 className="text-primary">Please, sign in to see your favourite videos...
+                                                <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
+                                        </div>
+                                    )
+
+                            )
+                        }
                     </div>
                 </div>
-            </>
-        );
-    } else {
-
-        if (isLoading) {
-            return (
-                <>
-                    <div className="F-vd-container">
-                        <div className="F-header">
-                            <div className="title">Your Favourites</div>
-                        </div>
-                        <div className="spinner">
-                            <div className="spinner-img">
-                                <Loader />
-                            </div>
-                            <div className="spinner-text"><h3>Loading...</h3></div>
-                        </div>
-                    </div>
-                </>
-            );
-        } else {
-            return favourite.length > 0
-                ? (
-                    <>
-                        <div className="F-container">
-                            <div className="F-vd-container">
-                                <div className="F-header">
-                                    <div className="title">Your Favourites</div>
-                                    <div className="F-clear-btn"><button onClick={() => removeAllFavourite()}>Remove all</button></div>
-                                </div>
-                                <div className="clear"></div>
-                                <div>
-                                    <table>
-                                        <tbody className="vd-video">{renderFavourite()}</tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <ToastContainer />
-                    </>
-                ) : (
-                    <>
-                        <div className="F-vd-container">
-                            <div className="F-header">
-                                <div className="title">Your Favourites</div>
-                            </div>
-                            <div className="no-favourite"><h3>No Favourites</h3></div>
-                        </div>
-                    </>
-                );
-        }
-    }
+            </div>
+            <ToastContainer />
+        </>
+    );
 }
 
 export default Favourite;

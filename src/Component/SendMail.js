@@ -1,107 +1,89 @@
 import './Css/form.css';
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import ApiCall from '../ServiceManager/apiCall';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 let apiCall = new ApiCall();
 
-class SendMail extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: null,
-            emailError: null,
-            emailValid: false
-        }
+export default function SendMail() {
+
+    const history = useHistory();
+
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+
+    function routeChange(path) {
+        history.push(path);
     }
 
-    routeChange = (path) => {
-        this.props.history.push(path);
-    }
-
-    displayAlert = (type, alertMsg) => {
+    function displayAlert(type, alertMsg) {
         if (type === true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
 
-    getValue = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        this.setState({ [name]: [value] }, () => { this.validation(name, value) });
-    }
-
-    validation = (feildName, value) => {
-        let emailError = this.state.emailError;
-        let emailValid = this.state.emailValid;
-
-        switch (feildName) {
+    function validate(name, fieldValue) {
+        switch (name) {
             case 'email':
-                emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-                emailError = emailValid ? '' : 'Invalid Email...!';
-                break;
-            default:
+                const emailValid = fieldValue.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+                setEmailError(emailValid ? null : 'Enter valid email...!');
+                if (emailValid) {
+                    setEmail(fieldValue);
+                }
                 break;
         }
-
-        this.setState({
-            emailError: emailError,
-            emailValid: emailValid
-        });
     }
 
-    sendEmail = async () => {
+    async function sendEmail() {
         const parameter = {
-            email: this.state.email[0]
+            email: email
         }
 
         const data = await apiCall.postAPI('http://localhost:3000/sendEmail', parameter);
-
-        this.displayAlert(data.status, data.msg);
+        displayAlert(data.status, data.msg);
 
         if (data.status) {
             //-----------------------------------------------------------------------------
-            localStorage.setItem('email', this.state.email)
+            localStorage.setItem('email', email)
             //-----------------------------------------------------------------------------
-            this.routeChange('/resetPassword');
+            routeChange('/resetPassword');
         }
     }
 
-    render() {
-        return (
-            <>
-                <div className="container-fluid">
-                    <div className="row pt-5">
-                        <div className="offset-md-7 col-md-4 mt-5">
-                            <h2 className="px-5 pt-5 text-primary">Send Recovery Mail</h2>
-                            <form className="p-5">
+    return (
+        <>
+            <div className="container-fluid">
+                <div className="background">
+                    <div className="row pt-md-5">
+                        <div className="offset-lg-7 offset-md-5 col-lg-4 col-md-7 mt-md-5">
+                            <h2 className="px-md-5 pt-5 text-primary">Send Recovery Mail</h2>
+                            <form className="p-md-5">
                                 <div className="form-group">
-                                    <p className="validation-error" >{this.state.emailError}</p>
+                                    <p className="validation-error" >{emailError}</p>
                                     <input
                                         type="email"
                                         name="email"
                                         className="w-100 p-2"
-                                        onChange={this.getValue}
+                                        onChange={(e) => validate(e.target.name, e.target.value)}
                                         placeholder="Email"
-                                        autocomplete="off"
+                                        autoComplete="off"
                                     />
                                 </div>
-                                <button type="button" className="btn btn-primary d-block my-5 mx-auto" onClick={this.sendEmail} disabled={!this.state.emailValid} >Send</button>
+                                <button type="button" className="btn btn-primary d-block my-5 mx-auto" onClick={() => sendEmail()} disabled={emailError != null} >Send</button>
                             </form>
                         </div>
                     </div>
                 </div>
-                <ToastContainer />
-            </>
-        )
-    }
+            </div>
+            <ToastContainer />
+        </>
+    )
 }
-
-export default SendMail;

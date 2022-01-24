@@ -47,11 +47,11 @@ class ResetPassword extends React.Component {
     displayAlert = (type, alertMsg) => {
         if (type === true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -122,53 +122,54 @@ class ResetPassword extends React.Component {
         return (
             <>
                 <div className="container-fluid">
-                    <div className="row pt-5">
-                        <div className="offset-md-7 col-md-4 mt-5">
-                            {/* <h5 className='px-5 py-5 text-center'>Your OTP will be expire in <span> {this.state.minutes} : {this.state.seconds}</span></h5> */}
-                            <h1 className="px-5 mt-4 text-primary">Reset Password</h1>
-                            <form className="p-5">
-                                <div className="form-group">
-                                    <input
-                                        type="number"
-                                        name="otp"
-                                        className="w-100 p-2"
-                                        onChange={this.getValue}
-                                        placeholder="Otp"
-                                        autocomplete="off"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <p className="validation-error" >{this.state.passwordError}</p>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        className="w-100 p-2"
-                                        onChange={this.getValue}
-                                        placeholder="Password"
-                                        autocomplete="off"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <p className="validation-error" >{this.state.confirmPassError}</p>
-                                    <input
-                                        type="password"
-                                        name="confirmPass"
-                                        className="w-100 p-2"
-                                        onChange={this.getValue}
-                                        placeholder="Confirm Password"
-                                        autocomplete="off"
-                                    />
-                                </div>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary d-block my-5 mx-auto"
-                                    onClick={this.ResetPassword}
-                                    disabled={!this.state.passwordValid || !this.state.confirmPassValid}
-                                >
-                                    Reset Password
-                                </button>
-                                <h5 className={(this.state.seconds) % 2 === 0 ? 'text-danger text-center' : 'text-success text-center'}>Your OTP will be expire in <span> {this.state.minutes} : {this.state.seconds}</span></h5>
-                            </form>
+                    <div className="background">
+                        <div className="row pt-md-5">
+                            <div className="offset-lg-7 offset-md-5 col-lg-4 col-md-7 mt-md-5">
+                                <h1 className="px-md-5 mt-4 text-primary">Reset Password</h1>
+                                <form className="p-md-5 pt-4">
+                                    <div className="form-group">
+                                        <input
+                                            type="number"
+                                            name="otp"
+                                            className="w-100 p-2"
+                                            onChange={this.getValue}
+                                            placeholder="Otp"
+                                            autocomplete="off"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <p className="validation-error" >{this.state.passwordError}</p>
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            className="w-100 p-2"
+                                            onChange={this.getValue}
+                                            placeholder="Password"
+                                            autocomplete="off"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <p className="validation-error" >{this.state.confirmPassError}</p>
+                                        <input
+                                            type="password"
+                                            name="confirmPass"
+                                            className="w-100 p-2"
+                                            onChange={this.getValue}
+                                            placeholder="Confirm Password"
+                                            autocomplete="off"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary d-block my-5 mx-auto"
+                                        onClick={this.ResetPassword}
+                                        disabled={!this.state.passwordValid || !this.state.confirmPassValid}
+                                    >
+                                        Reset Password
+                                    </button>
+                                    <h5 className={(this.state.seconds) % 2 === 0 ? 'text-danger text-center' : 'text-success text-center'}>Your OTP will be expire in <span> {this.state.minutes} : {this.state.seconds}</span></h5>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

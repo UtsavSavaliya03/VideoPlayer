@@ -40,7 +40,6 @@ function UserProfile() {
         setContact(user.contact);
         setCountry(user.country);
         setAddress(user.address);
-
     }, [user])
 
     function displayAlert(type, alertMsg) {

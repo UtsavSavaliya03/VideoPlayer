@@ -26,10 +26,10 @@ function VideoPlay() {
     const dispatch = useDispatch();
     const action = bindActionCreators(actionCreators, dispatch);
 
-    const user = useSelector(state => state.user);
     const isLogin = useSelector(state => state.isLogin);
+    const user = useSelector(state => state.user);
 
-    
+
     const [userComment, setUserComment] = useState('');
     const [videoComments, setVideoComments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +37,7 @@ function VideoPlay() {
     const [isCmtListLoading, setIsCmtListLoading] = useState(false);
     const [videos, setVideos] = useState([]);
     const [previousId, setPreviousId] = useState(null);
-    
+
     /* ----------- Current Playing video's Like, Favourite, Watchlater State ----------- */
     const isLiked = useSelector(state => state.isLiked);
     const isFavourite = useSelector(state => state.isFavourite);
@@ -47,11 +47,15 @@ function VideoPlay() {
     const [playingVideo, setPlayingVideo] = useState([]);
 
     if (previousId != null && previousId != atob(params.id)) {
-        window.location.reload();
+        setDataHandler();
     }
 
     useEffect(async () => {
+        setDataHandler();
+        setCommentHandler();
+    }, [user]);
 
+    async function setDataHandler() {
         /* --------------------------- Get currently playing Video ----------------------------- */
 
         setIsLoading(true);
@@ -86,20 +90,6 @@ function VideoPlay() {
             const watchLater = await apiCall.postAPI('http://localhost:3000/checkWatchLater', vdParameters);
             action.setWatchLater(watchLater.status);
         }
-        /* --------------------------- Get Comment Api ----------------------------- */
-
-        setIsCmtListLoading(true);
-
-        const parameter = {
-            video_id: playingVd.data._id
-        }
-
-        const videoCmt = await apiCall.postAPI('http://localhost:3000/getComment', parameter);
-
-        setIsCmtListLoading(false);
-        if (videoCmt.status) {
-            setVideoComments(videoCmt.data);
-        }
 
         /* --------------------------- Get All Videos Api ----------------------------- */
 
@@ -112,8 +102,25 @@ function VideoPlay() {
         if (videos.status) {
             setVideos(videos.data);
         }
+    }
 
-    }, [user]);
+    async function setCommentHandler() {
+        /* --------------------------- Get Comment ----------------------------- */
+
+        const videoId = atob(params.id);
+        setIsCmtListLoading(true);
+
+        const parameter = {
+            video_id: videoId
+        }
+
+        const videoCmt = await apiCall.postAPI('http://localhost:3000/getComment', parameter);
+
+        setIsCmtListLoading(false);
+        if (videoCmt.status) {
+            setVideoComments(videoCmt.data);
+        }
+    }
 
     function routeChange(path) {
         history.push(path);
@@ -131,17 +138,17 @@ function VideoPlay() {
         }
     }
 
-    async function playVideo(videoDetails) {
+    async function playVideo(videoId) {
 
         if (isLogin) {
             const parameter = {
                 user_id: user._id,
-                video_id: videoDetails._id
+                video_id: videoId
             }
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
         }
 
-        routeChange(`/playVideo/${btoa(videoDetails._id)}`);
+        routeChange(`/playVideo/${btoa(videoId)}`);
         window.location.reload();
     }
 
@@ -154,7 +161,6 @@ function VideoPlay() {
             const like = await apiCall.postAPI('http://localhost:3000/addLike', parameter);
 
             action.setLike(like.status);
-            displayAlert(like.status, like.msg);
         } else {
             displayAlert(false, "Please, Sign in first...!");
         }
@@ -169,7 +175,6 @@ function VideoPlay() {
             const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
 
             action.setFavourite(favourite.status);
-            displayAlert(favourite.status, favourite.msg);
         } else {
             displayAlert(false, "Please, Sign in first...!");
         }
@@ -185,7 +190,6 @@ function VideoPlay() {
             const watchLater = await apiCall.postAPI('http://localhost:3000/addWatchLater', parameter);
 
             action.setWatchLater(watchLater.status);
-            displayAlert(watchLater.status, watchLater.msg);
         } else {
             displayAlert(false, "Please, Sign in first...!");
         }
@@ -202,6 +206,7 @@ function VideoPlay() {
 
             if (comment.status) {
                 setUserComment('');
+                setCommentHandler();
             }
         }
     }
@@ -222,7 +227,7 @@ function VideoPlay() {
                 return (
                     <tr key={vd._id}>
                         <td className="vd-queue">
-                            <button onClick={() => { playVideo(vd) }} >
+                            <button onClick={() => { playVideo(vd._id) }} >
                                 <div className="vd-content-container">
                                     <div>
                                         <video className="vd-content" poster={vd.thumbnailImage_link} >
@@ -296,6 +301,9 @@ function VideoPlay() {
                                 </video>
                             </div>
                             <div className="video-details">
+                                <div className="tags text-primary">
+                                    {playingVideo.tags}
+                                </div>
                                 <div className="vd-name">
                                     <p>{playingVideo.videoName}</p>
                                 </div>
@@ -331,7 +339,7 @@ function VideoPlay() {
                                     </div>
                                     <div className="user-info">
                                         <input
-                                            autocomplete="off"
+                                            autoComplete="off"
                                             className="cmt-input"
                                             type="text"
                                             name="userComment"
@@ -360,9 +368,10 @@ function VideoPlay() {
                         </div>
                         <div className="vd-list-container">
                             <div>
-                                <table>
-                                    <tbody className="vd-video">{renderVideosList()}</tbody>
-                                </table>
+                                <div className='py-5 bg-light'>
+                                    <h2 className='text-center'>Advertisement</h2>
+                                </div>
+                                <div className="vd-video">{renderVideosList()}</div>
                             </div>
                         </div>
                         <div className="clear"></div>

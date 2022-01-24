@@ -94,3 +94,32 @@
 .react-tag-input__input {
   padding: 5px 10px !important;
 }
+.input-btn .file-name {
+  overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.reactEasyCrop_Container {
+  z-index: 1;
+}
+/* .modalBackground {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(153, 153, 153, 0.8);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* .modalContainer {
+  display: block;
+  margin: auto;
+  width: 50%;
+  border-radius: 15px;
+  box-shadow: 5px 10px 18px #888888;
+  background-image: linear-gradient(to bottom right, #d5eeff, rgb(255, 224, 228), #cbe9ff, rgb(255, 205, 214));
+} */

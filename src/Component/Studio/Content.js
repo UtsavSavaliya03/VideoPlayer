@@ -7,6 +7,8 @@ import ApiCall from '../../ServiceManager/apiCall';
 import Loader from '../../ServiceManager/Loader';
 import { useHistory } from "react-router-dom";
 import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 
 let apiCall = new ApiCall;
 
@@ -35,10 +37,28 @@ function Content() {
 
         setIsLoading(false);
 
+        console.log(channelVideo);
+
         if (channelVideo.status) {
             setChannelVideo(channelVideo.data);
         }
     }, [userChannel]);
+
+    function confirmDelete(videoId) {
+        confirmAlert({
+            title: 'Confirm To Delete',
+            message: 'Are you sure to delete this Video ?',
+            buttons: [
+                {
+                    label: 'CANCEL'
+                },
+                {
+                    label: 'CONFIRM',
+                    onClick: () => removeVideo(videoId)
+                }
+            ]
+        })
+    };
 
 
     async function playVideo(videoId) {
@@ -56,6 +76,15 @@ function Content() {
         window.location.reload();
     }
 
+    async function removeVideo(videoId) {
+        const videoUrl = `http://localhost:3000/removeVideo/${videoId}`;
+        const video = await apiCall.postAPI(videoUrl);
+
+        if (video.status) {
+            window.location.reload();
+        }
+    }
+
     function renderChannelVideo() {
         return channelVideo.map(vd => {
             return (
@@ -63,7 +92,7 @@ function Content() {
                     <div className="CV-vd-queue">
                         <div className="video-list">
                             <div className="CV-remove-btn">
-                                <button>< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
+                                <button onClick={() => confirmDelete(vd._id)}>< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
                                 <button onClick={() => playVideo(vd._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
                             </div>
                             <div className="CV-vd-content-container">

@@ -24,27 +24,7 @@ class ServiceManager extends React.Component {
       method: "POST",
       mode: "cors",
       headers: {
-        // 'Accept': 'application/json',
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(parameter)
-    })
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
-  
-  async postAPIUploadFile(url, parameter) {
-    return fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        // 'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data'
       },
       body: JSON.stringify(parameter)
     })

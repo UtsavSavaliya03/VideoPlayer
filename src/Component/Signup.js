@@ -32,11 +32,11 @@ class Signup extends React.Component {
     displayAlert = (type, alertMsg) => {
         if (type === true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -109,88 +109,90 @@ class Signup extends React.Component {
         return (
             <>
                 <div className="container-fluid">
-                    <div className="row pt-5">
-                        <div className="offset-md-5 col-md-7 mt-5">
-                            <h1 className="px-5 pt-5 text-primary">Signup</h1>
-                            <form className="p-5">
-                                <div className="row">
-                                    <div className="form-group col-md-6">
-                                        <input
-                                            type="text"
-                                            name="fName"
-                                            className="w-100 p-2"
-                                            onChange={this.getValue}
-                                            placeholder="Fist Name"
-                                            autocomplete="off"
-                                        />
+                    <div className="background">
+                        <div className="row pt-md-5">
+                            <div className="offset-lg-7 offset-md-5 col-lg-4 col-md-7 mt-md-5">
+                                <h1 className="px-md-5 pt-5 text-primary">Signup</h1>
+                                <form className="p-md-5 pt-4">
+                                    <div className="row">
+                                        <div className="form-group col-md-6">
+                                            <input
+                                                type="text"
+                                                name="fName"
+                                                className="w-100 p-2"
+                                                onChange={this.getValue}
+                                                placeholder="Fist Name"
+                                                autocomplete="off"
+                                            />
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <input
+                                                type="text"
+                                                name="lName"
+                                                className="w-100 p-2"
+                                                onChange={this.getValue}
+                                                placeholder="Last Name"
+                                                autocomplete="off"
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="form-group col-md-6">
-                                        <input
-                                            type="text"
-                                            name="lName"
-                                            className="w-100 p-2"
-                                            onChange={this.getValue}
-                                            placeholder="Last Name"
-                                            autocomplete="off"
-                                        />
+                                    <div className="row">
+                                        <div className="form-group col-md-6">
+                                            <input
+                                                type="text"
+                                                name="userName"
+                                                className="w-100 p-2"
+                                                onChange={this.getValue}
+                                                placeholder="Username"
+                                                autocomplete="off"
+                                            />
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <p className="validation-error" >{this.state.emailError}</p>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                className="w-100 p-2"
+                                                onChange={this.getValue}
+                                                placeholder="Email"
+                                                autocomplete="off"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="form-group col-md-6">
-                                        <input
-                                            type="text"
-                                            name="userName"
-                                            className="w-100 p-2"
-                                            onChange={this.getValue}
-                                            placeholder="Username"
-                                            autocomplete="off"
-                                        />
+                                    <div className="row">
+                                        <div className="form-group col-md-6">
+                                            <p className="validation-error" >{this.state.passwordError}</p>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                className="w-100 p-2"
+                                                onChange={this.getValue}
+                                                placeholder="Password"
+                                                autocomplete="off"
+                                            />
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <p className="validation-error" >{this.state.confirmPassError}</p>
+                                            <input
+                                                type="password"
+                                                name="confirmPass"
+                                                className="w-100 p-2"
+                                                onChange={this.getValue}
+                                                placeholder="Confirm Password"
+                                                autocomplete="off"
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="form-group col-md-6">
-                                        <p className="validation-error" >{this.state.emailError}</p>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            className="w-100 p-2"
-                                            onChange={this.getValue}
-                                            placeholder="Email"
-                                            autocomplete="off"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="form-group col-md-6">
-                                        <p className="validation-error" >{this.state.passwordError}</p>
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            className="w-100 p-2"
-                                            onChange={this.getValue}
-                                            placeholder="Password"
-                                            autocomplete="off"
-                                        />
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <p className="validation-error" >{this.state.confirmPassError}</p>
-                                        <input
-                                            type="password"
-                                            name="confirmPass"
-                                            className="w-100 p-2"
-                                            onChange={this.getValue}
-                                            placeholder="Confirm Password"
-                                            autocomplete="off"
-                                        />
-                                    </div>
-                                </div>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary d-block my-5 mx-auto"
-                                    onClick={this.signupHandler}
-                                    disabled={!this.state.emailValid || !this.state.passwordValid || !this.state.confirmPassValid}
-                                >
-                                    Signup
-                                </button>
-                            </form>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary d-block my-5 mx-auto"
+                                        onClick={this.signupHandler}
+                                        disabled={!this.state.emailValid || !this.state.passwordValid || !this.state.confirmPassValid}
+                                    >
+                                        Signup
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

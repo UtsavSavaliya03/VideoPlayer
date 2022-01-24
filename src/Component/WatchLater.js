@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './Css/CentralStyle.css';
 import './Css/WatchLater.css';
 import VideoPlayer from 'react-video-js-player';
 import TimeAgo from 'react-timeago';
@@ -22,6 +23,10 @@ function WatchLater(props) {
     const [watchLater, setWatchLater] = useState('');
 
     useEffect(async () => {
+        loadWatchLaterVideos();
+    }, [user]);
+
+    async function loadWatchLaterVideos() {
         setIsLoading(true);
 
         const parameter = {
@@ -34,7 +39,7 @@ function WatchLater(props) {
         if (watchLater.status) {
             setWatchLater(watchLater.data);
         }
-    }, [user]);
+    }
 
     function routeChange(path) {
         props.history.push(path);
@@ -43,41 +48,46 @@ function WatchLater(props) {
     function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
 
-    async function playVideo(videoDetails) {
+    async function playVideo(videoId) {
 
         if (isLogin) {
 
             const parameter = {
                 user_id: user._id,
-                video_id: videoDetails
+                video_id: videoId
             }
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
         }
 
-        routeChange('/playVideo');
+        routeChange(`/playVideo/${btoa(videoId)}`);
     }
 
-    async function removeWatchLater(videoId) {
+    async function removeWatchLater(e, videoId) {
+
+        e.stopPropagation();
 
         const parameter = {
             user_id: user._id,
             video_id: videoId
         }
-        const watchLater = await apiCall.postAPI('http://localhost:3000/removeWatchLater', parameter);
+        const removedWatchLater = await apiCall.postAPI('http://localhost:3000/removeWatchLater', parameter);
 
-        displayAlert(watchLater.status, watchLater.msg);
+        displayAlert(removedWatchLater.status, removedWatchLater.msg);
 
-        if (watchLater.status) {
-            window.location.reload();
+        if (removedWatchLater.status) {
+            loadWatchLaterVideos();
+            if (watchLater.length == 1) {
+                setWatchLater([]);
+            }
         }
     }
 
@@ -86,110 +96,95 @@ function WatchLater(props) {
         const parameter = {
             user_id: user._id
         }
-        const watchLater = await apiCall.postAPI('http://localhost:3000/removeAllWatchLater', parameter);
+        const removedWatchLater = await apiCall.postAPI('http://localhost:3000/removeAllWatchLater', parameter);
 
-        displayAlert(watchLater.status, watchLater.msg);
+        displayAlert(removedWatchLater.status, removedWatchLater.msg);
 
-        if (watchLater.status) {
-            window.location.reload();
+        if (removedWatchLater.status) {
+            loadWatchLaterVideos();
+            setWatchLater([]);
         }
     }
 
     function renderWatchLater() {
         return watchLater.map(vd => {
             return (
-                <li key={vd._id}>
-                    <div className="WL-vd-queue">
-                        <div className="video-list">
-                            <div className="WL-remove-btn">
-                                <button onClick={() => removeWatchLater(vd.video_id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => playVideo(vd.video_id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                <div key={vd._id} className="WL-vd-queue mb-2">
+                    <button onClick={() => playVideo(vd.video_id._id)} className='vd-play-btn p-0 pt-1 w-100 text-left'>
+                        <div className="row mx-0 mx-lg-5">
+                            <div className="col-12 col-md-5 col-lg-3 p-md-0">
+                                <video width={'100%'} height={'160px'} poster={vd.video_id.thumbnailImage_link} >
+                                    <source src={vd.video_id.videoContent_link} type="video/mp4" />
+                                </video>
                             </div>
-                            <div className="WL-vd-content-container">
-                                <VideoPlayer className="WL-vd-content"
-                                    src={vd.video_id.videoContent_link}
-                                    poster={vd.video_id.thumbnailImage_link}
-                                    bigPlayButton={false}
-                                    controls={false}
-                                />
+                            <div className="col-12 col-md-7 col-lg-9 pr-md-0 pt-md-2">
+                                <div><h5 className='break-title-2'>{vd.video_id.videoName}</h5></div>
+                                <div><h5 className="text-muted">{vd.video_id.channel_id.channelName}</h5></div>
+                                <div><h6 className='text-muted'>{<TimeAgo date={vd.video_id.createDate} />}</h6></div>
+                                <button onClick={(e) => removeWatchLater(e, vd.video_id._id)} className='remove-fvourites-btn p-0 mt-2'><i class="far fa-trash-alt mr-2"></i>REMOVE FROM WATCH LATER</button>
                             </div>
-                            <div className="WL-vd-info">
-                                <div className="WL-vd-name">{vd.video_id.videoName}</div>
-                                <div className="WL-vd-channel">{vd.video_id.channel_id.channelName}</div>
-                                <div className="WL-vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.video_id.createDate} />}</span></div>
-                            </div>
-                            <div className="clear"></div>
                         </div>
-                    </div>
-                </li>
+                    </button>
+                </div>
             );
         })
     }
 
-    if (!isLogin) {
-        return (
-            <>
-                <div className="WL-vd-container">
-                    <div className="WL-header">
-                        <div className="title">Watch Later</div>
+    return (
+        <>
+            <div className="WL-container">
+                <div className="WL-vd-container p-0 m-0 px-md-5 mx-md-5">
+                    <div className="WL-header p-2 px-md-5 mb-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3 className='m-0'>Your Watch Later</h3>
+                        </div>
+                        {watchLater.length > 0 &&
+                            <div>
+                                <button
+                                    onClick={removeAllWatchLater}
+                                    className='remove-all-fvourites-btn'
+                                    type="button"
+                                >
+                                    <i class="far fa-trash-alt mr-2"></i>
+                                    CLEAR ALL
+                                </button>
+                            </div>
+                        }
                     </div>
-                    <div className="signin-btn">
-                        <h6 className="text-primary">Please, sign in to see your watch later videos...
-                            <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
+                    <div className='py-5 bg-light my-2'>
+                        <h2 className='text-center'>Advertisement</h2>
+                    </div>
+                    <div>
+                        {isLoading
+                            ? (
+                                <div className="spinner">
+                                    <Loader />
+                                    <div className="text-center text-muted"><h3>Loading...</h3></div>
+                                </div>
+                            ) : (
+                                isLogin
+                                    ? (
+                                        watchLater.length > 0
+                                            ? (
+                                                renderWatchLater()
+                                            ) : (
+                                                <div className="no-favourite"><h3 className='text-muted'>No Watch Later</h3></div>
+                                            )
+                                    ) : (
+                                        <div className="signin-btn">
+                                            <h6 className="text-primary">Please, sign in to see your favourite videos...
+                                                <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
+                                        </div>
+                                    )
+
+                            )
+                        }
                     </div>
                 </div>
-            </>
-        );
-    } else {
-
-        if (isLoading) {
-            return (
-                <>
-                    <div className="WL-vd-container">
-                        <div className="WL-header">
-                            <div className="title">Watch Later</div>
-                        </div>
-                        <div className="spinner">
-                            <div className="spinner-img">
-                                <Loader />
-                            </div>
-                            <div className="spinner-text"><h3>Loading...</h3></div>
-                        </div>
-                    </div>
-                </>
-            );
-        } else {
-            return watchLater.length > 0
-                ? (
-                    <>
-                        <div className="WL-container">
-                            <div className="WL-vd-container">
-                                <div className="WL-header">
-                                    <div className="title">Watch Later</div>
-                                    <div className="WL-clear-btn"><button onClick={() => removeAllWatchLater()} >Remove all</button></div>
-                                </div>
-                                <div className="clear"></div>
-                                <div>
-                                    <table>
-                                        <tbody className="vd-video">{renderWatchLater()}</tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <ToastContainer />
-                    </>
-                ) : (
-                    <>
-                        <div className="WL-vd-container">
-                            <div className="WL-header">
-                                <div className="title">Watch Later</div>
-                            </div>
-                            <div className="no-watch-later"><h3>No Watch Later</h3></div>
-                        </div>
-                    </>
-                );
-        }
-    }
+            </div>
+            <ToastContainer />
+        </>
+    );
 }
 
 export default WatchLater;

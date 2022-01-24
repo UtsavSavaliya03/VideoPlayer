@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Component, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import Signup from './Component/Signup';
@@ -20,15 +20,15 @@ import LikedVd from './Component/LikedVd';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from './State/action-creators/index';
-import { useSelector } from 'react-redux';
+import SearchResult from './Component/SearchResult';
 
 function App(props) {
 
-  const [cookies, setCookie, removeCookie] = useCookies(["user", "channel", "isLogin"]);
+  const [cookies, setCookie] = useCookies(["user", "channel", "isLogin"]);
   const dispatch = useDispatch();
   const action = bindActionCreators(actionCreators, dispatch);
-  const isLogin = useSelector((state)=> state.isLogin);
-  const userChannel = useSelector((state)=> state.userChannel);
+  const isLogin = cookies.isLogin === undefined ? false : cookies.isLogin;
+  const userChannel = cookies.channel === undefined ? false : true;
 
   useEffect(() => {
     action.setUser((cookies.user === undefined) ? '' : cookies.user);
@@ -40,7 +40,7 @@ function App(props) {
     <Route
       {...props}
       render={props =>
-        (isLogin == false) ? (
+        (isLogin === false) ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: '/' }} />
@@ -49,14 +49,14 @@ function App(props) {
     />
   );
 
-  const PrivateRoute = ({ component: Component, ...props }) => (
+  const SecureRoute = ({ component: Component, ...props }) => (
     <Route
       {...props}
-      render={props =>
-        ({isLogin}) ? (
+      render={props => 
+        (isLogin) ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: '/login' }} />
+          <Redirect to={{pathname: '/'}} />
         )
       }
     />
@@ -66,10 +66,14 @@ function App(props) {
     <Route
       {...props}
       render={props =>
-        (userChannel != '') ? (
+        (userChannel) ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: '/' }} />
+          (isLogin == true) ? (
+            <Redirect to={{ pathname: '/' }} />
+          ) : (
+            <Redirect to={{ pathname: '/login' }} />
+          )
         )
       }
     />
@@ -80,21 +84,22 @@ function App(props) {
       <Router>
         <div>
           <Header />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <LoginRoute path="/login" component={Login} />
-              <Route path="/signup" component={Signup} />
-              <Route path="/sendMail" component={SendMail} />
-              <Route path="/resetPassword" component={ResetPassword} />
-              <Route path="/playVideo/:id" component={VideoPlay} />
-              <Route path="/userProfile" component={UserProfile} />
-              <Route path="/createChannel" component={CreateChannel} />
-              <Route path="/studio" component={Studio} />  
-              <Route path="/favourite" component={Favourite} />
-              <Route path="/watchLater" component={WatchLater} />
-              <Route path="/history" component={History} />
-              <Route path="/likedVideos" component={LikedVd} />
-            </Switch>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <LoginRoute path="/login" component={Login} />
+            <Route path="/signup" component={Signup} />
+            <Route path="/sendMail" component={SendMail} />
+            <Route path="/resetPassword" component={ResetPassword} />
+            <Route path="/playVideo/:id" component={VideoPlay} />
+            <SecureRoute path="/userProfile" component={UserProfile} />
+            <SecureRoute path="/createChannel" component={CreateChannel} />
+            <ChannelRoute path="/studio" component={Studio} />
+            <Route path="/favourite" component={Favourite} />
+            <Route path="/watchLater" component={WatchLater} />
+            <Route path="/history" component={History} />
+            <Route path="/likedVideos" component={LikedVd} />
+            <Route path="/result/:name" component={SearchResult} />
+          </Switch>
         </div>
       </Router>
     </>

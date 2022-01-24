@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './Css/Uploads.css';
 import './Css/bootstrap.min.css';
 import axios from 'axios';
@@ -11,6 +11,7 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 /* ----------- import css ----------- */
 import 'react-toastify/dist/ReactToastify.css';
 import "@pathofdev/react-tag-input/build/index.css";
+
 
 function Uploads() {
 
@@ -27,7 +28,7 @@ function Uploads() {
     const [description, setDescription] = useState(null);
     const [category, setCategory] = useState(null);
     const [visibility, setVisibility] = useState(null);
-    const [videoTags, setvideoTags] = useState([]);
+    const [videoTags, setVideoTags] = useState([]);
     const [uploadedPercentage, setUploadedPercentage] = useState(0);
 
     function uploadVideo() {
@@ -64,7 +65,7 @@ function Uploads() {
         return true;
     }
 
-    function fileChangeHandler(event) {
+    async function fileChangeHandler(event) {
         const file = event.target.files[0];
         if (file != null) {
             const fileType = file.type.substr(0, 5);
@@ -109,7 +110,6 @@ function Uploads() {
             }
         }
 
-
         const data = await axios.post('http://localhost:3000/uploadVideo', formData, progress).then(res => {
             setUploadedPercentage(100);
             setTimeout(() => {
@@ -151,7 +151,10 @@ function Uploads() {
                     <div className="form-group files col-6">
                         <label>Upload Your Thumbnail Image Here</label>
                         <button className="input-btn" onClick={() => uploadThumbnail()}>
-                            <p className="file-name">{thumbnailFileName}</p>
+                            <div className='row px-3'>
+                                <p className="file-name col-6">{thumbnailFileName}</p>
+                                <p className='text-warning col-6'> Image size should be 1280 X 720 px </p>
+                            </div>
                         </button>
                         <input
                             id="selectThumbnail"
@@ -236,7 +239,7 @@ function Uploads() {
                             allowUnique={true}
                             tags={videoTags}
                             value={videoTags}
-                            onChange={(newTags) => setvideoTags(newTags)}
+                            onChange={(newTags) => setVideoTags(newTags)}
                             placeholder="# Add tags...  (Type and press enter)"
                         />
                     </div>

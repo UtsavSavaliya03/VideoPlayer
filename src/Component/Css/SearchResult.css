@@ -1,0 +1,22 @@
+.btn-item {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.btn-item:focus {
+    outline: none;
+}
+.item:hover {
+    background-color: rgb(238, 238, 238);
+}
+.title-text {
+    font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.loader-container {
+    margin-top: 250px;
+}

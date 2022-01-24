@@ -30,12 +30,13 @@ export default function Header(props) {
     const [sidebar, setSidebar] = useState(false);
     const showSidebar = () => setSidebar(!sidebar);
 
-    const studioPath = (window.location.pathname);
+    const windowPath = (window.location.pathname);
 
     const [cookies, setCookie, removeCookie] = useCookies(["user", "channel"]);
     const isLogin = useSelector(state => state.isLogin);
     const user = useSelector(state => state.user);
     const userChannel = useSelector(state => state.userChannel);
+    const [searchQuery, setSearchQuery] = useState('');
 
     function signOutHandler() {
         removeCookie("user");
@@ -48,13 +49,25 @@ export default function Header(props) {
         history.push(path);
     }
 
+    function searchHandler() {
+        if (searchQuery.length > 0) {
+            routeChange(`/result/${searchQuery}`);
+        }
+    }
+    
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            searchHandler();
+        }
+    }
+
     return (
         <>
-            <div className="header-container">
+            <div className="header-container px-1 px-md-4">
                 <div>
                 </div>
-                <div className="menu">
-                    <div>
+                <div className="menu d-flex justify-content-between w-100">
+                    <div className='d-inline'>
                         <a className='menu-bars'>
                             <GiHamburgerMenu onClick={showSidebar} />
                         </a>
@@ -66,7 +79,7 @@ export default function Header(props) {
                                     <AiOutlineClose />
                                 </a>
                             </li>
-                            {(studioPath.substr(0, 7) === '/studio') ?
+                            {(windowPath.substr(0, 7) === '/studio') ?
                                 (<>
                                     <li className='nav-text'>
                                         <a href="/">
@@ -125,68 +138,81 @@ export default function Header(props) {
                                                 <span className="sidebar-title">History</span>
                                             </a>
                                         </li>
-                                        <li className='nav-text'>
-                                            <a href="">
-                                                <span className="sidebar-icon" ><FiSettings /></span>
-                                                <span className="sidebar-title">Settings</span>
-                                            </a>
-                                        </li>
                                     </>
                                 )
                             }
                         </ul>
                     </nav>
-                </div>
-                <div className="button-container">
-                    <ul className="navigation">
-                        {!isLogin &&
-                            <li>
-                                <button onClick={() => routeChange('/login')} className="btn-signin">SIGN IN</button>
-                            </li>}
-                        {isLogin &&
-                            <li>
-                                <Avatar
-                                    className="header-avatar"
-                                    size="35"
-                                    round={true}
-                                    src={user.profile_picture}
-                                    name={user.fName + " " + user.lName}
-                                />
-                                <div className="dropdown">
-                                    <ul className="dropdown-content">
-                                        <div className="user">
-                                            <div className="user-profile">
-                                                <Avatar className="dropdown-avatar" size="50" round={true} src={user.profile_picture} name={user.fName + " " + user.lName} />
+                    {(windowPath != "/login" && windowPath != "/signup" && windowPath != "/resetPassword" && windowPath != "/sendMail")
+                        &&
+                        <div className='search-bar d-inline align-self-center text-center w-50'>
+                            <input
+                                type="text"
+                                class="search-input pl-3 py-1"
+                                placeholder="Search. . ."
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                            />
+                            <button
+                                className='btn-search py-1 px-0'
+                                onClick={searchHandler}
+                            >
+                                <i class="far fa-search"></i>
+                            </button>
+                        </div>
+                    }
+
+                    <div className="button-container">
+                        <ul className="navigation">
+                            {!isLogin &&
+                                <li>
+                                    <button onClick={() => routeChange('/login')} className="btn-signin">SIGN IN</button>
+                                </li>}
+                            {isLogin &&
+                                <li>
+                                    <Avatar
+                                        className="header-avatar"
+                                        size="35"
+                                        round={true}
+                                        src={user.profile_picture}
+                                        name={user.fName + " " + user.lName}
+                                    />
+                                    <div className="dropdown">
+                                        <ul className="dropdown-content">
+                                            <div className="user">
+                                                <div className="user-profile">
+                                                    <Avatar className="dropdown-avatar" size="50" round={true} src={user.profile_picture} name={user.fName + " " + user.lName} />
+                                                </div>
+                                                <div className="user-info">
+                                                    <p className="user-name" >{user.userName}</p>
+                                                    <p className="user-email" >{user.email}</p>
+                                                </div>
+                                                <div className="clear"></div>
                                             </div>
-                                            <div className="user-info">
-                                                <p className="user-name" >{user.userName}</p>
-                                                <p className="user-email" >{user.email}</p>
-                                            </div>
-                                            <div className="clear"></div>
-                                        </div>
-                                        <hr />
-                                        <li>
-                                            <a href="/userProfile" ><span><img src={personIcon} alt="person icon" /></span>My Account</a>
-                                        </li>
-                                        {(userChannel === 'undefined')
-                                            ?
+                                            <hr />
                                             <li>
-                                                <a href="/createChannel" ><span><img src={channelIcon} alt="Channel icon" /></span>Create Channel</a>
+                                                <a href="/userProfile" ><span><img src={personIcon} alt="person icon" /></span>My Account</a>
                                             </li>
-                                            :
-                                            <li>
-                                                <a target="_blank" href="/studio" ><span><img src={studioIcon} alt="Subscribtion icon" /></span>Studio</a>
-                                            </li>
-                                        }
-                                        {(studioPath.substr(0, 7) != '/studio') &&
-                                            <li>
-                                                <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                            </li>}
-                    </ul>
+                                            {(userChannel === 'undefined')
+                                                ?
+                                                <li>
+                                                    <a href="/createChannel" ><span><img src={channelIcon} alt="Channel icon" /></span>Create Channel</a>
+                                                </li>
+                                                :
+                                                <li>
+                                                    <a target="_blank" href="/studio" ><span><img src={studioIcon} alt="Subscribtion icon" /></span>Studio</a>
+                                                </li>
+                                            }
+                                            {(windowPath.substr(0, 7) != '/studio') &&
+                                                <li>
+                                                    <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </li>}
+                        </ul>
+                    </div>
                 </div>
                 <div className="clear"></div>
             </div>

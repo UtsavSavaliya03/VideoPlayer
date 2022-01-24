@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import './Css/CentralStyle.css';
 import './Css/History.css';
-import VideoPlayer from 'react-video-js-player';
 import TimeAgo from 'react-timeago';
 import ApiCall from '../ServiceManager/apiCall';
 import Loader from '../ServiceManager/Loader';
-import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import { ToastContainer, toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
@@ -22,21 +21,23 @@ function History(props) {
     const [history, setHistory] = useState([]);
 
     useEffect(async () => {
+        loadHistory();
+    }, [user])
 
+    async function loadHistory() {
         setIsLoading(true);
 
         const parameter = {
             user_id: user._id
         }
         const history = await apiCall.postAPI('http://localhost:3000/getHistory', parameter);
-        
+
         setIsLoading(false);
-        
+
         if (history.status) {
             setHistory(history.data);
         }
-
-    }, [user])
+    }
 
     function routeChange(path) {
         props.history.push(path);
@@ -45,11 +46,11 @@ function History(props) {
     function displayAlert(type, alertMsg) {
         if (type === true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -66,21 +67,24 @@ function History(props) {
         }
 
         routeChange(`/playVideo/${btoa(videoId)}`);
-        window.location.reload();
     }
 
-    async function removeHistory(videoId) {
+    async function removeHistory(e, videoId) {
+
+        e.stopPropagation();
 
         const parameter = {
             user_id: user._id,
             video_id: videoId
         }
-        const history = await apiCall.postAPI('http://localhost:3000/removeHistory', parameter);
+        const removedHistory = await apiCall.postAPI('http://localhost:3000/removeHistory', parameter);
 
-        displayAlert(history.status, history.msg);
-        console.log(history);
-        if (history.status) {
-            window.location.reload();
+        displayAlert(removedHistory.status, removedHistory.msg);
+        if (removedHistory.status) {
+            loadHistory();
+            if (history.length == 1) {
+                setHistory([]);
+            }
         }
     }
 
@@ -89,112 +93,97 @@ function History(props) {
         const parameter = {
             user_id: user._id
         }
-        const history = await apiCall.postAPI('http://localhost:3000/removeAllHistory', parameter);
+        const removedHistory = await apiCall.postAPI('http://localhost:3000/removeAllHistory', parameter);
 
-        displayAlert(history.status, history.msg);
+        displayAlert(removedHistory.status, removedHistory.msg);
 
-        if (history.status) {
-            window.location.reload();
+        if (removedHistory.status) {
+            loadHistory();
+            setHistory([]);
         }
     }
 
-    function renderHistorr() {
+    function renderHistory() {
         return history.map(vd => {
             return (
-                <li key={vd._id}>
-                    <div className="H-vd-queue">
-                        <div className="video-list">
-                            <div className="H-remove-btn">
-                                <button onClick={() => removeHistory(vd.video_id._id)} >< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => playVideo(vd.video_id._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                <div key={vd._id} className="H-vd-queue mb-2">
+                    <button onClick={() => playVideo(vd.video_id._id)} className='vd-play-btn p-0 pt-1 w-100 text-left'>
+                        <div className="row mx-0 mx-lg-5">
+                            <div className="col-12 col-md-5 col-lg-3 p-md-0">
+                                <video width={'100%'} height={'160px'} poster={vd.video_id.thumbnailImage_link} >
+                                    <source src={vd.video_id.videoContent_link} type="video/mp4" />
+                                </video>
                             </div>
-                            <div className="H-vd-content-container">
-                                <VideoPlayer className="H-vd-content"
-                                    src={vd.video_id.videoContent_link}
-                                    poster={vd.video_id.thumbnailImage_link}
-                                    bigPlayButton={false}
-                                    controls={false}
-                                />
+                            <div className="col-12 col-md-7 col-lg-9 pr-md-0">
+                                <div><h5 className='text-primary'>{vd.createDate.substr(0, 10)}</h5></div>
+                                <div><h5 className='break-title-1'>{vd.video_id.videoName}</h5></div>
+                                <div><h5 className="text-muted">{vd.video_id.channel_id.channelName}</h5></div>
+                                <div><h6 className='text-muted'>{<TimeAgo date={vd.video_id.createDate} />}</h6></div>
+                                <button onClick={(e) => removeHistory(e, vd.video_id._id)} className='remove-fvourites-btn p-0 mt-2'><i class="far fa-trash-alt mr-2"></i>REMOVE FROM HISTORIES</button>
                             </div>
-                            <div className="H-vd-info">
-                                <div className="H-history-date">{vd.createDate.substr(0, 10)}</div>
-                                <div className="H-vd-name">{vd.video_id.videoName}</div>
-                                <div className="H-vd-channel">{vd.video_id.channel_id.channelName}</div>
-                                <div className="H-vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.video_id.createDate} />}</span></div>
-                            </div>
-                            <div className="clear"></div>
                         </div>
-                    </div>
-                </li>
+                    </button>
+                </div>
             );
         })
     }
 
-    if (!isLogin) {
-        return (
-            <>
-                <div className="H-vd-container">
-                    <div className="H-header">
-                        <div className="title">Your History</div>
+    return (
+        <>
+            <div className="F-container">
+                <div className="F-vd-container p-0 m-0 px-md-5 mx-md-5">
+                    <div className="F-header p-2 px-md-5 mb-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3 className='m-0'>Your Histories</h3>
+                        </div>
+                        {history.length > 0 &&
+                            <div>
+                                <button
+                                    onClick={removeAllHistory}
+                                    className='remove-all-fvourites-btn'
+                                    type="button"
+                                >
+                                    <i class="far fa-trash-alt mr-2"></i>
+                                    CLEAR ALL
+                                </button>
+                            </div>
+                        }
                     </div>
-                    <div className="signin-btn">
-                        <h6 className="text-primary">Please, sign in to see your history...
-                            <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
+                    <div className='py-5 bg-light my-2'>
+                        <h2 className='text-center'>Advertisement</h2>
+                    </div>
+                    <div>
+                        {isLoading
+                            ? (
+                                <div className="spinner">
+                                    <Loader />
+                                    <div className="text-center text-muted"><h3>Loading...</h3></div>
+                                </div>
+                            ) : (
+                                isLogin
+                                    ? (
+                                        history.length > 0
+                                            ? (
+                                                renderHistory()
+                                            ) : (
+                                                <div className="no-favourite"><h3 className='text-muted'>No Histories</h3></div>
+                                            )
+                                    ) : (
+                                        <div className="signin-btn">
+                                            <h6 className="text-primary">Please, sign in to see your Histories...
+                                                <span><a href="/login" className="btn btn-outline-primary ml-4">SIGN IN</a></span></h6>
+                                        </div>
+                                    )
+
+                            )
+                        }
                     </div>
                 </div>
+            </div>
+            <ToastContainer />
+        </>
+    );
 
-            </>
-        );
-    } else {
-
-        if (isLoading) {
-            return (
-                <>
-                    <div className="H-vd-container">
-                        <div className="H-header">
-                            <div className="title">Your History</div>
-                        </div>
-                        <div className="spinner">
-                            <div className="spinner-img">
-                                <Loader />
-                            </div>
-                            <div className="spinner-text"><h3>Loading...</h3></div>
-                        </div>
-                    </div>
-                </>
-            );
-        } else {
-            return history.length > 0
-                ? (
-                    <>
-                        <div className="H-container">
-                            <div className="H-vd-container">
-                                <div className="H-header">
-                                    <div className="title">Your History</div>
-                                    <div className="H-clear-btn"><button onClick={() => removeAllHistory()} >Clear all history</button></div>
-                                </div>
-                                <div className="clear"></div>
-                                <div>
-                                    <div>
-                                        <div className="vd-video">{renderHistorr()}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <ToastContainer />
-                    </>
-                ) : (
-                    <>
-                        <div className="H-vd-container">
-                            <div className="H-header">
-                                <div className="title">Your History</div>
-                            </div>
-                            <div className="no-history"><h3>No History</h3></div>
-                        </div>
-                    </>
-                );
-        }
-    }
 }
 
 export default History;
