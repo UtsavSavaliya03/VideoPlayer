@@ -27,11 +27,11 @@ function CreateChannel() {
     function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -54,8 +54,8 @@ function CreateChannel() {
                 return error
             });
 
-        if(data.status) {
-            setCookie("channel", data.data, {path: '/'});
+        if (data.status) {
+            setCookie("channel", data.data, { path: '/' });
             routeChange('/studio');
         }
 
@@ -93,63 +93,65 @@ function CreateChannel() {
 
     return (
         <>
-            <div className="create-channel">
-                <h3 className="pt-5">How you will appear</h3><hr className='pb-4' />
-                <div className="row">
-                    <div className="channel-logo col-3">
-                        <Avatar
-                            className="channel-avatar d-block m-auto"
-                            src={user.profile_picture}
-                            round={true}
-                            size='200'
-                            name={channelName}
-                        />
-                        <input
-                            hidden
-                            type="file"
-                            id="channel_profile"
-                            accept="image/*"
-                            onChange={(event) => fileChangeHandler(event)}
-                        />
-                        <button className="profile-btn d-block m-auto" type="button" onClick={() => uploadImage()} >CHANGE PICTURE</button>
-                    </div>
-                    <div className="create-channel-data col-9">
-                        <form autocomplete="off">
-                            <div className="row">
-                                <div class="form-group col-md-6">
-                                    <input
-                                        type="text"
-                                        name="channelName"
-                                        class="input"
-                                        onChange={(event) => { setChannelName(event.currentTarget.value) }}
-                                        placeholder="Channel Name"
-                                    />
+            <div className="container-fluid">
+                <div className="px-md-5 mx-md-5">
+                    <h3 className="pt-5">How you will appear</h3><hr className='pb-4' />
+                    <div className="row">
+                        <div className="channel-logo col-12 col-md-4">
+                            <Avatar
+                                className="channel-avatar d-block m-auto"
+                                src={user.profile_picture}
+                                round={true}
+                                size='200'
+                                name={channelName}
+                            />
+                            <input
+                                hidden
+                                type="file"
+                                id="channel_profile"
+                                accept="image/*"
+                                onChange={(event) => fileChangeHandler(event)}
+                            />
+                            <button className="profile-btn d-block m-auto" type="button" onClick={() => uploadImage()} >CHANGE PROFILE</button>
+                        </div>
+                        <div className="create-channel-data col-12 col-md-8 mt-5 mt-md-3">
+                            <form autocomplete="off">
+                                <div className="row">
+                                    <div class="form-group col-12 col-md-6">
+                                        <input
+                                            type="text"
+                                            name="channelName"
+                                            class="input"
+                                            onChange={(event) => { setChannelName(event.currentTarget.value) }}
+                                            placeholder="Channel Name"
+                                        />
+                                    </div>
+                                    <div class="form-group col-12 col-md-6">
+                                        <input
+                                            type="text"
+                                            name="email"
+                                            class="input"
+                                            onChange={(event) => { setEmail(event.currentTarget.value) }}
+                                            placeholder="Email"
+                                        />
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <input
-                                        type="text"
-                                        name="email"
-                                        class="input"
-                                        onChange={(event) => { setEmail(event.currentTarget.value) }}
-                                        placeholder="Email"
-                                    />
+                                <div class="form-group">
+                                    <textarea
+                                        name="channelBio"
+                                        class="textarea"
+                                        rows="10"
+                                        onChange={(event) => { setChannelBio(event.currentTarget.value) }}
+                                        placeholder="Add Channel Bio..." >
+                                    </textarea>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <textarea
-                                    name="channelBio"
-                                    class="textarea"
-                                    rows="10"
-                                    onChange={(event) => { setChannelBio(event.currentTarget.value) }}
-                                    placeholder="Add Channel Bio..." >
-                                </textarea>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+                    </div><hr className="mt-4" />
+                    <div className="btn-container my-4">
+                        <button className="cancel-btn ml-4" type="button" onClick={() => { history.goBack() }} >CANCEL</button>
+                        <button className="create-btn ml-4" type="button" onClick={() => { channelHandler() }} disabled={channelName == null || email == null} >CREATE CHANNEL</button>
                     </div>
-                </div><hr className="mt-4" />
-                <div className="btn-container my-4">
-                    <button className="cancel-btn ml-4" type="button" onClick={() => { history.goBack() }} >CANCEL</button>
-                    <button className="create-btn ml-4" type="button" onClick={() => { channelHandler() }} disabled={channelName == null || email == null } >CREATE CHANNEL</button>
                 </div>
             </div>
             <ToastContainer />

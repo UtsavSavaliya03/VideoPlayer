@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './Css/CentralStyle.css';
 import './Css/VideoPlay.css';
 import TimeAgo from 'react-timeago';
 import Avatar from 'react-avatar';
@@ -12,9 +13,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../State/action-creators/index';
+import Slider from "react-slick";
+import millify from "millify";
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
+// Import css files Slick Slider (CSS)
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 let apiCall = new ApiCall;
 
@@ -37,6 +43,7 @@ function VideoPlay() {
     const [isCmtListLoading, setIsCmtListLoading] = useState(false);
     const [videos, setVideos] = useState([]);
     const [previousId, setPreviousId] = useState(null);
+    const [viewCmt, setViewCmt] = useState(false);
 
     /* ----------- Current Playing video's Like, Favourite, Watchlater State ----------- */
     const isLiked = useSelector(state => state.isLiked);
@@ -46,11 +53,25 @@ function VideoPlay() {
     /* ----------- Current Playing video's State ----------- */
     const [playingVideo, setPlayingVideo] = useState([]);
 
+    const category = [{ "name": "Entertainment" }, { "name": "Music" }, { "name": "Crypto" }, { "name": "Health" }, { "name": "Art" }, { "name": "Education" }, { "name": "Yoga" }, { "name": "Doctor" }, { "name": "Environment" }, { "name": "Bussiness" }, { "name": "software" }, { "name": "IoT" }]
+
+    var slider = {
+        dots: false,
+        speed: 1000,
+        slidesToShow: 2,
+        infinite: category.length > 1 ? true : false,
+        centerMode: true,
+        variableWidth: true
+    };
+
     if (previousId != null && previousId != atob(params.id)) {
         setDataHandler();
     }
 
     useEffect(async () => {
+        if (window.innerWidth > 990) {
+            setViewCmt(true);
+        }
         setDataHandler();
         setCommentHandler();
     }, [user]);
@@ -104,6 +125,19 @@ function VideoPlay() {
         }
     }
 
+    async function setCategoryVideoHandler(category) {
+        setIsVdListLoading(true);
+
+        const url = `http://localhost:3000/categoryVd/${category}`;
+        const categoryVideos = await apiCall.postAPI(url);
+
+        setIsVdListLoading(false);
+
+        if (categoryVideos.status) {
+            setVideos(categoryVideos.data);
+        }
+    }
+
     async function setCommentHandler() {
         /* --------------------------- Get Comment ----------------------------- */
 
@@ -129,14 +163,24 @@ function VideoPlay() {
     function displayAlert(type, alertMsg) {
         if (type === true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
+
+    async function viewHandler(videoId) {
+        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const parameter = {
+            user_id: user._id
+        }
+
+        await apiCall.postAPI(viewUrl, parameter);
+    }
+
 
     async function playVideo(videoId) {
 
@@ -148,6 +192,7 @@ function VideoPlay() {
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
         }
 
+        viewHandler(videoId);
         routeChange(`/playVideo/${btoa(videoId)}`);
         window.location.reload();
     }
@@ -211,6 +256,31 @@ function VideoPlay() {
         }
     }
 
+    function renderCategory() {
+        return category.map(category => {
+            return (
+                <div key={category.name}>
+                    <button
+                        onClick={() => setCategoryVideoHandler(category.name)}
+                        className='category-btn mx-2'
+                    >
+                        {category.name}
+                    </button>
+                </div>
+            )
+        })
+    }
+
+    function renderTags() {
+        return (playingVideo.tags).map(tag => {
+            return (
+                <div key={tag.index} className='d-inline'>
+                    <p className='mr-3 d-inline'>{tag}</p>
+                </div>
+            );
+        })
+    }
+
     function renderVideosList() {
         if (isVdListLoading) {
             return (
@@ -225,25 +295,22 @@ function VideoPlay() {
         } else {
             return videos.map(vd => {
                 return (
-                    <tr key={vd._id}>
-                        <td className="vd-queue">
-                            <button onClick={() => { playVideo(vd._id) }} >
-                                <div className="vd-content-container">
-                                    <div>
-                                        <video className="vd-content" poster={vd.thumbnailImage_link} >
-                                            <source src={vd.videoContent_link} type="video/mp4" />
-                                        </video>
-                                    </div>
+                    <div key={vd._id} className="vd-queue mb-3 mb-md-1">
+                        <button className='text-left' onClick={() => { playVideo(vd._id) }} >
+                            <div className="row">
+                                <div className="col-12 col-md-5">
+                                    <video className="vd-content" poster={vd.thumbnailImage_link} >
+                                        <source src={vd.videoContent_link} type="video/mp4" />
+                                    </video>
                                 </div>
-                                <div className="vd-info">
-                                    <div className="vd-name">{vd.videoName}</div>
-                                    <div className="vd-channel">{vd.channel_id.channelName}</div>
-                                    <div className="vd-views-time">{<TimeAgo date={vd.createDate} />}</div>
+                                <div className="col-12 col-md-7 pl-md-0">
+                                    <div><h6 className='break-title-2 mb-1'>{vd.videoName}</h6></div>
+                                    <div><p className='break-title-1 text-muted m-0'>{vd.channel_id.channelName}</p></div>
+                                    <div><p className='text-muted m-0'>{(millify(vd.views.length) + (vd.views.length > 1 ? " Views" : " View")) + ' • '} <span>{<TimeAgo date={vd.createDate} />}</span> </p></div>
                                 </div>
-                                <div className="clear"></div>
-                            </button>
-                        </td>
-                    </tr>
+                            </div>
+                        </button>
+                    </div>
                 );
             })
         }
@@ -254,12 +321,12 @@ function VideoPlay() {
             return videoComments.map((cmt) => {
                 return (
                     <li key={cmt._id}>
-                        <div className="user-comment">
+                        <div className="mt-4">
                             <div className="row">
-                                <div className="user-profile">
+                                <div className="col-1 pl-0 pr-lg-0">
                                     <Avatar src={cmt.user_id.profile_picture} round size="45" name={`${cmt.user_id.fName} ${cmt.user_id.lName}`} />
                                 </div>
-                                <div className=" user-info col">
+                                <div className="user-info col-11 pl-lg-0">
                                     <p className="name m-0">{`${cmt.user_id.fName} ${cmt.user_id.lName}`} • <span className="cmt-time" >{<TimeAgo date={cmt.createDate} />}</span> </p>
                                     <p className="comment m-0">{cmt.cmt_text}</p>
                                 </div>
@@ -271,7 +338,7 @@ function VideoPlay() {
         } else {
             return (
                 <>
-                    <div className="no-comment" ><h3>No Comments</h3></div>
+                    <div className='py-lg-5'><h3 className="text-center text-muted my-5">No Comments</h3></div>
                 </>
             )
         }
@@ -282,9 +349,7 @@ function VideoPlay() {
             <>
                 <div className="container-fluid">
                     <div className="spinner">
-                        <div className="spinner-img">
-                            <Loader />
-                        </div>
+                        <Loader />
                     </div>
                 </div>
             </>
@@ -292,40 +357,40 @@ function VideoPlay() {
     } else {
         return (
             <>
-                <div>
-                    <div className="video-container">
-                        <div className="vd-playing-cotainer">
+                <div className="container-fluid px-2 px-lg-5 py-4">
+                    <div className="row">
+                        <div className="col-12 col-lg-8">
                             <div>
-                                <video className="vd-playing" poster={playingVideo.thumbnailImage_link} controls autoPlay >
+                                <video width={'100%'} className="vd-playing" poster={playingVideo.thumbnailImage_link} autoPlay controls >
                                     <source src={playingVideo.videoContent_link} type="video/mp4"></source>
                                 </video>
                             </div>
-                            <div className="video-details">
-                                <div className="tags text-primary">
-                                    {playingVideo.tags}
+                            <div className="video-details mt-2">
+                                <div className="break-title-1 text-primary">
+                                    {playingVideo.tags.length > 0 && renderTags()}
                                 </div>
-                                <div className="vd-name">
-                                    <p>{playingVideo.videoName}</p>
+                                <div>
+                                    <h5 className='break-title-2'>{playingVideo.videoName}</h5>
                                 </div>
-                                <div className="vd-view-time">
-                                    {<TimeAgo date={playingVideo.createDate} />}
+                                <div>
+                                    <h6 className='text-muted m-0'>{(millify(playingVideo.views.length) + (playingVideo.views.length > 1 ? " Views" : " View")) + ' • '} <span>{<TimeAgo date={playingVideo.createDate} />}</span> </h6>
                                 </div>
-                                <div className="btn-container">
-                                    <button><AiFillLike onClick={() => addLike(playingVideo._id)} className={isLiked ? 'like-btn-active' : 'like-btn'} /><span className="tooltip-text" >Like</span></button>
-                                    <button><AiFillHeart onClick={() => addFavourite(playingVideo._id)} className={isFavourite ? 'favourite-btn-active' : 'favourite-btn'} /><span className="tooltip-text" >Favourite</span></button>
-                                    <button><MdWatchLater onClick={() => addWatchLater(playingVideo._id)} className={isWatchLater ? 'watch-later-btn-active' : 'watch-later-btn'} /><span className="tooltip-text" >Watch Later</span></button>
+                                <div className="clearfix">
+                                    <div className="btn-container float-right">
+                                        <button><AiFillLike onClick={() => addLike(playingVideo._id)} className={isLiked ? 'like-btn-active' : 'like-btn'} /><span className="tooltip-text" >Like</span></button>
+                                        <button><AiFillHeart onClick={() => addFavourite(playingVideo._id)} className={isFavourite ? 'favourite-btn-active' : 'favourite-btn'} /><span className="tooltip-text" >Favourite</span></button>
+                                        <button><MdWatchLater onClick={() => addWatchLater(playingVideo._id)} className={isWatchLater ? 'watch-later-btn-active' : 'watch-later-btn'} /><span className="tooltip-text" >Watch Later</span></button>
+                                    </div>
                                 </div>
-                                <div className="clear"></div>
                             </div><hr className="hr" />
-                            <div className="channel">
-                                <div className="logo">
-                                    <Avatar className="channel-profile" src={playingVideo.channel_id.channel_profile} round size="50" name={playingVideo.channel_id.channelName} />
-                                </div>
-                                <div className="channel-info">
-                                    <p className="name">{playingVideo.channel_id.channelName}</p>
-                                </div>
-                                <div className="clear"></div>
+
+                            {/* ------------------ Channel Information ---------------- */}
+                            <div>
+                                <Avatar className="channel-profile" src={playingVideo.channel_id.channel_profile} round size="50" name={playingVideo.channel_id.channelName} />
+                                <h5 className="d-inline ml-3 break-title-1">{playingVideo.channel_id.channelName}</h5>
                             </div><hr />
+
+                            {/* ------------------ Comment Section ---------------- */}
                             {!isLogin &&
                                 <div className="signin-btn">
                                     <h6 className="text-primary">Please, sign in to comment..
@@ -333,48 +398,70 @@ function VideoPlay() {
                                 </div>
                             }
                             {isLogin &&
-                                <div className="add-comment">
-                                    <div className="user-profile">
+                                <div className="add-comment row">
+                                    <div className="col-1 pr-lg-0">
                                         <Avatar className="user-profile-cmt" src={user.profile_picture} round size="45" name={user.fName + ' ' + user.lName} />
                                     </div>
-                                    <div className="user-info">
+                                    <div className="user-info col-11 pl-lg-0 pl-md-0 pl-4">
                                         <input
                                             autoComplete="off"
-                                            className="cmt-input"
+                                            className="cmt-input w-100 py-1 px-2"
                                             type="text"
                                             name="userComment"
                                             value={userComment}
                                             placeholder={`Commenting as ${user.fName} ${user.lName} `}
                                             onChange={(e) => setUserComment(e.target.value)}
                                         />
-                                        {userComment.length > 0 && <button className="add-cmt-btn" onClick={() => { postComment() }} >COMMENT</button>}
+                                        {userComment.length > 0 && <button className="cmt-btn float-right" onClick={() => { postComment() }} >COMMENT</button>}
                                     </div>
-                                    <div className="clear"></div>
                                 </div>
                             }
                             <hr />
-                            {isCmtListLoading
-                                ?
-                                <>
-                                    <div className="comment-container">
-                                        <div className="spinner">
-                                            <Loader />
-                                        </div>
+                            {
+                                /* ------ Comment Buttons ------ */
+                                viewCmt ? (
+                                    <div className="clearfix">
+                                        <button onClick={() => setViewCmt(false)} className='cmt-btn text-uppercase float-right'>Hide Comments</button>
                                     </div>
-                                </>
-                                :
-                                <div className="comment-container">{renderComment()}</div>
+                                ) : (
+                                    <div className="clearfix">
+                                        <button onClick={() => setViewCmt(true)} className='cmt-btn text-uppercase float-right'>View Comments</button>
+                                    </div>
+                                )
                             }
+                            {viewCmt &&
+                                <>
+                                    {isCmtListLoading ? (
+                                        <>
+                                            <div className="comment-container">
+                                                <div className="spinner">
+                                                    <Loader />
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="comment-container">{renderComment()}</div>
+                                        </>
+                                    )
+                                    }
+                                </>
+                            }
+
                         </div>
-                        <div className="vd-list-container">
+                        <div className='col-12 col-lg-4'>
                             <div>
-                                <div className='py-5 bg-light'>
+                                <div className='py-5 bg-light mb-4'>
                                     <h2 className='text-center'>Advertisement</h2>
+                                </div>
+                                <div className='my-3 py-2 border-top border-bottom'>
+                                    <Slider {...slider}>
+                                        {renderCategory()}
+                                    </Slider>
                                 </div>
                                 <div className="vd-video">{renderVideosList()}</div>
                             </div>
                         </div>
-                        <div className="clear"></div>
                     </div>
                 </div>
                 <ToastContainer />

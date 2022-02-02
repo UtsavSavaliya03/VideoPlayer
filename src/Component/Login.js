@@ -4,9 +4,6 @@ import ApiCall from '../ServiceManager/apiCall';
 import { ToastContainer, toast } from 'react-toastify';
 import { useCookies } from 'react-cookie';
 
-/* -------------- BackGround images ----------------- */
-import img1 from '../assets/Images/cameraBg.png'
-
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
 

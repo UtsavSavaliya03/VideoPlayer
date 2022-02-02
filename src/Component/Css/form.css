@@ -8,7 +8,8 @@ input::-webkit-inner-spin-button {
     background: linear-gradient(to bottom, rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.5) 100%), url(../../assets/Background/loginBackground.jpg);
     background-position: left;
     background-repeat: no-repeat;
-    background-size: contain;;
+    background-size: contain;
+    height: 100vh;
 }
 form input {
     border-radius: 0px !important;

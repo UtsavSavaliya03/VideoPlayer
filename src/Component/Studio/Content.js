@@ -1,14 +1,14 @@
-import './Css/content.css';
+import '../Css/CentralStyle.css';
+import './Css/Content.css';
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TimeAgo from 'react-timeago';
-import VideoPlayer from 'react-video-js-player';
 import ApiCall from '../../ServiceManager/apiCall';
 import Loader from '../../ServiceManager/Loader';
 import { useHistory } from "react-router-dom";
-import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
+import millify from "millify";
 
 let apiCall = new ApiCall;
 
@@ -21,13 +21,17 @@ function Content() {
     const userChannel = useSelector((state) => state.userChannel);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [channelVideo, setChannelVideo] = useState('');
+    const [channelVideo, setChannelVideo] = useState([]);
 
     function routeChange(path) {
         history.push(path);
     }
 
     useEffect(async () => {
+        loadChannelVideo();
+    }, [userChannel]);
+
+    async function loadChannelVideo() {
         setIsLoading(true);
 
         const parameter = {
@@ -37,14 +41,15 @@ function Content() {
 
         setIsLoading(false);
 
-        console.log(channelVideo);
-
         if (channelVideo.status) {
             setChannelVideo(channelVideo.data);
         }
-    }, [userChannel]);
+    }
 
-    function confirmDelete(videoId) {
+    function confirmDelete(e, videoId) {
+
+        e.stopPropagation();
+
         confirmAlert({
             title: 'Confirm To Delete',
             message: 'Are you sure to delete this Video ?',
@@ -60,6 +65,14 @@ function Content() {
         })
     };
 
+    async function viewHandler(videoId) {
+        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const parameter = {
+            user_id: user._id
+        }
+
+        await apiCall.postAPI(viewUrl, parameter);
+    }
 
     async function playVideo(videoId) {
 
@@ -72,6 +85,8 @@ function Content() {
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
 
         }
+
+        viewHandler(videoId);
         routeChange(`/playVideo/${btoa(videoId)}`);
         window.location.reload();
     }
@@ -81,89 +96,67 @@ function Content() {
         const video = await apiCall.postAPI(videoUrl);
 
         if (video.status) {
-            window.location.reload();
+            loadChannelVideo();
+            if (channelVideo.length == 1) {
+                setChannelVideo([]);
+            }
         }
     }
 
     function renderChannelVideo() {
         return channelVideo.map(vd => {
             return (
-                <li key={vd._id}>
-                    <div className="CV-vd-queue">
-                        <div className="video-list">
-                            <div className="CV-remove-btn">
-                                <button onClick={() => confirmDelete(vd._id)}>< MdDeleteForever className="delete-btn" /><span className="tooltip-text" >Remove</span></button>
-                                <button onClick={() => playVideo(vd._id)} >< MdOutlinePlayCircleFilled className="play-btn" /><span className="tooltip-text" >Play</span></button>
+                <div key={vd._id} className="CV-vd-queue mb-2">
+                    <button onClick={() => playVideo(vd._id)} className='vd-play-btn p-0 pt-1 w-100 text-left'>
+                        <div className="row mx-0 mx-lg-5">
+                            <div className="col-12 col-md-5 col-lg-3 p-md-0">
+                                <video width={'100%'} height={'160px'} poster={vd.thumbnailImage_link} >
+                                    <source src={vd.videoContent_link} type="video/mp4" />
+                                </video>
                             </div>
-                            <div className="CV-vd-content-container">
-                                <VideoPlayer className="CV-vd-content"
-                                    src={vd.videoContent_link}
-                                    poster={vd.thumbnailImage_link}
-                                    bigPlayButton={false}
-                                    controls={false}
-                                />
+                            <div className="col-12 col-md-7 col-lg-9 pr-md-0 pt-md-2">
+                                <div><h5 className='break-title-2'>{vd.videoName}</h5></div>
+                                <div><h5 className="break-title-1 text-muted">{vd.channel_id.channelName}</h5></div>
+                                <div><h6 className='text-muted m-0'>{( millify(vd.views.length) + (vd.views.length > 1 ? " Views" : " View") ) + ' • '} <span>{<TimeAgo date={vd.createDate}/>}</span> </h6></div>
+                                <button onClick={(e) => confirmDelete(e, vd._id)} className='remove-video-btn p-0 mt-2 text-uppercase'><i class="far fa-trash-alt mr-2"></i>Delete Permanently</button>
                             </div>
-                            <div className="CV-vd-info">
-                                <div className="CV-vd-name">{vd.videoName}</div>
-                                <div className="CV-vd-channel">{vd.channel_id.channelName}</div>
-                                <div className="CV-vd-views-time"><span>300K</span><span> • </span><span>{<TimeAgo date={vd.createDate} />}</span></div>
-                            </div>
-                            <div className="clear"></div>
                         </div>
-                    </div>
-                </li>
+                    </button>
+                </div>
             );
         })
     }
 
-    if (isLoading) {
-        return (
-            <>
-                <div className="CV-vd-container">
-                    <div className="CV-header">
-                        <div className="title">Your uploaded videos</div>
-                    </div>
-                    <div className="spinner">
-                        <div className="spinner-img">
-                            <Loader />
-                        </div>
-                        <div className="spinner-text"><h3>Loading...</h3></div>
-                    </div>
-                </div>
-            </>
-        );
-    } else {
-        return channelVideo.length > 0 ? (
-            <>
-                <div className="CV-container">
-                    <div className="CV-vd-container">
-                        <div className="CV-header">
-                            <div className="title">Your uploaded videos</div>
-                        </div>
-                        <div className="clear"></div>
+    return (
+        <>
+            <div className="CV-container">
+                <div className="CV-vd-container p-0 m-0 px-md-5 mx-md-5">
+                    <div className="CV-header p-2 px-md-5 mb-3 d-flex align-items-center justify-content-between">
                         <div>
-                            <table>
-                                <tbody className="vd-video">{renderChannelVideo()}</tbody>
-                            </table>
+                            <h3 className='m-0 ml-3'>Your Videos</h3>
                         </div>
                     </div>
-                </div>
-            </>
-        ) : (
-            <>
-                <div className="CV-vd-container">
-                    <div className="CV-header">
-                        <div className="title">Your uploaded videos</div>
+                    <div>
+                        {isLoading
+                            ? (
+                                <div className="spinner">
+                                    <Loader />
+                                    <div className="text-center text-muted"><h3>Loading...</h3></div>
+                                </div>
+                            ) : (
+                                channelVideo.length > 0
+                                    ? (
+                                        renderChannelVideo()
+                                    ) : (
+                                        <div className='my-5 py-5'><h3 className='text-muted text-center py-5'>No Videos Uploaded</h3></div>
+                                    )
+                            )
+                        }
                     </div>
-                    <div className="no-channel-video"><h3>No Videos yet</h3></div>
-                    <div className='text-center'>
-                        <h6 className="text-primary">Please, Upload your content...
-                            <span><a href="/studio/upload" className="btn btn-outline-primary ml-4">UPLOAD</a></span></h6>
-                    </div>
                 </div>
-            </>
-        );
-    }
+            </div>
+        </>
+    );
 }
 
 export default Content;

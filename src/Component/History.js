@@ -6,6 +6,7 @@ import ApiCall from '../ServiceManager/apiCall';
 import Loader from '../ServiceManager/Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import millify from "millify";
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
@@ -55,6 +56,15 @@ function History(props) {
         }
     }
 
+    async function viewHandler(videoId) {
+        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const parameter = {
+            user_id: user._id
+        }
+
+        await apiCall.postAPI(viewUrl, parameter);
+    }
+
     async function playVideo(videoId) {
 
         if (isLogin) {
@@ -66,6 +76,7 @@ function History(props) {
             await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
         }
 
+        viewHandler(videoId);
         routeChange(`/playVideo/${btoa(videoId)}`);
     }
 
@@ -117,8 +128,8 @@ function History(props) {
                             <div className="col-12 col-md-7 col-lg-9 pr-md-0">
                                 <div><h5 className='text-primary'>{vd.createDate.substr(0, 10)}</h5></div>
                                 <div><h5 className='break-title-1'>{vd.video_id.videoName}</h5></div>
-                                <div><h5 className="text-muted">{vd.video_id.channel_id.channelName}</h5></div>
-                                <div><h6 className='text-muted'>{<TimeAgo date={vd.video_id.createDate} />}</h6></div>
+                                <div><h5 className="break-title-1 text-muted">{vd.video_id.channel_id.channelName}</h5></div>
+                                <div><h6 className='text-muted m-0'>{( millify(vd.video_id.views.length) + (vd.video_id.views.length > 1 ? " Views" : " View") ) + ' • '} <span>{<TimeAgo date={vd.video_id.createDate}/>}</span> </h6></div>
                                 <button onClick={(e) => removeHistory(e, vd.video_id._id)} className='remove-fvourites-btn p-0 mt-2'><i class="far fa-trash-alt mr-2"></i>REMOVE FROM HISTORIES</button>
                             </div>
                         </div>
@@ -149,7 +160,7 @@ function History(props) {
                             </div>
                         }
                     </div>
-                    <div className='py-5 bg-light my-2'>
+                    <div className='py-5 bg-light my-3'>
                         <h2 className='text-center'>Advertisement</h2>
                     </div>
                     <div>

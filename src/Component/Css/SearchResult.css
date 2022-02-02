@@ -1,3 +1,6 @@
+.S-vd-queue:hover {
+    background-color: rgb(230, 230, 230);
+}
 .btn-item {
     border: none;
     background-color: transparent;
@@ -8,14 +11,6 @@
 }
 .item:hover {
     background-color: rgb(238, 238, 238);
-}
-.title-text {
-    font-size: 18px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
 }
 .loader-container {
     margin-top: 250px;

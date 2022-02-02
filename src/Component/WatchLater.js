@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './Css/CentralStyle.css';
 import './Css/WatchLater.css';
-import VideoPlayer from 'react-video-js-player';
 import TimeAgo from 'react-timeago';
 import ApiCall from '../ServiceManager/apiCall';
 import { useSelector } from 'react-redux';
-import { MdDeleteForever, MdOutlinePlayCircleFilled } from "react-icons/md";
 import Loader from '../ServiceManager/Loader';
 import { ToastContainer, toast } from 'react-toastify';
+import millify from "millify";
 
 /* ------------------ Import CSS ------------------- */
 import 'react-toastify/dist/ReactToastify.css';
@@ -57,6 +56,15 @@ function WatchLater(props) {
         }
     }
 
+    async function viewHandler(videoId) {
+        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const parameter = {
+            user_id: user._id
+        }
+
+        await apiCall.postAPI(viewUrl, parameter);
+    }
+
     async function playVideo(videoId) {
 
         if (isLogin) {
@@ -68,6 +76,7 @@ function WatchLater(props) {
             const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
         }
 
+        viewHandler(videoId);
         routeChange(`/playVideo/${btoa(videoId)}`);
     }
 
@@ -119,8 +128,8 @@ function WatchLater(props) {
                             </div>
                             <div className="col-12 col-md-7 col-lg-9 pr-md-0 pt-md-2">
                                 <div><h5 className='break-title-2'>{vd.video_id.videoName}</h5></div>
-                                <div><h5 className="text-muted">{vd.video_id.channel_id.channelName}</h5></div>
-                                <div><h6 className='text-muted'>{<TimeAgo date={vd.video_id.createDate} />}</h6></div>
+                                <div><h5 className="break-title-1 text-muted">{vd.video_id.channel_id.channelName}</h5></div>
+                                <div><h6 className='text-muted m-0'>{( millify(vd.video_id.views.length) + (vd.video_id.views.length > 1 ? " Views" : " View") ) + ' • '} <span>{<TimeAgo date={vd.video_id.createDate}/>}</span> </h6></div>
                                 <button onClick={(e) => removeWatchLater(e, vd.video_id._id)} className='remove-fvourites-btn p-0 mt-2'><i class="far fa-trash-alt mr-2"></i>REMOVE FROM WATCH LATER</button>
                             </div>
                         </div>
@@ -151,7 +160,7 @@ function WatchLater(props) {
                             </div>
                         }
                     </div>
-                    <div className='py-5 bg-light my-2'>
+                    <div className='py-5 bg-light my-3'>
                         <h2 className='text-center'>Advertisement</h2>
                     </div>
                     <div>

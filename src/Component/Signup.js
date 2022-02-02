@@ -111,7 +111,7 @@ class Signup extends React.Component {
                 <div className="container-fluid">
                     <div className="background">
                         <div className="row pt-md-5">
-                            <div className="offset-lg-7 offset-md-5 col-lg-4 col-md-7 mt-md-5">
+                            <div className="offset-lg-6 offset-md-5 col-lg-6 col-md-7 mt-md-5">
                                 <h1 className="px-md-5 pt-5 text-primary">Signup</h1>
                                 <form className="p-md-5 pt-4">
                                     <div className="row">

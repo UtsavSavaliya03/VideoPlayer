@@ -75,31 +75,6 @@ li:hover .dropdown {
 
 /* ---------------------- Dropdown ------------------------- */
 
-.user .user-profile {
-    float: left;
-}
-.user .user-info {
-    float: left;
-}
-.user .user-profile .dropdown-avatar {
-    margin: 10px 30px 10px 10px;
-}
-.user-info .user-name {
-    width: 250px;
-    margin: 15px 0 0 0;
-    font-size: 20px;
-    font-weight: 600;
-    word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1; /* number of lines to show */
-    -webkit-box-orient: vertical;
-}
-.user-info .user-email {
-    font-size: 15px;
-    color: gray;
-}
 .button-container .navigation hr {
     margin: 8px 0;
 }
@@ -146,10 +121,16 @@ li:hover .dropdown {
 .nav-menu::-webkit-scrollbar-thumb:hover {
     background: #555; 
 }
-  .menu-bars svg {
-    height: 30px;
-    width: 30px;
-    margin-top: 5px;
+  .menu-bars .btn-close {
+    color: gray;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  .menu-bars .btn-close:hover {
+    color: black;
+  }
+  .menu-bars .btn-menu {
+    font-size: 30px;
     cursor: pointer;
   }
   .nav-menu {
@@ -168,41 +149,30 @@ li:hover .dropdown {
     left: 0;
     transition: 350ms;
   }
-  
   .nav-text {
     display: block;
     list-style: none;
   }
-  .sidebar-icon svg {
-      width: 30px;
-      height: 30px;
-      margin-top: 5px;
-  }
-  .sidebar-title {
-    margin-left: 15px;
-    margin-top: 5px;
-  }
-  
-  .nav-text a {
-    width: auto;
-    text-align: left;
+  .nav-text .btn-navigation {
+    background-color: transparent;
     border: none;
-    color: black;
-    text-decoration: none;
-    padding: 0px 20px;
-    font-size: 20px;
-    font-weight: 400;
-    padding: 5px 20px;
-    display: flex;
-  }
-  
-  .nav-text a:hover {
-    background-color: #c4c4c4;
+    padding: 6px 20px;
+    font-size: 22px;
     cursor: pointer;
+    color: rgb(121, 117, 117);
+    width: 100%;
+    text-align: left;
   }
-  
+  .nav-text .btn-navigation:hover {
+    background-color: #c4c4c4;
+    color: black;
+  }
+  .nav-text .btn-navigation:focus {
+    outline: none;
+  }
   .nav-menu-items {
     width: 100%;
+    box-shadow: 0 -10px 20px -5px rgba(115,115,115,0.75), 0 10px 20px -5px rgba(115,115,115,0.75), 10px 0 20px -5px rgba(115,115,115,0.75);
   }
   .navbar-toggle {
     margin-bottom: 20px;

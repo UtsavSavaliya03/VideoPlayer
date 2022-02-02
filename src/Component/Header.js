@@ -1,26 +1,16 @@
+import './Css/CentralStyle.css';
 import './Css/Header.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import personIcon from '../assets/Icons/person.svg';
 import channelIcon from '../assets/Icons/channel.svg';
 import studioIcon from '../assets/Icons/studio.svg';
 import logOutIcon from '../assets/Icons/logout.svg';
 import Avatar from 'react-avatar';
-import { GiHamburgerMenu } from "react-icons/gi";
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 
 /* --------------- Icons ------------------- */
 
-import { AiOutlineClose } from "react-icons/ai";
-import { AiOutlineHome } from "react-icons/ai";
-import { AiOutlineHeart } from "react-icons/ai";
-import { MdOutlineWatchLater } from "react-icons/md";
-import { BiLike } from "react-icons/bi";
-import { RiHistoryLine } from "react-icons/ri";
-import { FiSettings } from "react-icons/fi";
-import { BiBookContent } from "react-icons/bi";
-import { FiUser } from "react-icons/fi";
-import { GoCloudUpload } from "react-icons/go";
 import { useHistory } from 'react-router-dom';
 
 export default function Header(props) {
@@ -54,7 +44,7 @@ export default function Header(props) {
             routeChange(`/result/${searchQuery}`);
         }
     }
-    
+
     function handleKeyPress(event) {
         if (event.key === "Enter") {
             searchHandler();
@@ -67,89 +57,90 @@ export default function Header(props) {
                 <div>
                 </div>
                 <div className="menu d-flex justify-content-between w-100">
-                    <div className='d-inline'>
+                    <div className='d-inline align-self-center'>
                         <a className='menu-bars'>
-                            <GiHamburgerMenu onClick={showSidebar} />
+                            <i onClick={showSidebar} class="btn-menu fas fa-bars"></i>
                         </a>
                     </div>
                     <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                         <ul className='nav-menu-items' onClick={showSidebar}>
                             <li className='navbar-toggle'>
                                 <a className='menu-bars'>
-                                    <AiOutlineClose />
+                                    <i class="btn-close fal fa-times m-1"></i>
                                 </a>
                             </li>
                             {(windowPath.substr(0, 7) === '/studio') ?
                                 (<>
                                     <li className='nav-text'>
-                                        <a href="/">
-                                            <span className="sidebar-icon" ><AiOutlineHome /></span>
-                                            <span className="sidebar-title" >Home</span>
-                                        </a>
+                                        <button className='btn-navigation' onClick={() => routeChange('/')}>
+                                            <i class="fas fa-home mr-3"></i>
+                                            Home
+                                        </button>
                                     </li>
                                     <li className='nav-text'>
-                                        <a href="/studio">
-                                            <span className="sidebar-icon" ><BiBookContent /></span>
-                                            <span className="sidebar-title" >Content</span>
-                                        </a>
+                                        <button className='btn-navigation' onClick={() => { routeChange('/studio'); window.location.reload() }}>
+                                            <i class="fas fa-photo-video mr-3"></i>
+                                            Content
+                                        </button>
                                     </li>
                                     <li className='nav-text'>
-                                        <a href={`/studio/myChannel/${btoa(userChannel._id)}`}>
-                                            <span className="sidebar-icon" ><FiUser /></span>
-                                            <span className="sidebar-title">My Channel</span>
-                                        </a>
+                                        <button className='btn-navigation' onClick={() => { routeChange(`/studio/myChannel/${btoa(userChannel._id)}`); window.location.reload() }}>
+                                            <i class="fas fa-tv mr-3"></i>
+                                            My Channel
+                                        </button>
                                     </li>
                                     <li className='nav-text'>
-                                        <a href="/studio/upload">
-                                            <span className="sidebar-icon" ><GoCloudUpload /></span>
-                                            <span className="sidebar-title" >Upload Video</span>
-                                        </a>
+                                        <button className='btn-navigation' onClick={() => { routeChange('/studio/upload'); window.location.reload() }}>
+                                            <i class="fas fa-cloud-upload-alt mr-3"></i>
+                                            Upload Video
+                                        </button>
                                     </li>
                                 </>
                                 ) : (
                                     <>
                                         <li className='nav-text'>
-                                            <a href="/">
-                                                <span className="sidebar-icon" ><AiOutlineHome /></span>
-                                                <span className="sidebar-title" >Home</span>
-                                            </a>
+                                            <button className='btn-navigation' onClick={() => routeChange('/')}>
+                                                <i class="fas fa-home mr-3"></i>
+                                                Home
+                                            </button>
                                         </li>
                                         <li className='nav-text'>
-                                            <a href="/likedVideos">
-                                                <span className="sidebar-icon" ><BiLike /></span>
-                                                <span className="sidebar-title">Liked Videos</span>
-                                            </a>
+                                            <button className='btn-navigation' onClick={() => routeChange('/likedVideos')}>
+                                                <i class="fas fa-thumbs-up mr-3"></i>
+                                                Liked Videos
+                                            </button>
                                         </li>
                                         <li className='nav-text'>
-                                            <a href="/favourite">
-                                                <span className="sidebar-icon" ><AiOutlineHeart /></span>
-                                                <span className="sidebar-title">Favourite</span>
-                                            </a>
+                                            <button className='btn-navigation' onClick={() => routeChange('/favourite')}>
+                                                <i class="fas fa-heart mr-3"></i>
+                                                Favourite
+                                            </button>
                                         </li>
                                         <li className='nav-text'>
-                                            <a href="/watchLater">
-                                                <span className="sidebar-icon" ><MdOutlineWatchLater /></span>
-                                                <span className="sidebar-title">Watch Latere</span>
-                                            </a>
+                                            <button className='btn-navigation' onClick={() => routeChange('/watchLater')}>
+                                                <i class="far fa-clock mr-3"></i>
+                                                Watch Later
+                                            </button>
                                         </li>
                                         <li className='nav-text'>
-                                            <a href="/history">
-                                                <span className="sidebar-icon" ><RiHistoryLine /></span>
-                                                <span className="sidebar-title">History</span>
-                                            </a>
+                                            <button className='btn-navigation' onClick={() => routeChange('/history')}>
+                                                <i class="fas fa-history mr-3"></i>
+                                                History
+                                            </button>
                                         </li>
                                     </>
                                 )
                             }
                         </ul>
                     </nav>
+                    {/* --------- Search Bar --------- */}
                     {(windowPath != "/login" && windowPath != "/signup" && windowPath != "/resetPassword" && windowPath != "/sendMail")
                         &&
-                        <div className='search-bar d-inline align-self-center text-center w-50'>
+                        <div className='search-bar d-inline align-self-center text-center w-50 py-1'>
                             <input
                                 type="text"
                                 class="search-input pl-3 py-1"
-                                placeholder="Search. . ."
+                                placeholder="Search . . ."
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyPress={handleKeyPress}
                             />
@@ -165,7 +156,7 @@ export default function Header(props) {
                     <div className="button-container">
                         <ul className="navigation">
                             {!isLogin &&
-                                <li>
+                                <li className='py-1'>
                                     <button onClick={() => routeChange('/login')} className="btn-signin">SIGN IN</button>
                                 </li>}
                             {isLogin &&
@@ -179,13 +170,13 @@ export default function Header(props) {
                                     />
                                     <div className="dropdown">
                                         <ul className="dropdown-content">
-                                            <div className="user">
-                                                <div className="user-profile">
+                                            <div className="user row px-4 pt-3 pb-2">
+                                                <div className="col-2">
                                                     <Avatar className="dropdown-avatar" size="50" round={true} src={user.profile_picture} name={user.fName + " " + user.lName} />
                                                 </div>
-                                                <div className="user-info">
-                                                    <p className="user-name" >{user.userName}</p>
-                                                    <p className="user-email" >{user.email}</p>
+                                                <div className="col-10 pl-4">
+                                                    <h6 className="m-0 break-title-1" >{user.userName}</h6>
+                                                    <p className="m-0 text-muted break-title-1" >{user.email}</p>
                                                 </div>
                                                 <div className="clear"></div>
                                             </div>

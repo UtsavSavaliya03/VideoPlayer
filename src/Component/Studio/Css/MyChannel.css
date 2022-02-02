@@ -1,15 +1,11 @@
-.channel-container {
-    height: 94vh;
-    overflow: auto;
-}
-.channel-container .img-frame {
+.container-fluid .img-frame {
     height: 300px;
     background: url("../../../assets/Background/chanelBg.jpg") no-repeat 50% 50%;
 
     background-size: cover;
     position: relative;
 }
-.channel-container .overlay:before {
+.container-fluid .overlay:before {
     content: "";
     position: absolute;
     left: 0;
@@ -22,7 +18,6 @@
     background: #5f5e5e;
 }
 .channel-data {
-    width: 75%;
     position: relative;
     margin: auto;
     margin-top: -100px;

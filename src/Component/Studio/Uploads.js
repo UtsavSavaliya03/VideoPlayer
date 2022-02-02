@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Css/Uploads.css';
 import './Css/bootstrap.min.css';
 import axios from 'axios';
@@ -32,11 +32,11 @@ function Uploads() {
     const [uploadedPercentage, setUploadedPercentage] = useState(0);
 
     function uploadVideo() {
-        document.getElementById("selectVideo").click()
+        document.getElementById("selectVideo").click();
     }
 
     function uploadThumbnail() {
-        document.getElementById("selectThumbnail").click()
+        document.getElementById("selectThumbnail").click();
     }
 
     function routeChange(path) {
@@ -46,11 +46,11 @@ function Uploads() {
     function displayAlert(type, alertMsg) {
         if (type == true) {
             toast.success(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         } else {
             toast.error(alertMsg, {
-                position: "top-center"
+                position: "top-right"
             })
         }
     }
@@ -84,7 +84,7 @@ function Uploads() {
         }
     }
 
-    async function fileUploadHandler(event) {
+    async function fileUploadHandler() {
 
         const formData = new FormData();
 
@@ -127,134 +127,136 @@ function Uploads() {
 
     return (
         <>
-            <div className="uploader-container">
-                <h4>Upload Video</h4>
-                <hr className="my-4" />
-                <div className="row">
-                    <div className="form-group files col-6">
-                        <label>Upload Your Video Here</label>
-                        <button className="input-btn" onClick={() => uploadVideo()}>
-                            <p className="file-name">{videoFileName}</p>
+            <div className="container-fluid px-md-5">
+                <div className='mx-lg-5 pt-5'>
+                    <h4>Upload Video</h4>
+                    <hr className="my-4" />
+                    <div className="row">
+                        <div className="form-group files col-12 col-lg-6">
+                            <label>Upload Your Video Here</label>
+                            <button className="input-btn" onClick={() => uploadVideo()}>
+                                <p className="file-name">{videoFileName}</p>
+                            </button>
+                            <input
+                                id="selectVideo"
+                                hidden
+                                type="file"
+                                name="videoFile"
+                                className="form-control"
+                                multiple="multiple"
+                                accept="video/*"
+                                autocomplete="off"
+                                onChange={(e) => fileChangeHandler(e)}
+                            />
+                        </div>
+                        <div className="form-group files col-12 col-lg-6">
+                            <label>Upload Your Thumbnail Image Here</label>
+                            <button className="input-btn" onClick={() => uploadThumbnail()}>
+                                <div className='row px-3'>
+                                    <p className="file-name col-6">{thumbnailFileName}</p>
+                                    <p className='text-warning col-6'> Image size should be 1280 X 720 px </p>
+                                </div>
+                            </button>
+                            <input
+                                id="selectThumbnail"
+                                hidden
+                                type="file"
+                                name="thumbnailFile"
+                                className="form-control"
+                                multiple="multiple"
+                                accept="image/*"
+                                autocomplete="off"
+                                onChange={(e) => fileChangeHandler(e)}
+                            />
+                        </div>
+                    </div>
+                    <hr className="my-4" />
+                    <div className="row">
+                        <div className="form-group col-12">
+                            <input
+                                className="input"
+                                type="text"
+                                name="videoName"
+                                autocomplete="off"
+                                placeholder="Title"
+                                onChange={(e) => { setVideoName(e.target.value) }}
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="form-group col-12">
+                            <textarea
+                                className="text-area"
+                                name="description"
+                                rows="7"
+                                autocomplete="off"
+                                placeholder="Description..."
+                                onChange={(e) => { setDescription(e.target.value) }}
+                            >
+                            </textarea>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12 col-md-6">
+                            <input
+                                className="input"
+                                list="category-list"
+                                id="category"
+                                name="category"
+                                autocomplete="off"
+                                placeholder="Category"
+                                onChange={(e) => { setCategory(e.target.value) }}
+                            />
+                            <datalist id="category-list">
+                                <option value="Art">Art</option>
+                                <option value="Business">Business</option>
+                                <option value="Education">Education</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Health">Health</option>
+                                <option value="Motivation">Motivation</option>
+                                <option value="Others">Others</option>
+                                <option value="Science">Science</option>
+                            </datalist>
+                        </div>
+                        <div className="form-group col-12 col-md-6">
+                            <input
+                                className="input"
+                                list="visibility-list"
+                                id="visibility"
+                                name="visibility"
+                                autocomplete="off"
+                                placeholder="Visibility"
+                                onChange={(e) => { setVisibility(e.target.value) }}
+                            />
+                            <datalist id="visibility-list">
+                                <option value="Public">Public</option>
+                                <option value="Private">Private</option>
+                            </datalist>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <ReactTagInput
+                                allowUnique={true}
+                                tags={videoTags}
+                                value={videoTags}
+                                onChange={(newTags) => setVideoTags(newTags)}
+                                placeholder="# Add tags...  (Type and press enter)"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        {uploadedPercentage > 0 && <ProgressBar now={uploadedPercentage} animated label={` Uploading... ${uploadedPercentage} %`} className="my-4" />}
+                    </div>
+                    <div>
+                        <button
+                            type="button"
+                            className="btn btn-primary float-right my-5"
+                            disabled={selectedVideo == null || selectedThumbnail == null || videoFileName == null || description == null}
+                            onClick={() => fileUploadHandler()}
+                        > Upload Video
                         </button>
-                        <input
-                            id="selectVideo"
-                            hidden
-                            type="file"
-                            name="videoFile"
-                            className="form-control"
-                            multiple="multiple"
-                            accept="video/*"
-                            autocomplete="off"
-                            onChange={(e) => fileChangeHandler(e)}
-                        />
                     </div>
-                    <div className="form-group files col-6">
-                        <label>Upload Your Thumbnail Image Here</label>
-                        <button className="input-btn" onClick={() => uploadThumbnail()}>
-                            <div className='row px-3'>
-                                <p className="file-name col-6">{thumbnailFileName}</p>
-                                <p className='text-warning col-6'> Image size should be 1280 X 720 px </p>
-                            </div>
-                        </button>
-                        <input
-                            id="selectThumbnail"
-                            hidden
-                            type="file"
-                            name="thumbnailFile"
-                            className="form-control"
-                            multiple="multiple"
-                            accept="image/*"
-                            autocomplete="off"
-                            onChange={(e) => fileChangeHandler(e)}
-                        />
-                    </div>
-                </div>
-                <hr className="my-4" />
-                <div className="row">
-                    <div className="form-group col-12">
-                        <input
-                            className="input"
-                            type="text"
-                            name="videoName"
-                            autocomplete="off"
-                            placeholder="Title"
-                            onChange={(e) => { setVideoName(e.target.value) }}
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="form-group col-12">
-                        <textarea
-                            className="text-area"
-                            name="description"
-                            rows="7"
-                            autocomplete="off"
-                            placeholder="Description..."
-                            onChange={(e) => { setDescription(e.target.value) }}
-                        >
-                        </textarea>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-6">
-                        <input
-                            className="input"
-                            list="category-list"
-                            id="category"
-                            name="category"
-                            autocomplete="off"
-                            placeholder="Category"
-                            onChange={(e) => { setCategory(e.target.value) }}
-                        />
-                        <datalist id="category-list">
-                            <option value="Art">Art</option>
-                            <option value="Business">Business</option>
-                            <option value="Education">Education</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Health">Health</option>
-                            <option value="Motivation">Motivation</option>
-                            <option value="Others">Others</option>
-                            <option value="Science">Science</option>
-                        </datalist>
-                    </div>
-                    <div className="form-group col-6">
-                        <input
-                            className="input"
-                            list="visibility-list"
-                            id="visibility"
-                            name="visibility"
-                            autocomplete="off"
-                            placeholder="Visibility"
-                            onChange={(e) => { setVisibility(e.target.value) }}
-                        />
-                        <datalist id="visibility-list">
-                            <option value="Public">Public</option>
-                            <option value="Private">Private</option>
-                        </datalist>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <ReactTagInput
-                            allowUnique={true}
-                            tags={videoTags}
-                            value={videoTags}
-                            onChange={(newTags) => setVideoTags(newTags)}
-                            placeholder="# Add tags...  (Type and press enter)"
-                        />
-                    </div>
-                </div>
-                <div>
-                    {uploadedPercentage > 0 && <ProgressBar now={uploadedPercentage} animated label={` Uploading... ${uploadedPercentage} %`} className="my-4" />}
-                </div>
-                <div>
-                    <button
-                        type="button"
-                        className="btn btn-primary float-right mt-5"
-                        disabled={selectedVideo == null || selectedThumbnail == null || videoFileName == null || description == null}
-                        onClick={() => fileUploadHandler()}
-                    > Upload Video
-                    </button>
                 </div>
             </div>
             <ToastContainer />
