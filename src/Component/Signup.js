@@ -95,7 +95,7 @@ class Signup extends React.Component {
             password: this.state.password[0]
         }
         console.log(this.state.password[0]);
-        const data = await apiCall.postAPI('http://localhost:3000/signup', parameter);
+        const data = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/signup', parameter);
         console.log(data);
 
         this.displayAlert(data.status, data.msg);

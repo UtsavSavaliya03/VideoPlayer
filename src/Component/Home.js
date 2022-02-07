@@ -43,7 +43,7 @@ export default function Home() {
 
         setIsLoading(true);
 
-        const videos = await apiCall.postAPI('http://localhost:3000/getAllVd');
+        const videos = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getAllVd');
 
         setIsLoading(false);
 
@@ -57,7 +57,7 @@ export default function Home() {
     }
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -73,7 +73,7 @@ export default function Home() {
                 user_id: user._id,
                 video_id: videoId,
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
         }
 
         viewHandler(videoId);
@@ -84,7 +84,7 @@ export default function Home() {
     async function setCategoryVideoHandler(category) {
         setIsLoading(true);
 
-        const url = `http://localhost:3000/categoryVd/${category}`;
+        const url = `https://video-player-api-demo.herokuapp.com/categoryVd/${category}`;
         const categoryVideos = await apiCall.postAPI(url);
 
         setIsLoading(false);

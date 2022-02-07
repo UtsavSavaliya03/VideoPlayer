@@ -37,7 +37,7 @@ function Content() {
         const parameter = {
             channel_id: userChannel._id
         }
-        const channelVideo = await apiCall.postAPI('http://localhost:3000/getChannelVd', parameter);
+        const channelVideo = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getChannelVd', parameter);
 
         setIsLoading(false);
 
@@ -66,7 +66,7 @@ function Content() {
     };
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -82,7 +82,7 @@ function Content() {
                 user_id: user._id,
                 video_id: videoId
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
 
         }
 
@@ -92,7 +92,7 @@ function Content() {
     }
 
     async function removeVideo(videoId) {
-        const videoUrl = `http://localhost:3000/removeVideo/${videoId}`;
+        const videoUrl = `https://video-player-api-demo.herokuapp.com/removeVideo/${videoId}`;
         const video = await apiCall.postAPI(videoUrl);
 
         if (video.status) {

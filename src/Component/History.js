@@ -31,7 +31,7 @@ function History(props) {
         const parameter = {
             user_id: user._id
         }
-        const history = await apiCall.postAPI('http://localhost:3000/getHistory', parameter);
+        const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getHistory', parameter);
 
         setIsLoading(false);
 
@@ -57,7 +57,7 @@ function History(props) {
     }
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -73,7 +73,7 @@ function History(props) {
                 user_id: user._id,
                 video_id: videoId
             }
-            await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
         }
 
         viewHandler(videoId);
@@ -88,7 +88,7 @@ function History(props) {
             user_id: user._id,
             video_id: videoId
         }
-        const removedHistory = await apiCall.postAPI('http://localhost:3000/removeHistory', parameter);
+        const removedHistory = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeHistory', parameter);
 
         displayAlert(removedHistory.status, removedHistory.msg);
         if (removedHistory.status) {
@@ -104,7 +104,7 @@ function History(props) {
         const parameter = {
             user_id: user._id
         }
-        const removedHistory = await apiCall.postAPI('http://localhost:3000/removeAllHistory', parameter);
+        const removedHistory = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeAllHistory', parameter);
 
         displayAlert(removedHistory.status, removedHistory.msg);
 

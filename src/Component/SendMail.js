@@ -47,7 +47,7 @@ export default function SendMail() {
             email: email
         }
 
-        const data = await apiCall.postAPI('http://localhost:3000/sendEmail', parameter);
+        const data = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/sendEmail', parameter);
         displayAlert(data.status, data.msg);
 
         if (data.status) {

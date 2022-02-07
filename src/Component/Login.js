@@ -39,7 +39,7 @@ export default function Login(props) {
             password: password
         }
 
-        const data = await apiCall.postAPI('http://localhost:3000/login', parameter);
+        const data = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/login', parameter);
         console.log(data);
 
         displayAlert(data.status, data.msg)
@@ -52,7 +52,7 @@ export default function Login(props) {
                 user_id: data.data.user._id,
             }
 
-            const channel = await apiCall.postAPI('http://localhost:3000/getUserChannel', parameter);
+            const channel = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getUserChannel', parameter);
             console.log(channel);
             if (channel.status) {
                 setCookie("channel", channel.data, { path: '/' });

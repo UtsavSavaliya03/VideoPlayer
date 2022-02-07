@@ -101,7 +101,7 @@ function UserProfile() {
         formData.append("country", country);
         formData.append("address", address);
 
-        const url = `http://localhost:3000/updateProfile/${user._id}`
+        const url = `https://video-player-api-demo.herokuapp.com/updateProfile/${user._id}`
 
         const data = await axios.post(url, formData)
             .then((response) => {
@@ -115,7 +115,7 @@ function UserProfile() {
 
         if (data.status) {
 
-            const url = `http://localhost:3000/getUser/${user._id}`
+            const url = `https://video-player-api-demo.herokuapp.com/getUser/${user._id}`
 
             setTimeout(async () => {
                 const updatedUser = await apiCall.postAPI(url);

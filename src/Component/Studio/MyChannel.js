@@ -23,7 +23,7 @@ function MyChannel() {
         setIsLoading(true);
 
         const channelId = atob(params.id);
-        const getChannelUrl = `http://localhost:3000/getChannel/${channelId}`;
+        const getChannelUrl = `https://video-player-api-demo.herokuapp.com/getChannel/${channelId}`;
         const channel = await apiCall.postAPI(getChannelUrl);
 
         if (channel.status) {

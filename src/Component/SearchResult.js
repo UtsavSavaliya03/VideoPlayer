@@ -34,7 +34,7 @@ export default function SearchResult() {
     async function searchValue() {
         setIsLoading(true);
         setPreviousId(params.name);
-        var videoUrl = `http://localhost:3000/searchVideo/${params.name}`;
+        var videoUrl = `https://video-player-api-demo.herokuapp.com/searchVideo/${params.name}`;
         const videos = await apiCall.postAPI(videoUrl);
         setIsLoading(false);
         if (videos.status) {
@@ -47,7 +47,7 @@ export default function SearchResult() {
     }, []);
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -61,7 +61,7 @@ export default function SearchResult() {
                 user_id: user._id,
                 video_id: videoId
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
         }
 
         viewHandler(videoId);

@@ -31,7 +31,7 @@ function WatchLater(props) {
         const parameter = {
             user_id: user._id
         }
-        const watchLater = await apiCall.postAPI('http://localhost:3000/getWatchLater', parameter);
+        const watchLater = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getWatchLater', parameter);
 
         setIsLoading(false);
 
@@ -57,7 +57,7 @@ function WatchLater(props) {
     }
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -73,7 +73,7 @@ function WatchLater(props) {
                 user_id: user._id,
                 video_id: videoId
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
         }
 
         viewHandler(videoId);
@@ -88,7 +88,7 @@ function WatchLater(props) {
             user_id: user._id,
             video_id: videoId
         }
-        const removedWatchLater = await apiCall.postAPI('http://localhost:3000/removeWatchLater', parameter);
+        const removedWatchLater = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeWatchLater', parameter);
 
         displayAlert(removedWatchLater.status, removedWatchLater.msg);
 
@@ -105,7 +105,7 @@ function WatchLater(props) {
         const parameter = {
             user_id: user._id
         }
-        const removedWatchLater = await apiCall.postAPI('http://localhost:3000/removeAllWatchLater', parameter);
+        const removedWatchLater = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeAllWatchLater', parameter);
 
         displayAlert(removedWatchLater.status, removedWatchLater.msg);
 

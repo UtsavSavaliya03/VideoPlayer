@@ -110,7 +110,7 @@ function Uploads() {
             }
         }
 
-        const data = await axios.post('http://localhost:3000/uploadVideo', formData, progress).then(res => {
+        const data = await axios.post('https://video-player-api-demo.herokuapp.com/uploadVideo', formData, progress).then(res => {
             setUploadedPercentage(100);
             setTimeout(() => {
                 setUploadedPercentage(0);

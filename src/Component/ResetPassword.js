@@ -108,7 +108,7 @@ class ResetPassword extends React.Component {
         console.log(this.state.password[0]);
         console.log(this.state.confirmPass[0]);
         console.log(this.state.otp[0]);
-        const data = await apiCall.postAPI('http://localhost:3000/resetPassword', parameter);
+        const data = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/resetPassword', parameter);
         console.log(data);
 
         this.displayAlert(data.status, data.msg);

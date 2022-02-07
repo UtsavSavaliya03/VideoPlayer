@@ -83,7 +83,7 @@ function VideoPlay() {
 
         setPreviousId(atob(params.id));
         const videoId = atob(params.id);
-        const url = `http://localhost:3000/getVideo/${videoId}`;
+        const url = `https://video-player-api-demo.herokuapp.com/getVideo/${videoId}`;
         const playingVd = await apiCall.postAPI(url);
 
         if (playingVd.status) {
@@ -100,15 +100,15 @@ function VideoPlay() {
 
         if (isLogin) {
             // Like
-            const like = await apiCall.postAPI('http://localhost:3000/checkLike', vdParameters);
+            const like = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/checkLike', vdParameters);
             action.setLike(like.status);
 
             // Favourite
-            const favourite = await apiCall.postAPI('http://localhost:3000/checkFavourite', vdParameters);
+            const favourite = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/checkFavourite', vdParameters);
             action.setFavourite(favourite.status);
 
             // Watch Later
-            const watchLater = await apiCall.postAPI('http://localhost:3000/checkWatchLater', vdParameters);
+            const watchLater = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/checkWatchLater', vdParameters);
             action.setWatchLater(watchLater.status);
         }
 
@@ -116,7 +116,7 @@ function VideoPlay() {
 
         setIsVdListLoading(true);
 
-        const videos = await apiCall.postAPI('http://localhost:3000/getAllVd');
+        const videos = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getAllVd');
 
         setIsVdListLoading(false);
 
@@ -128,7 +128,7 @@ function VideoPlay() {
     async function setCategoryVideoHandler(category) {
         setIsVdListLoading(true);
 
-        const url = `http://localhost:3000/categoryVd/${category}`;
+        const url = `https://video-player-api-demo.herokuapp.com/categoryVd/${category}`;
         const categoryVideos = await apiCall.postAPI(url);
 
         setIsVdListLoading(false);
@@ -148,7 +148,7 @@ function VideoPlay() {
             video_id: videoId
         }
 
-        const videoCmt = await apiCall.postAPI('http://localhost:3000/getComment', parameter);
+        const videoCmt = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getComment', parameter);
 
         setIsCmtListLoading(false);
         if (videoCmt.status) {
@@ -173,7 +173,7 @@ function VideoPlay() {
     }
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -189,7 +189,7 @@ function VideoPlay() {
                 user_id: user._id,
                 video_id: videoId
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
         }
 
         viewHandler(videoId);
@@ -203,7 +203,7 @@ function VideoPlay() {
                 user_id: user._id,
                 video_id: videoId
             }
-            const like = await apiCall.postAPI('http://localhost:3000/addLike', parameter);
+            const like = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addLike', parameter);
 
             action.setLike(like.status);
         } else {
@@ -217,7 +217,7 @@ function VideoPlay() {
                 user_id: user._id,
                 video_id: videoId
             }
-            const favourite = await apiCall.postAPI('http://localhost:3000/addFavourite', parameter);
+            const favourite = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addFavourite', parameter);
 
             action.setFavourite(favourite.status);
         } else {
@@ -232,7 +232,7 @@ function VideoPlay() {
                 video_id: videoId
             }
 
-            const watchLater = await apiCall.postAPI('http://localhost:3000/addWatchLater', parameter);
+            const watchLater = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addWatchLater', parameter);
 
             action.setWatchLater(watchLater.status);
         } else {
@@ -247,7 +247,7 @@ function VideoPlay() {
                 video_id: playingVideo._id,
                 cmt_text: userComment,
             }
-            const comment = await apiCall.postAPI('http://localhost:3000/postComment', parameter);
+            const comment = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/postComment', parameter);
 
             if (comment.status) {
                 setUserComment('');

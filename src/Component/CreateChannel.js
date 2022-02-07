@@ -46,7 +46,7 @@ function CreateChannel() {
         formData.append("email", email);
         formData.append("channelBio", channelBio);
 
-        const data = await axios.post('http://localhost:3000/createChannel', formData)
+        const data = await axios.post('https://video-player-api-demo.herokuapp.com/createChannel', formData)
             .then((response) => {
                 return response.data
             })

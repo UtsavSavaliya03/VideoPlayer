@@ -34,7 +34,7 @@ export default function UpdateChannel() {
         setIsLoading(true);
 
         const channelId = atob(params.id);
-        const getChannelUrl = `http://localhost:3000/getChannel/${channelId}`;
+        const getChannelUrl = `https://video-player-api-demo.herokuapp.com/getChannel/${channelId}`;
         const channel = await apiCall.postAPI(getChannelUrl);
 
         if (channel.status) {
@@ -74,7 +74,7 @@ export default function UpdateChannel() {
         formData.append("channelBio", channelBio);
 
         const channelId = atob(params.id);
-        const updateChannelUrl = `http://localhost:3000/updateChannel/${channelId}`
+        const updateChannelUrl = `https://video-player-api-demo.herokuapp.com/updateChannel/${channelId}`
 
         const data = await axios.post(updateChannelUrl, formData)
             .then((response) => {
@@ -89,7 +89,7 @@ export default function UpdateChannel() {
         if (data.status) {
 
             setTimeout(async () => {
-                const getChannelUrl = `http://localhost:3000/getChannel/${channelId}`;
+                const getChannelUrl = `https://video-player-api-demo.herokuapp.com/getChannel/${channelId}`;
                 const channel = await apiCall.postAPI(getChannelUrl);
                 if (channel.status) {
                     setCookie("channel", channel.data, { path: '/' });

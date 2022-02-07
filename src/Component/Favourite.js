@@ -34,7 +34,7 @@ function Favourite(props) {
         const parameter = {
             user_id: user._id
         }
-        const favourite = await apiCall.postAPI('http://localhost:3000/getFavourite', parameter);
+        const favourite = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getFavourite', parameter);
 
         setIsLoading(false);
 
@@ -60,7 +60,7 @@ function Favourite(props) {
     }
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -76,7 +76,7 @@ function Favourite(props) {
                 user_id: user._id,
                 video_id: videoId
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
 
         }
 
@@ -92,7 +92,7 @@ function Favourite(props) {
             user_id: user._id,
             video_id: videoId
         }
-        const removedFavourite = await apiCall.postAPI('http://localhost:3000/removeFavourite', parameter);
+        const removedFavourite = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeFavourite', parameter);
 
         displayAlert(removedFavourite.status, removedFavourite.msg);
 
@@ -109,7 +109,7 @@ function Favourite(props) {
         const parameter = {
             user_id: user._id
         }
-        const favourite = await apiCall.postAPI('http://localhost:3000/removeAllFavourite', parameter);
+        const favourite = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeAllFavourite', parameter);
 
         displayAlert(favourite.status, favourite.msg);
 

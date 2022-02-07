@@ -34,7 +34,7 @@ export default function LikedVd() {
         const parameter = {
             user_id: user._id
         }
-        const likedVd = await apiCall.postAPI('http://localhost:3000/getUserLike', parameter);
+        const likedVd = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/getUserLike', parameter);
 
         setIsLoading(false);
 
@@ -60,7 +60,7 @@ export default function LikedVd() {
     }
 
     async function viewHandler(videoId) {
-        const viewUrl = `http://localhost:3000/addView/${videoId}`;
+        const viewUrl = `https://video-player-api-demo.herokuapp.com/addView/${videoId}`;
         const parameter = {
             user_id: user._id
         }
@@ -76,7 +76,7 @@ export default function LikedVd() {
                 user_id: user._id,
                 video_id: videoId
             }
-            const history = await apiCall.postAPI('http://localhost:3000/addHistory', parameter);
+            const history = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/addHistory', parameter);
 
         }
 
@@ -92,7 +92,7 @@ export default function LikedVd() {
             user_id: user._id,
             video_id: videoId
         }
-        const removedLikedVd = await apiCall.postAPI('http://localhost:3000/removeLike', parameter);
+        const removedLikedVd = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/removeLike', parameter);
 
         displayAlert(removedLikedVd.status, removedLikedVd.msg);
 
