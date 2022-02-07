@@ -1,4 +1,4 @@
-import './Css/MyChannel.css';
+import './CSS/MyChannel.css';
 import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import { useHistory, useParams } from "react-router-dom";

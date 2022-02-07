@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './Css/Uploads.css';
-import './Css/bootstrap.min.css';
+import './CSS/Uploads.css';
+import './CSS/bootstrap.min.css';
 import axios from 'axios';
 import { useHistory } from 'react-router';
 import { useSelector } from "react-redux";
