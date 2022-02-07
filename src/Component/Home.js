@@ -15,6 +15,8 @@ import Ad from './add';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import { Adsense } from '@ctrl/react-adsense';
+
 let apiCall = new ApiCall();
 
 export default function Home() {
@@ -138,7 +140,17 @@ export default function Home() {
         <>
             <div className="container-fluid pb-5">
                 <div className='my-2'>
-                    <Ad />
+                    {/* <Ad /> */}
+                    <Adsense
+                        client="ca-pub-7640562161899788"
+                        slot="7259870550"
+                    />
+                    <Adsense
+                        client="ca-pub-7640562161899788"
+                        slot="7259870550"
+                        style={{ width: 500, height: 300 }}
+                        format=""
+                    />
                 </div>
                 {/* <div className='py-5 bg-light my-2'>
                     <h2 className='text-center'>Advertisement</h2>

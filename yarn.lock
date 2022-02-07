@@ -1194,6 +1194,13 @@
   "resolved" "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-10.1.0.tgz"
   "version" "10.1.0"
 
+"@ctrl/react-adsense@^1.5.0":
+  "integrity" "sha512-qHVvBAQQE0hS/fyfYHQvHxDIauprYkc57YvfPKy5T/aioedGqWgMf7g0/+Al3Blh6taDLZwP4JU6Xszq/ycqZQ=="
+  "resolved" "https://registry.npmjs.org/@ctrl/react-adsense/-/react-adsense-1.5.0.tgz"
+  "version" "1.5.0"
+  dependencies:
+    "tslib" "^1.14.1"
+
 "@eslint/eslintrc@^0.3.0":
   "integrity" "sha512-1JTKgrOKAHVivSvOYw+sJOunkBjUOvjqWk1DPja7ZFhIS2mX/4EgTT8M7eTK9jrKhL/FvXXEbQwIs3pg1xp3dg=="
   "resolved" "https://registry.npmjs.org/@eslint/eslintrc/-/eslintrc-0.3.0.tgz"
@@ -11374,6 +11381,11 @@
     "json5" "^1.0.1"
     "minimist" "^1.2.0"
     "strip-bom" "^3.0.0"
+
+"tslib@^1.14.1":
+  "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
+  "version" "1.14.1"
 
 "tslib@^1.8.1":
   "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
