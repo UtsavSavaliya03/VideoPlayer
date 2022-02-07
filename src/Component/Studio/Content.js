@@ -1,5 +1,5 @@
 import '../Css/CentralStyle.css';
-import './CSS/Content.css';
+import './Style/Content.css';
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TimeAgo from 'react-timeago';
