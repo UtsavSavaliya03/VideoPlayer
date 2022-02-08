@@ -10,8 +10,8 @@ render () {
       <div className='ad'>
         <ins className='adsbygoogle'
           style={{ display: 'block' }}
-          data-ad-client='ca-pub-3199660652950290'
-          data-ad-slot='6259591966'
+          data-ad-client='ca-pub-8525725600038548'
+          data-ad-slot='6728438510'
           data-ad-format='auto' />
       </div>
     );
