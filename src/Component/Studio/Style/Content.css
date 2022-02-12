@@ -38,6 +38,14 @@
 .CV-vd-queue:hover {
     background-color: rgb(230, 230, 230);
 }
+.CV-vd-queue .private {
+    color: black;
+    border-radius: 10px;
+    background-color: rgb(1, 206, 1);
+}
+.CV-vd-queue .lock-icon {
+    font-size: 14px;
+}
 
 /* --------------- Spinner ---------------- */
 

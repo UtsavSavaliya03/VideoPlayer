@@ -29,7 +29,7 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [videos, setVideos] = useState([]);
 
-    const category = [{ "name": "Entertainment" }, { "name": "Music" }, { "name": "Crypto" }, { "name": "Health" }, { "name": "Art" }, { "name": "Education" }, { "name": "Yoga" }, { "name": "Doctor" }, { "name": "Environment" }, { "name": "Bussiness" }, { "name": "software" }, { "name": "IoT" }]
+    const category = [{ "name": "Entertainment" }, { "name": "Music" }, { "name": "Crypto" }, { "name": "Health" }, { "name": "Art" }, { "name": "Education" }, { "name": "Yoga" }, { "name": "Environment" }, { "name": "Bussiness" }, { "name": "software" }, { "name": "IoT" }]
 
     var slider = {
         dots: false,
@@ -139,16 +139,16 @@ export default function Home() {
     return (
         <>
             <div className="container-fluid pb-5">
-                <div className='my-2'>
+                {/* <div className='my-2'>
                     <Ad />
                     <Adsense
                         client="pub-8525725600038548"
                         slot="6728438510"
                     />
-                </div>
-                {/* <div className='py-5 bg-light my-2'>
-                    <h2 className='text-center'>Advertisement</h2>
                 </div> */}
+                <div className='py-5 bg-light my-2'>
+                    <h2 className='text-center'>Advertisement</h2>
+                </div>
                 <div className='mt-3 py-2 border-top border-bottom'>
                     <Slider {...slider}>
                         {renderCategory()}

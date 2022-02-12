@@ -117,7 +117,7 @@ function Content() {
                             <div className="col-12 col-md-7 col-lg-9 pr-md-0 pt-md-2">
                                 <div><h5 className='break-title-2'>{vd.videoName}</h5></div>
                                 <div><h5 className="break-title-1 text-muted">{vd.channel_id.channelName}</h5></div>
-                                <div><h6 className='text-muted m-0'>{( millify(vd.views.length) + (vd.views.length > 1 ? " Views" : " View") ) + ' • '} <span>{<TimeAgo date={vd.createDate}/>}</span> </h6></div>
+                                <div><h6 className='text-muted m-0'>{( millify(vd.views.length) + (vd.views.length > 1 ? " Views" : " View") ) + ' • '} <span>{<TimeAgo date={vd.createDate}/>}</span> { vd.visibility == "Private" && <span className='private mx-3 px-3'><i class="fas fa-lock-alt mr-2 lock-icon"></i>Private</span>} </h6></div>
                                 <button onClick={(e) => confirmDelete(e, vd._id)} className='remove-video-btn p-0 mt-2 text-uppercase'><i class="far fa-trash-alt mr-2"></i>Delete Permanently</button>
                             </div>
                         </div>
