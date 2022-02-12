@@ -210,12 +210,17 @@ function Uploads() {
                             <datalist id="category-list">
                                 <option value="Art">Art</option>
                                 <option value="Business">Business</option>
+                                <option value="Crypto">Crypto</option>
                                 <option value="Education">Education</option>
                                 <option value="Entertainment">Entertainment</option>
+                                <option value="God">God</option>
                                 <option value="Health">Health</option>
                                 <option value="Motivation">Motivation</option>
+                                <option value="Musics">Musics</option>
                                 <option value="Others">Others</option>
                                 <option value="Science">Science</option>
+                                <option value="Share Market">Share Market</option>
+                                <option value="Yoga">Yoga</option>
                             </datalist>
                         </div>
                         <div className="form-group col-12 col-md-6">

@@ -29,7 +29,7 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [videos, setVideos] = useState([]);
 
-    const category = [{ "name": "Entertainment" }, { "name": "Music" }, { "name": "Crypto" }, { "name": "Health" }, { "name": "Art" }, { "name": "Education" }, { "name": "Yoga" }, { "name": "Environment" }, { "name": "Bussiness" }, { "name": "software" }, { "name": "IoT" }]
+    const category = [{ "name": "Art" }, { "name": "Business" }, { "name": "Crypto" }, { "name": "Education" }, { "name": "Entertainment" }, { "name": "God" }, { "name": "Health" }, { "name": "Motivation" }, { "name": "Musics" }, { "name": "Others" }, { "name": "Science" }, { "name": "Share Market" }, { "name": "Yoga" }]
 
     var slider = {
         dots: false,
