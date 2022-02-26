@@ -12,7 +12,7 @@ let apiCall = new ApiCall;
 
 export default function Login(props) {
 
-    const [cookies, setCookie] = useCookies("user", "channel", "isLogin");
+    const [cookies, setCookie] = useCookies("user", "token", "channel", "isLogin");
     const [userOrEmail, setUserOrEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -39,6 +39,7 @@ export default function Login(props) {
             password: password
         }
 
+        // https://video-player-api-demo.herokuapp.com/login
         const data = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/login', parameter);
         console.log(data);
 
@@ -47,6 +48,7 @@ export default function Login(props) {
         if (data.status) {
             setCookie("isLogin", true, { path: '/' });
             setCookie("user", data.data.user, { path: '/' });
+            setCookie("token", data.data.token, { path: '/' });
 
             const parameter = {
                 user_id: data.data.user._id,
@@ -112,7 +114,7 @@ export default function Login(props) {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
+            <ToastContainer limit={2}/>
         </>
     );
 }

@@ -30,6 +30,8 @@ video {
 }
 .category-btn:focus {
     outline: none;
+    color: black;
+    background-color: rgb(179, 179, 179);
 }
 .category-btn:hover {
     cursor: pointer;

@@ -1,6 +1,6 @@
 import './Css/CentralStyle.css';
 import './Css/Header.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import personIcon from '../assets/Icons/person.svg';
 import channelIcon from '../assets/Icons/channel.svg';
 import studioIcon from '../assets/Icons/studio.svg';
@@ -8,10 +8,10 @@ import logOutIcon from '../assets/Icons/logout.svg';
 import Avatar from 'react-avatar';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
-
-/* --------------- Icons ------------------- */
-
+import ApiCall from '../ServiceManager/apiCall';
 import { useHistory } from 'react-router-dom';
+
+var apiCall = new ApiCall;
 
 export default function Header(props) {
 
@@ -28,11 +28,55 @@ export default function Header(props) {
     const userChannel = useSelector(state => state.userChannel);
     const [searchQuery, setSearchQuery] = useState('');
 
-    function signOutHandler() {
+    useEffect(async () => {
+        if (isLogin) {
+            const url = `https://video-player-api-demo.herokuapp.com/getUserToken/${user._id}`;
+            const token = await apiCall.postAPI(url);
+
+            var checkedToken = (token.data).filter((currElement) => {
+                return currElement == cookies.token
+            });
+
+            if (checkedToken.length == 0) {
+                cookieRemover();
+                window.location.reload();
+            }
+        }
+    });
+
+    function cookieRemover() {
         removeCookie("user");
         removeCookie("channel");
         removeCookie("isLogin");
-        window.location.reload();
+        removeCookie("token");
+    }
+
+    async function signOutHandler() {
+        cookieRemover();
+        const parameter = {
+            user_id: user._id,
+            token: cookies.token
+        }
+
+        const logout = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/logout', parameter);
+
+        if (logout.status) {
+            window.location.reload();
+        }
+    }
+
+    async function signOutAllHandler() {
+        cookieRemover();
+        const parameter = {
+            user_id: user._id,
+            logoutAll: true
+        }
+
+        const logoutAll = await apiCall.postAPI('https://video-player-api-demo.herokuapp.com/logout', parameter);
+
+        if (logoutAll.status) {
+            window.location.reload();
+        }
     }
 
     function routeChange(path) {
@@ -195,9 +239,14 @@ export default function Header(props) {
                                                 </li>
                                             }
                                             {(windowPath.substr(0, 7) != '/studio') &&
-                                                <li>
-                                                    <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
-                                                </li>
+                                                <>
+                                                    <li>
+                                                        <a href="/" onClick={() => { signOutHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/" onClick={() => { signOutAllHandler() }}><span><img src={logOutIcon} alt="Log Out icon" /></span>Log Out (All Devices )</a>
+                                                    </li>
+                                                </>
                                             }
                                         </ul>
                                     </div>

@@ -464,7 +464,7 @@ function VideoPlay() {
                         </div>
                     </div>
                 </div>
-                <ToastContainer />
+                <ToastContainer limit={2}/>
             </>
         );
     }

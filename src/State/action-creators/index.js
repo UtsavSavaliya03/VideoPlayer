@@ -1,5 +1,5 @@
 export const setLogin = (isLogin) => {
-    return (dispatch)=>{
+    return (dispatch) => {
         dispatch({
             type: 'setLogin',
             payload: isLogin

@@ -97,7 +97,7 @@ export default function Home() {
     function renderCategory() {
         return category.map(category => {
             return (
-                <div key={category.key}>
+                <div key={category.name}>
                     <button
                         onClick={() => setCategoryVideoHandler(category.name)}
                         className='category-btn mx-2'
